@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import { Media } from '@/components/media'
-import { Route } from '@/components/route'
 import { SplitWords } from '@/components/split-words'
 import { site } from '@/content/site'
 
@@ -54,19 +53,20 @@ export function Hero() {
             continues across both lines via `start`. */}
         <h1
           id="hero-heading"
-          aria-label="Marketer who builds"
+          aria-label="Developer. Marketer."
           className="text-[clamp(2.8rem,6.2vw,6rem)] leading-[0.98] font-semibold tracking-[-0.035em]"
         >
           <span className="block">
-            <SplitWords text="Marketer" start={0} total={3} />
+            <SplitWords text="Developer." start={0} total={2} />
           </span>
           <span className="block">
-            <SplitWords text="who builds" start={1} total={3} />
+            <SplitWords text="Marketer." start={1} total={2} />
           </span>
         </h1>
 
-        {/* Three words carry the whole positioning, so the supporting lines get
-            to be concrete instead of explaining the headline back. */}
+        {/* Two words, two full-stack disciplines, neither one a modifier on
+            the other — so the supporting lines get to be concrete instead of
+            explaining the headline back. */}
         <p
           className="fade-up text-soft mt-[clamp(18px,3vh,32px)] max-w-[34ch] text-[clamp(1.05rem,1.55vw,1.3rem)]"
           style={delay(0.5)}
@@ -81,9 +81,10 @@ export function Hero() {
           {/* Not "most teams hire twice for that": headcount framing prices the
               work by what it replaces and reads as an offer to be bought
               cheaply. The argument is that the decisions hold together. */}
-          Seven years of marketing strategy: SEO, paid acquisition, social media
-          and CRO. Four building the products too. So the product and the funnel
-          get designed together, not negotiated between teams.
+          Full-stack marketing technologist for seven years, across SEO, paid
+          acquisition, social media and CRO. Full-stack developer for four,
+          shipping the products that marketing points to. The same person
+          designs both, not handed between two teams.
         </p>
 
         {/* The three facts a Swiss recruiter screens on, above the fold and in
@@ -120,10 +121,7 @@ export function Hero() {
                 className="size-[17px]"
               />
             </span>
-            <Route
-              from={hiring.currentLocation.split(',')[0] ?? ''}
-              to={hiring.targetLocation.split(',')[0] ?? ''}
-            />
+            {hiring.currentLocation.split(',')[0] ?? ''}
           </li>
           <li
             aria-hidden="true"

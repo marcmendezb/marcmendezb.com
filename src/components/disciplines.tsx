@@ -5,13 +5,12 @@ import { ToolPills } from '@/components/tool-pills'
 import { disciplines } from '@/content/projects'
 
 /**
- * The three disciplines, as a numbered list rather than a card grid.
+ * The two disciplines, as a numbered-feeling list rather than a card grid.
  *
- * Cards would be the reflex here and the wrong answer: three equal boxes imply
- * three equal, interchangeable skills, when the argument is specifically that
- * marketing came first and shapes the other two. A numbered sequence separated
- * by hairlines carries that order, and it matches the grid the rest of the page
- * is built on.
+ * Cards would be the reflex here and the wrong answer: two boxes side by side
+ * read as a comparison, inviting a reader to decide which one is "more him".
+ * A sequence separated by hairlines reads as two parts of one practice
+ * instead, and it matches the grid the rest of the page is built on.
  */
 export function Disciplines() {
   return (
@@ -23,7 +22,7 @@ export function Disciplines() {
       <SectionHeading
         id="disciplines-heading"
         title="What I do"
-        meta="Three disciplines, one way of working"
+        meta="Two disciplines, one way of working"
         rule={false}
       />
 
@@ -35,8 +34,8 @@ export function Disciplines() {
             // at 1fr it opened a dead gap the width of the body copy.
             className="reveal border-hair grid grid-cols-1 gap-x-[clamp(20px,4vw,56px)] gap-y-4 border-t py-[clamp(28px,4vw,48px)] first:border-t-0 first:pt-0 min-[880px]:grid-cols-[auto_minmax(160px,0.55fr)_1.45fr]"
           >
-            {/* A hairline tick rather than 01 / 02 / 03. Numbering implied a
-                sequence and a ranking that aren't there: the three run in
+            {/* A hairline tick rather than 01 / 02. Numbering implied a
+                sequence and a ranking that aren't there: the two run in
                 parallel and feed each other. The rule is the same device the
                 section dividers and the roadmap use, so it anchors the row
                 without asserting anything. */}
@@ -49,7 +48,7 @@ export function Disciplines() {
               {/* Same word-by-word reveal as the About and Contact lines, but
                   settling on ink: the accent stays reserved for the two lines
                   that carry the argument. */}
-              {/* The three names carry the accent; their claims stay ink, so
+              {/* The two names carry the accent; their claims stay ink, so
                   the colour marks the discipline rather than the whole block. */}
               <h3
                 data-pace="slow"

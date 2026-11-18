@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import { Reveal } from '@/components/reveal'
-import { Route } from '@/components/route'
 import { SectionHeading } from '@/components/section-heading'
 import { SplitWords } from '@/components/split-words'
 import { learning, timeline } from '@/content/projects'
@@ -52,12 +51,7 @@ export function About() {
       <SectionHeading
         id="about-heading"
         title="About"
-        meta={
-          <Route
-            from={hiring.currentLocation.split(',')[0] ?? ''}
-            to={hiring.targetLocation.split(',')[0] ?? ''}
-          />
-        }
+        meta={hiring.currentLocation.split(',')[0] ?? ''}
       />
 
       {/* Band 1: the statement, then the argument behind it. */}
@@ -68,10 +62,10 @@ export function About() {
           {/* A <p> has role=paragraph, which prohibits aria-label, so the
               sentence is exposed once as a visually-hidden string instead. */}
           <span className="sr-only">
-            I learned to sell before I learned to build.
+            I build the product and the growth around it.
           </span>
           <SplitWords
-            text="I learned to sell before I learned to build."
+            text="I build the product and the growth around it."
             variant="plain"
             total={9}
           />
@@ -83,11 +77,12 @@ export function About() {
           <div className="text-soft max-w-[52ch] space-y-4">
             <p>
               Most people who build web products pick up conversion later, as
-              something you add once the thing works. I did it the other way
-              round: seven years of marketing first, then I studied web
-              development. So it&rsquo;s already in the structure when I build.
-              What the page is for, what it asks of you, what happens after you
-              say yes.
+              something bolted on once the thing works. I came at it from both
+              sides: seven years as a full-stack marketing technologist, four as
+              a full-stack developer, with neither one supporting the other. So
+              conversion is already in the structure when I build, not
+              retrofitted after launch: what the page is for, what it asks of
+              you, what happens after you say yes.
             </p>
             <p>
               It shows up as coherence. The positioning, the site, the product
@@ -95,9 +90,10 @@ export function About() {
               defending their own piece of it.
             </p>
             <p>
-              I&rsquo;m moving to {hiring.targetLocation.split(',')[0]},
-              I&rsquo;m available {hiring.availableFrom}, and there&rsquo;s no
-              permit to sort out. {site.openTo}
+              Originally from {hiring.origin.split(',')[0]}, I&rsquo;m based
+              near {hiring.targetLocation.split(',')[0]} already, available{' '}
+              {hiring.availableFrom}, with no permit or relocation to sort out.{' '}
+              {site.openTo}
             </p>
           </div>
         </Reveal>
@@ -191,10 +187,20 @@ export function About() {
       <Reveal className="reveal mt-[clamp(16px,2vw,28px)] grid grid-cols-1 items-start gap-[clamp(16px,2vw,28px)] min-[720px]:grid-cols-3">
         <div className="border-hair bg-surface/60 rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(20px,2.4vw,32px)] py-[clamp(20px,2.2vw,28px)] backdrop-blur-2xl">
           <h3 className="mb-3 text-sm font-medium">Education</h3>
-          <div className="border-hair flex items-baseline justify-between gap-4 border-t py-2.5">
-            <p className="text-sm">{education.field}</p>
-            <p className="text-mute text-sm">{education.year}</p>
-          </div>
+          <dl>
+            {education.map((entry) => (
+              <div
+                key={entry.qualification}
+                className="border-hair gap-4 border-t py-2.5"
+              >
+                <dt className="text-sm">{entry.qualification}</dt>
+                <dd className="text-mute mt-0.5 text-sm">
+                  {entry.country}
+                  {entry.completed === false ? ', not completed' : ''}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
         <div className="border-hair bg-surface/60 rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(20px,2.4vw,32px)] py-[clamp(20px,2.2vw,28px)] backdrop-blur-2xl">

@@ -34,7 +34,7 @@ export function buildPersonSchema() {
     address: {
       '@type': 'PostalAddress',
       addressLocality: hiring.currentLocation.split(',')[0]?.trim(),
-      addressCountry: 'ES',
+      addressCountry: 'CH',
     },
     workLocation: {
       '@type': 'Place',

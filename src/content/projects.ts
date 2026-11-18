@@ -396,11 +396,13 @@ export const projects: readonly Project[] = [
 ] as const
 
 /**
- * The three disciplines, in the order they should be read.
+ * The two disciplines, in no particular order.
  *
- * Marketing first: it's the longer half of the track record and the half that
- * makes the rest unusual. A developer who ships is common; a marketer who ships
- * the product as well as the funnel is not.
+ * Full-stack on both sides: seven years as a marketing technologist and four
+ * as a developer are different tenures, but neither one is the "real" job
+ * with the other bolted on. AI tooling sits inside the developer discipline
+ * rather than as a third item of its own — coding agents are a development
+ * capability here, not a separate identity.
  */
 export type Discipline = {
   name: string
@@ -412,12 +414,57 @@ export type Discipline = {
 
 export const disciplines: readonly Discipline[] = [
   {
-    name: 'Marketing',
+    name: 'Full-stack developer',
+    claim: 'I build it myself',
+    body: 'Real products, not mockups: corporate sites, landing pages, marketing automation, SaaS, web apps, internal software. I take them from the frontend through to deploy, with coding agents doing real work alongside me rather than just autocompleting in the editor. There’s no handoff, because there’s nobody to hand off to.',
+    /* Drawn from what is actually in the repos, not from memory: 43 projects
+       across personal and client work were read for their dependencies.
+       Cloudflare Workers with D1 appear in four of them and Hono in three.
+       Vite is in eleven. The AI API entries are evidenced too: one of them
+       ships @anthropic-ai/sdk with Trigger.dev for background jobs, and
+       nutribot runs @google/generative-ai.
+
+       MySQL, Framer and Figma are here on Marc's say-so rather than on
+       evidence: they're skills he supplied, but nothing in these repos uses
+       them. Worth a second look before an interview. */
+    tools: [
+      'TypeScript',
+      'React',
+      'Next.js',
+      'Astro',
+      'Framer',
+      'Figma',
+      'Vite',
+      'Node',
+      'Hono',
+      'PostgreSQL',
+      'MySQL',
+      'Supabase',
+      'Cloudflare Workers & D1',
+      'Stripe',
+      'Vercel',
+      'Docker',
+      'Claude Code',
+      'Codex',
+      'Cursor',
+      'Agentic coding',
+      'Multi-agent workflows',
+      'Anthropic API',
+      'Gemini API',
+      'Trigger.dev',
+      'Local LLMs',
+      'VS Code extensions',
+      'Internal tooling',
+    ],
+  },
+  {
+    name: 'Full-stack marketing technologist',
     claim: 'I know why it sells',
-    body: 'Strategy first, then the channels that serve it: SEO, paid acquisition, social media, landing pages, CRO, email and the automation behind it. I did this for seven years before I wrote a line of production code. That’s why I think about conversion while I’m building, not after.',
+    body: 'Strategy first, then the channels that serve it: SEO, paid acquisition, social media, landing pages, CRO, email and the automation behind it. Seven years of this before I wrote a line of production code, which is why I think about conversion while I’m building, not after.',
     // 'Lifecycle' became 'Email marketing': the same work, named the way a job
-    // ad names it. Automation and workflows sit here rather than under Building
-    // because the judgement they encode is a marketing one.
+    // ad names it. Automation and workflows sit here rather than under the
+    // developer discipline, because the judgement they encode is a marketing
+    // one.
     tools: [
       'Marketing strategy',
       'Positioning',
@@ -434,56 +481,10 @@ export const disciplines: readonly Discipline[] = [
       'Referral loops',
       'Copy',
       'Analytics & tracking',
-    ],
-  },
-  {
-    name: 'Building',
-    claim: 'I build it myself',
-    body: 'Real products, not mockups: corporate sites, landing pages, marketing automation, SaaS, web apps, internal software. I take them from the frontend through to deploy. There’s no handoff, because there’s nobody to hand off to.',
-    /* Drawn from what is actually in the repos, not from memory: 43 projects
-       across personal and client work were read for their dependencies.
-       Cloudflare Workers with D1 appear in four of them and Hono in three.
-       Vite is in eleven.
-
-       MySQL and Framer are here on Marc's say-so rather than on evidence:
-       they're skills he supplied, but nothing in these repos uses them.
-       Worth a second look before an interview. */
-    tools: [
-      'TypeScript',
-      'React',
-      'Next.js',
-      'Astro',
-      'Framer',
-      'Vite',
-      'Node',
-      'Hono',
-      'PostgreSQL',
-      'MySQL',
-      'Supabase',
-      'Cloudflare Workers & D1',
-      'Stripe',
-      'Vercel',
-      'Docker',
-    ],
-  },
-  {
-    name: 'AI',
-    claim: 'I ship at twice the pace',
-    body: 'I work with coding agents every day and build my own tooling around them, and I\u2019ve shipped products with the model doing real work in production, not just in the editor. It means my time goes on deciding what to build rather than typing it out.',
-    /* The API entries are evidenced: one of them ships @anthropic-ai/sdk with
-       Trigger.dev for background jobs, nutribot runs @google/generative-ai. */
-    tools: [
-      'Claude Code',
-      'Codex',
-      'Cursor',
-      'Agentic coding',
-      'Multi-agent workflows',
-      'Anthropic API',
-      'Gemini API',
-      'Trigger.dev',
-      'Local LLMs',
-      'VS Code extensions',
-      'Internal tooling',
+      'GA4',
+      'GTM',
+      'HubSpot',
+      'Photoshop',
     ],
   },
 ] as const

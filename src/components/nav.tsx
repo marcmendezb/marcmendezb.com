@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { Route } from '@/components/route'
 import { site } from '@/content/site'
 import { pauseSmoothScroll, resumeSmoothScroll } from '@/lib/smooth-scroll'
 
@@ -403,10 +402,7 @@ export function Nav() {
               style={{ '--i': 6 } as React.CSSProperties}
               className="menu-in border-hair text-mute mt-[clamp(26px,5vh,44px)] flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t pt-5 text-sm"
             >
-              <Route
-                from={site.hiring.currentLocation.split(',')[0] ?? ''}
-                to={site.hiring.targetLocation.split(',')[0] ?? ''}
-              />
+              <span>{site.hiring.currentLocation.split(',')[0] ?? ''}</span>
               <span className="flex items-center gap-2">
                 <span aria-hidden="true" className="status-mark">
                   <Image

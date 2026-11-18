@@ -28,6 +28,21 @@ export type Language = {
   level: string
 }
 
+export type EducationEntry = {
+  /** The qualification and subject, e.g. "Higher Vocational Diploma, Web Application Development". */
+  qualification: string
+  country: string
+  /**
+   * The awarding school or university. `null` while unconfirmed — see the
+   * module comment on `| null` fields. Not rendered on the page even once
+   * set; kept here so `reportPlaceholders()` can still flag it and so the
+   * data is complete if a fuller CV page ever wants it.
+   */
+  institution: string | null
+  /** Set only for a programme that was left unfinished. */
+  completed?: false
+}
+
 export const site = {
   // ---------------------------------------------------------------------------
   // Identity
@@ -38,11 +53,12 @@ export const site = {
   /**
    * Used in <title>, OG tags and the JSON-LD `jobTitle`.
    *
-   * Marketing leads deliberately. It's the longer half of the track record
-   * (seven years against four) and the half that makes the developer work
-   * unusual, rather than the other way round.
+   * Both named outright rather than one leading. Seven years in marketing
+   * and four building products are different tenures, but neither is the
+   * "real" job with the other bolted on — and a recruiter searching either
+   * term on its own should still land on this page.
    */
-  role: 'Marketing & web development',
+  role: 'Full-stack developer & marketing technologist',
 
   /**
    * Canonical origin, no trailing slash. Drives canonical URLs, OG tags,
@@ -58,7 +74,7 @@ export const site = {
 
   /** <150 chars. What Google shows, and what appears when someone pastes the link. */
   description:
-    'Marketer who builds. Seven years doing marketing strategy, SEO, paid acquisition and social. Four building the products too. Moving to Zürich, available now.',
+    'Full-stack developer and full-stack marketing technologist. Seven years in marketing, four building products. Based near Zürich, available now.',
 
   // ---------------------------------------------------------------------------
   // Contact
@@ -87,8 +103,19 @@ export const site = {
   // ---------------------------------------------------------------------------
 
   hiring: {
-    currentLocation: 'Barcelona, Spain',
+    // Elsau is the actual village; Winterthur is the city it sits beside and
+    // the name a recruiter will recognise, the same way the hero's status
+    // line and the mobile menu split on the city before the comma.
+    currentLocation: 'Winterthur, Switzerland',
     targetLocation: 'Zürich, Switzerland',
+
+    /**
+     * Where Marc moved from, not where he's moving to — he already lives in
+     * the Zürich area (see `currentLocation`). Surfaced once, in About's
+     * prose, so the page doesn't read as having skipped the relocation that
+     * already happened.
+     */
+    origin: 'Barcelona, Spain',
 
     /**
      * Zero days' notice.
@@ -117,17 +144,45 @@ export const site = {
   /**
    * Worth its own block rather than a footnote. Switzerland runs on vocational
    * training — the Berufsbildung route is the mainstream path there, not a
-   * fallback — so a formal diploma in web development reads as a credential to
-   * a Swiss recruiter in a way it might not elsewhere.
+   * fallback — so these read as credentials to a Swiss recruiter in a way
+   * they might not elsewhere.
    *
-   * Kept to the field and the year on purpose. The specific qualification,
-   * awarding body and grades belong on the CV, where someone who wants that
-   * detail will go looking for it; on the page they would be noise.
+   * Four entries, not one: a web development diploma on its own undersold the
+   * marketing side, which has its own formal qualification rather than being
+   * self-taught. The unfinished bachelor's stays in rather than getting
+   * quietly dropped — "left Public Relations partway through for a vocational
+   * diploma instead" is a more honest shape of a career than hiding the
+   * detour.
+   *
+   * The Spanish qualification codes (CFGS, CFGM) are left out on purpose:
+   * they mean nothing to a Swiss recruiter and would read as noise next to
+   * credentials they do recognise. "Higher" vs "Intermediate" carries the
+   * same distinction in plain English.
    */
-  education: {
-    field: 'Web development',
-    year: '2022',
-  },
+  education: [
+    {
+      qualification: 'Higher Vocational Diploma, Web Application Development',
+      country: 'Spain',
+      institution: null, // TODO: the centre's name
+    },
+    {
+      qualification: 'Higher Vocational Diploma, Marketing and Advertising',
+      country: 'Spain',
+      institution: null, // TODO: the centre's name
+    },
+    {
+      qualification:
+        'Intermediate Vocational Diploma, Administrative Assistance',
+      country: 'Spain',
+      institution: null, // TODO: the centre's name
+    },
+    {
+      qualification: 'Public Relations, Marketing and Advertising (BA)',
+      country: 'Spain',
+      institution: null, // TODO: the university's name
+      completed: false,
+    },
+  ] satisfies EducationEntry[],
 
   languages: [
     { name: 'Spanish', level: 'Native' },
@@ -140,8 +195,7 @@ export const site = {
    * What you're open to. Kept broad on purpose: you're looking at marketing
    * roles, development roles and the combination.
    */
-  openTo:
-    'Marketing roles, development roles, or both. Full-time, freelance or per project.',
+  openTo: 'Marketing roles, development roles, or both.',
 
   /**
    * Path to your CV, served from `public/`. `null` hides every download button.

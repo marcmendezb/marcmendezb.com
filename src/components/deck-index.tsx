@@ -15,8 +15,6 @@ type Props = {
   projects: readonly Entry[]
 }
 
-const pad = (n: number) => String(n).padStart(2, '0')
-
 /** How long the menu waits before closing, so the pointer can cross the gap. */
 const CLOSE_DELAY_MS = 140
 
@@ -186,12 +184,6 @@ export function DeckIndex({ projects }: Props) {
           onClick={() => setOpen((was) => !was)}
           className="deck-name"
         >
-          <span
-            aria-hidden="true"
-            className="text-mute text-[11px] tabular-nums"
-          >
-            {pad(current + 1)}
-          </span>
           <span className="text-[13px] font-medium whitespace-nowrap">
             {currentProject?.title ?? ''}
           </span>
@@ -220,12 +212,6 @@ export function DeckIndex({ projects }: Props) {
                     setOpen(false)
                   }}
                 >
-                  <span
-                    aria-hidden="true"
-                    className="deck-menu-num tabular-nums"
-                  >
-                    {pad(index + 1)}
-                  </span>
                   <span className="deck-menu-title">{project.title}</span>
                   <span className="deck-menu-note">{project.shorthand}</span>
                 </button>

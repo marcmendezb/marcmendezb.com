@@ -55,8 +55,8 @@ export default async function OpenGraphImage() {
           lineHeight: 1.02,
         }}
       >
-        <div>Marketer</div>
-        <div>who builds</div>
+        <div>Developer.</div>
+        <div>Marketer.</div>
       </div>
 
       <div
@@ -71,7 +71,7 @@ export default async function OpenGraphImage() {
         {/* Single text nodes on purpose: Satori requires an explicit
               `display` on any element with more than one child, and JSX
               interpolation splits these into several text nodes. */}
-        <div>{`${hiring.currentLocation.split(',')[0]} → ${hiring.targetLocation.split(',')[0]}`}</div>
+        <div>{hiring.currentLocation.split(',')[0]}</div>
         <div style={{ color: '#d8d8d6' }}>|</div>
         <div>Available</div>
         <div style={{ color: '#d8d8d6' }}>|</div>

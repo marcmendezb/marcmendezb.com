@@ -80,6 +80,15 @@ export function reportPlaceholders() {
     )
   }
 
+  const uninstituted = site.education.filter(
+    (entry) => entry.institution === null,
+  )
+  if (uninstituted.length > 0) {
+    todo.push(
+      `site.education — ${uninstituted.length} of ${site.education.length} entries have no institution name yet`,
+    )
+  }
+
   if (todo.length === 0) return
 
   console.warn(

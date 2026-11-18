@@ -505,7 +505,7 @@
 
   /* --- The route ----------------------------------------------------------- */
 
-  /* Barcelona to Zürich, compressed to 16px.
+  /* Winterthur to Zürich, compressed to 16px.
 
      It started as a 46px line that drew itself on a loop. At the scale of a
      14px status line that read as fidgety rather than subtle: a shape that
@@ -1967,11 +1967,6 @@
     background: color-mix(in srgb, var(--accent) 8%, transparent);
   }
 
-  .deck-menu-num {
-    font-size: 11px;
-    color: var(--mute);
-  }
-
   .deck-menu-title {
     font-size: 14px;
     font-weight: 500;
@@ -1987,7 +1982,6 @@
     white-space: nowrap;
   }
 
-  .deck-menu-item[aria-current='true'] .deck-menu-num,
   .deck-menu-item[aria-current='true'] .deck-menu-title {
     color: var(--accent);
   }

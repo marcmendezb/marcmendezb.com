@@ -6,6 +6,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+# This workflow only reads the repo and runs checks — no deploys, no PR
+# comments, no releases — so the default token gets no more than that.
+permissions:
+  contents: read
+
 # Cancel an in-flight run when new commits land on the same branch.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -41,3 +46,11 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      # Non-blocking: a dependency can carry an advisory with no upstream fix
+      # yet (see README § Keeping dependencies patched), and failing the whole
+      # pipeline on that is worse than not checking at all. This keeps the
+      # result visible in the run log without turning main permanently red.
+      - name: Dependency audit
+        run: pnpm audit
+        continue-on-error: true

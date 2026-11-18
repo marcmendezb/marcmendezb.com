@@ -6,8 +6,8 @@ on:
   pull_request:
   workflow_dispatch:
 
-# This workflow only reads the repo and runs checks — no deploys, no PR
-# comments, no releases — so the default token gets no more than that.
+# This workflow only reads the repo and runs checks: no deploys, no PR
+# comments, no releases, so the default token gets no more than that.
 permissions:
   contents: read
 

@@ -24,7 +24,7 @@ const SWIPE_CLICK_MS = 400
  * click that pauses the slideshow, which is.
  *
  * The axis is decided once, on the first 10px of travel, and a gesture that
- * commits to vertical is left alone for the rest of its life — otherwise a
+ * commits to vertical is left alone for the rest of its life: otherwise a
  * thumb flicking down the page with any sideways drift in it would page the
  * carousel on the way past.
  */
@@ -45,7 +45,7 @@ function useSwipe(onSwipe: (direction: 'forward' | 'back') => void) {
      A timestamp rather than a flag, because most swipes produce no click at
      all: once a horizontal drag passes the touch slop the browser cancels the
      tap, and a flag set on the way out would sit there armed until it swallowed
-     somebody's next genuine tap — which is exactly what it did. A window that
+     somebody's next genuine tap, which is exactly what it did. A window that
      closes by itself cannot. */
   const swipedAt = useRef(0)
 
@@ -112,14 +112,14 @@ type Props = {
  *
  * On autoplay and WCAG 2.2.2: anything that moves on its own for longer than
  * five seconds needs a way to stop it. That mechanism is the pause button, and
- * clicking the image does the same thing — hovering alone does not stop it,
+ * clicking the image does the same thing: hovering alone does not stop it,
  * deliberately, because the pointer crosses these images on the way to
  * everything else. Under `prefers-reduced-motion` it never starts at all.
  *
  * No lightbox: the image never enlarges, on click or otherwise. A click is a
  * play/pause toggle and nothing more.
  *
- * A slide can be a video instead of a still (`image.kind === 'video'`) — a
+ * A slide can be a video instead of a still (`image.kind === 'video'`): a
  * silent, looping clip rather than a GIF, specifically so the pause button
  * has something it can actually call `.pause()` on. See `GalleryImage` in
  * `content/projects.ts` for why that distinction exists.
@@ -141,7 +141,7 @@ export function Carousel({ images, label, sizes }: Props) {
      playing and being stopped a tick later: the slide-advance timer and any
      video's autoplay both read this same flag, so initialising it correctly
      is what keeps a reduced-motion visitor from ever seeing the first frame
-     of unwanted motion at all. Read once, lazily — a plain `useState(false)`
+     of unwanted motion at all. Read once, lazily: a plain `useState(false)`
      would run every render, and this only needs to run before the first one.
      Pressing the explicit Play button afterwards still works normally: that
      is a request, not automatic motion, and nothing here distinguishes it
@@ -158,7 +158,7 @@ export function Carousel({ images, label, sizes }: Props) {
      one you used.
 
      `id` rather than reusing `icon` as the React key: `icon` only has two
-     values, and a toggle always alternates between them — but keying on it
+     values, and a toggle always alternates between them, but keying on it
      would still work for that reason alone. The id is here so a future third
      trigger of the same icon twice in a row (there isn't one today) remounts
      cleanly instead of silently no-opping because the key didn't change. */
@@ -274,13 +274,13 @@ export function Carousel({ images, label, sizes }: Props) {
       if (!el) return
       if (i === index) {
         // The active slide: play or hold exactly where a manual pause left
-        // it. `currentTime` is untouched either way — a video someone paused
+        // it. `currentTime` is untouched either way: a video someone paused
         // mid-way is meant to resume from there, not snap back to zero.
         if (paused) el.pause()
         else el.play().catch(() => {})
       } else {
         /* Any other slide. `.pause()` alone stops it wherever it happens to
-           be, and nothing else ever moves it from there — so a video that
+           be, and nothing else ever moves it from there, so a video that
            had reached, say, its third second before the carousel moved on
            stayed sitting at three seconds, and started from there the next
            time its turn came round rather than from the beginning. Resetting
@@ -315,7 +315,7 @@ export function Carousel({ images, label, sizes }: Props) {
            Gated on `:focus-visible`, which is the one part of that sentence
            this used to get wrong: a plain mouse click also fires `focus`, so
            clicking any button in here paused it a tick before that button's own
-           onClick ran — and a click handler that reads `paused` to decide its
+           onClick ran, and a click handler that reads `paused` to decide its
            next state (every one below does) was deciding against a value this
            effect had just changed out from under it. The toggle fired, but
            against a state that had already flipped, so it landed back where it
@@ -375,7 +375,7 @@ export function Carousel({ images, label, sizes }: Props) {
       ))}
 
       {/* The whole frame is a second way to reach the same control as the
-            Pause/Play button below — same action, same label, so a reader who
+            Pause/Play button below: same action, same label, so a reader who
             lands here by Tab hears exactly what they'd hear from the explicit
             button, not a different offer. There is nothing to enlarge: a click
             only ever pauses or resumes. */}
@@ -452,7 +452,7 @@ export function Carousel({ images, label, sizes }: Props) {
               >
                 {/* Keyed on the slide only. With `paused` in the key the
                       span remounted every time the pointer arrived, which
-                      restarted the CSS animation from zero — the bar jumped
+                      restarted the CSS animation from zero: the bar jumped
                       back to empty instead of holding. Freezing is handled by
                       `animation-play-state` on the paused bar instead.
                       
@@ -460,7 +460,7 @@ export function Carousel({ images, label, sizes }: Props) {
                       CSS keyframe is shared by every bar, but how long each
                       one takes to fill is a fact about its own slide, set
                       once per gallery entry rather than fixed at 3s for
-                      everything — a video gets exactly its own length, so the
+                      everything: a video gets exactly its own length, so the
                       slide changes on the loop point instead of mid-loop. */}
                 <span
                   key={`${i}-${index}`}

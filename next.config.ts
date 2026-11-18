@@ -5,7 +5,7 @@ import type { NextConfig } from 'next'
  *
  * On `script-src 'unsafe-inline'`: Next.js bootstraps hydration with inline
  * <script> tags, so a bare `script-src 'self'` blocks them and React never
- * hydrates (error #412) — the page renders but every interactive piece, the
+ * hydrates (error #412): the page renders but every interactive piece, the
  * navigation included, is dead. The build does not catch this; only loading the
  * page does.
  *
@@ -20,8 +20,8 @@ import type { NextConfig } from 'next'
  * critical CSS for the first paint.
  *
  * On `'unsafe-eval'` in development only: React's development build uses eval()
- * for debugging features — reconstructing a callstack that came from somewhere
- * else, among others — and without it the browser logs an error on every load.
+ * for debugging features (reconstructing a callstack that came from somewhere
+ * else, among others) and without it the browser logs an error on every load.
  * React never uses eval() in production, so the directive is granted to the dev
  * server and withheld from everything that ships. Keeping it out of the
  * production policy is the whole point: `'unsafe-eval'` turns any string that
@@ -67,7 +67,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
 
   // Fail the production build on type errors rather than shipping them.
-  // (Next.js 16 dropped the `eslint` key — linting runs via `pnpm lint` and CI.)
+  // (Next.js 16 dropped the `eslint` key: linting runs via `pnpm lint` and CI.)
   typescript: { ignoreBuildErrors: false },
 
   // Pin the workspace root. Without this, Turbopack walks up looking for a
@@ -95,7 +95,7 @@ const nextConfig: NextConfig = {
   // ---------------------------------------------------------------------------
   // This site is fully static. To deploy to a host without a Next.js runtime
   // (GitHub Pages, plain S3/nginx), uncomment the two lines below and run
-  // `pnpm build` — the site is emitted to `out/`.
+  // `pnpm build`: the site is emitted to `out/`.
   //
   // Note: `headers()` above is a no-op under static export; configure the same
   // headers on your CDN/web server instead.

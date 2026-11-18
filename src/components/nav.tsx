@@ -30,7 +30,7 @@ export function Nav() {
 
   // Written straight to the DOM rather than held in state. Measuring layout and
   // then setting state would schedule a second render on every hover, and the
-  // highlight is pure presentation — React has no reason to know its position.
+  // highlight is pure presentation: React has no reason to know its position.
   const measure = useCallback(() => {
     const bar = highlightRef.current
     if (!bar) return
@@ -96,7 +96,7 @@ export function Nav() {
      fires on a band across the middle of the viewport, which is the right
      question for "which section am I reading" and the wrong one for "is there
      still a photograph under the header". Shrinking the root by the header
-     height asks exactly the second one — the hero stops intersecting the moment
+     height asks exactly the second one: the hero stops intersecting the moment
      its bottom edge passes under the header. */
   useEffect(() => {
     const hero = document.getElementById('hero')
@@ -190,7 +190,7 @@ export function Nav() {
         className={[
           // Sits above the overlay (z-55), not below it. `position: fixed` plus
           // a z-index makes this header its own stacking context, so a higher
-          // z-index on the burger inside it counts for nothing — the whole
+          // z-index on the burger inside it counts for nothing: the whole
           // header has to win, or the close button vanishes behind the open
           // menu. (The original HTML had this exact bug.)
           'px-edge fixed inset-x-0 top-0 z-60 flex items-center justify-between',
@@ -222,7 +222,7 @@ export function Nav() {
             one side and the controls on the other. */}
         <div className="flex items-center gap-2.5">
           {/* Desktop pill. `relative` because the sliding highlight inside is
-            positioned against it — it used to get that for free from the
+            positioned against it: it used to get that for free from the
             absolute centring this replaces. */}
           <nav
             aria-label="Sections"
@@ -235,7 +235,7 @@ export function Nav() {
             />
             {site.nav.map((item, index) => {
               const isActive = activeIndex === index
-              // Whether the pill is currently sitting under this link — by hover
+              // Whether the pill is currently sitting under this link: by hover
               // or by scroll position. The original keyed the white text off the
               // active section alone, so hovering any other link slid the dark
               // pill under still-dark text and the label became unreadable.
@@ -313,7 +313,7 @@ export function Nav() {
 
       {/* Fullscreen mobile overlay.
           `inert` while closed keeps its links out of the tab order and hides
-          them from assistive tech — the clip-path alone would not. */}
+          them from assistive tech: the clip-path alone would not. */}
       <div
         id="mobile-menu"
         ref={overlayRef}

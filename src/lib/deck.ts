@@ -7,7 +7,7 @@
  *
  * Neither `getBoundingClientRect()` nor `offsetTop` can be asked directly. The
  * cards are `position: sticky`, and both report a pinned element where it is
- * currently painted rather than where it belongs — a pinned card claims the
+ * currently painted rather than where it belongs: a pinned card claims the
  * position of the one below it, which produced duplicate values and left the
  * deck unable to find anything behind the current position.
  *

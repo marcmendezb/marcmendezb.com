@@ -28,7 +28,7 @@ export function Hero() {
                   which is exactly the delay LCP measures. It optimises down to
                   ~43KB from the 1MB source, so preloading it is cheap.
 
-                  The About and menu copies stay lazy — both are below the fold
+                  The About and menu copies stay lazy: both are below the fold
                   or behind a closed panel. */}
               <Image
                 src="/brand/marcmendez-logo.png"
@@ -65,7 +65,7 @@ export function Hero() {
         </h1>
 
         {/* Two words, two full-stack disciplines, neither one a modifier on
-            the other — so the supporting lines get to be concrete instead of
+            the other, so the supporting lines get to be concrete instead of
             explaining the headline back. */}
         <p
           className="fade-up text-soft mt-[clamp(18px,3vh,32px)] max-w-[34ch] text-[clamp(1.05rem,1.55vw,1.3rem)]"
@@ -223,7 +223,7 @@ export function Hero() {
       {/* Full-bleed on a phone too, just in the directions a phone has.
           Boxed at 340px with `--edge` on both sides it read as an illustration
           dropped below the copy, with dead white under it before the next
-          section — the one element on the page that looked like a stock
+          section: the one element on the page that looked like a stock
           template. Running it off both edges and down to the section's own
           bottom makes it the end of the hero rather than an attachment to it,
           which is the same argument the desktop bleed is making. */}

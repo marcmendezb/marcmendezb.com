@@ -2,7 +2,7 @@ import { Reveal } from '@/components/reveal'
 
 type Props = {
   title: string
-  /** Short right-aligned note — a count, a location, a status. */
+  /** Short right-aligned note: a count, a location, a status. */
   meta?: React.ReactNode
   /** Ties the section's `aria-labelledby` to this heading. */
   id: string

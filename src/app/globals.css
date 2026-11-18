@@ -30,7 +30,7 @@
      made for a white ground, and a second palette is a second set of contrast
      figures to keep honest for no gain here.
 
-     `color-scheme: light` is what makes that stick beyond these tokens — it
+     `color-scheme: light` is what makes that stick beyond these tokens: it
      tells the browser to paint form controls, scrollbars and the canvas light
      even on a device set to dark, so nothing arrives inverted underneath. */
   color-scheme: light;
@@ -38,7 +38,7 @@
   --surface: #ffffff;
   --ink: #0a0a0a;
   /* The original design used #8a8a8a here, which is only 3.45:1 on white and
-     fails WCAG AA for body text — and this is the colour carrying the
+     fails WCAG AA for body text, and this is the colour carrying the
      availability line, the tags and the captions.
 
      #717171 cleared AA at 4.88:1, but with almost no headroom: once the brand
@@ -53,10 +53,10 @@
   --on-ink: #ffffff;
 
   /* The one accent. Used only for interactive affordance (focus, link sweep,
-     selection) and the one status signal that should catch the eye — the
+     selection) and the one status signal that should catch the eye: the
      "available" dot. Everything else stays monochrome; that restraint is what
      makes the blue read as intentional rather than decorative.
-     7.73:1 on white — AAA at any size. */
+     7.73:1 on white, AAA at any size. */
   --accent: #2438e0;
   --on-accent: #ffffff;
 
@@ -70,7 +70,7 @@
 
   /* The header rail. 64px left the pills 11px from the top of the window while
      the page keeps up to 64px of margin at the sides, and the corner read as
-     cramped next to it. At 80 the gap above is 19px — still tight against the
+     cramped next to it. At 80 the gap above is 19px, still tight against the
      side margin, which is right for a rail, but no longer pinched.
 
      Everything that has to clear the header reads this: the scroll padding for
@@ -132,7 +132,7 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Accent #1 — the focus ring. Only ever visible during keyboard navigation,
+  /* Accent #1: the focus ring. Only ever visible during keyboard navigation,
      and the blue separates it unmistakably from the black borders it lands on
      top of. */
   :focus-visible {
@@ -141,7 +141,7 @@
     border-radius: 2px;
   }
 
-  /* Accent #2 — text selection. */
+  /* Accent #2: text selection. */
   ::selection {
     background: var(--accent);
     color: var(--on-accent);
@@ -151,7 +151,7 @@
 /* ==========================================================================
    Components
 
-   Only the pieces that genuinely need bespoke CSS live here — the sliding nav
+   Only the pieces that genuinely need bespoke CSS live here: the sliding nav
    highlight, the masked text swaps, the curtain reveals. Everything structural
    is Tailwind utilities in the components themselves.
    ========================================================================== */
@@ -159,7 +159,7 @@
 @layer components {
   /* --- Skip link ---------------------------------------------------------- */
 
-  /* Accent #3 — the skip link, the first thing a keyboard user ever sees. */
+  /* Accent #3: the skip link, the first thing a keyboard user ever sees. */
   .skip-link {
     position: fixed;
     top: 12px;
@@ -171,7 +171,7 @@
     color: var(--on-accent);
     font-size: 14px;
     font-weight: 500;
-    /* Off-screen until focused, rather than display:none — which would take it
+    /* Off-screen until focused, rather than display:none, which would take it
        out of the tab order entirely and defeat the point. */
     transform: translateY(-200%);
     transition: transform 0.25s var(--ease);
@@ -209,7 +209,7 @@
      72% and a 14px blur read as frosted glass on a desktop, where the header
      spans a wide band of mostly empty page. On a phone the same pill covers a
      third of the width and what passes under it is a 40px headline, and at that
-     size the blur does not dissolve the letterforms — "What I do" and "Selected
+     size the blur does not dissolve the letterforms: "What I do" and "Selected
      work" were legible straight through the pill, which reads as a rendering
      fault rather than as a material. Raising the surface keeps the blur doing
      its job at the edges and stops the page showing through the middle.
@@ -225,12 +225,12 @@
   /* The call to action while the header is still over the hero photograph.
      No surface and a white label: the pill exists to separate chrome from the
      page behind it, and against a dark photograph the label separates itself,
-     so the filled shape only read as pasted on. The stroke stays, though — it
+     so the filled shape only read as pasted on. The stroke stays, though: it
      is what makes this read as a button rather than as a fourth nav link.
 
      The brand blue needs no adjusting here, which it did while the hover was a
      stroke: a 1px blue line on this photograph measured 1.7:1 and had to be
-     lightened to be seen at all. A fill brings its own ground — once the button
+     lightened to be seen at all. A fill brings its own ground: once the button
      floods, the label sits on #2438e0 rather than on the picture, and white on
      that is 7.7:1. The accent stays the accent. */
   .nav-pill[data-ghost='true'] {
@@ -243,7 +243,7 @@
 
   /* The header's call to action: one button, two grounds.
 
-     Over the hero it is the same object with its surface taken away — the
+     Over the hero it is the same object with its surface taken away: the
      stroke and the label stay, the fill behind them goes, so the photograph
      shows through. Past the hero the pill gets its surface back. The hover is
      the same in both: the accent floods in from the left and the label flips to
@@ -261,7 +261,7 @@
     left: 0;
     height: calc(100% - 10px);
     border-radius: 100px;
-    /* Accent for both meanings this pill carries — the section you're pointing
+    /* Accent for both meanings this pill carries: the section you're pointing
        at and the one you've scrolled to. Its label switches to --on-accent via
        `data-filled` in nav.tsx. */
     background: var(--accent);
@@ -458,14 +458,14 @@
      turning square (wrong for a brand made of curves) and a tracing ring before
      landing here. Using the logo is the version that needed no invention: it
      is round, it is unmistakably his, and rotation reads on it because the
-     gradient inside is asymmetric — which is exactly why rotation failed on a
+     gradient inside is asymmetric, which is exactly why rotation failed on a
      plain circle. */
   /* One column for the little marks, whatever each mark measures.
   
      The pin is 17px, the logo 12px and the EU ring 18px, and those sizes are
      deliberate: line art and a solid shape do not carry the same weight at the
      same box, so each is set to the size at which it sits level with the 14px
-     text beside it. In a row that is invisible. Stacked in a column it is not —
+     text beside it. In a row that is invisible. Stacked in a column it is not:
      three widths start three sentences at three different x positions, and the
      eye reads a list that has come loose rather than three careful sizes.
      
@@ -482,7 +482,7 @@
   /* The EU ring is line art drawn in the brand blue to sit on white, and on the
      dark panel it all but vanished. `brightness(0) invert(1)` takes it to white
      whatever colour it was: the first term drives every visible pixel to black
-     without touching the alpha, the second lifts that to white — so the ring
+     without touching the alpha, the second lifts that to white, so the ring
      keeps its exact shape, its thin strokes and its transparency, and one file
      serves both grounds. Scoped to the panel, because on the hero the same mark
      sits on white and has to stay blue. */
@@ -840,15 +840,15 @@
 
   /* The confirmation pulse: whichever icon you just produced, shown big and
      centred, then let go. It exists because the two lasting signs that
-     something happened — the small button's icon swap, the image's zoom
-     freezing — both sit at the edge of the frame or depend on noticing a
+     something happened (the small button's icon swap, the image's zoom
+     freezing) both sit at the edge of the frame or depend on noticing a
      motion stop, and neither one is where your pointer or finger just was.
 
      One animation on the outer wrapper rather than on the ring itself: the
      wrapper spans the whole frame and the ring sits centred inside it via
      flex/grid, so scaling the wrapper around its own centre scales the ring
-     around its centre too, and `onAnimationEnd` — attached to this same
-     wrapper in the markup — only has one animation to wait for. */
+     around its centre too, and `onAnimationEnd` (attached to this same
+     wrapper in the markup) only has one animation to wait for. */
   .carousel-pulse {
     animation: carousel-pulse-fade 800ms var(--ease) forwards;
   }
@@ -863,19 +863,19 @@
     background: rgb(0 0 0 / 0.35);
     color: #fff;
     /* The ring sits over the photograph itself, not over the control bar's
-       own scrim, so it carries a small one of its own — a light patch of
+       own scrim, so it carries a small one of its own: a light patch of
        image behind it would otherwise wash the stroke out. */
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
   }
 
   /* No fade-in: it has to read as instant, so it opens at full size and
-     opacity and only the exit is animated — a confirmation that arrives a
+     opacity and only the exit is animated: a confirmation that arrives a
      beat late reads as the click being slow, not as a considered reveal.
 
      Not given a `prefers-reduced-motion` override. The blanket rule at the
      bottom of this file already collapses its duration to nothing, so under
-     that preference the pulse never becomes visible at all — and that is the
+     that preference the pulse never becomes visible at all, and that is the
      right outcome here, not a gap to patch: the two static, lasting cues this
      exists to echo (the button's icon, the image's zoom stopping) are still
      fully present, and a flash with no informational job beyond "something
@@ -1025,7 +1025,7 @@
     /* Solid --ink here was far too loud: it left a hard black bar between
        every section, heavier than any other rule on the page and at odds with
        a design whose structure is carried by hairlines. This sits just above
-       --hair (10%) — enough that the sweep registers, light enough that the
+       --hair (10%): enough that the sweep registers, light enough that the
        line it leaves behind belongs to the same family as the rest. */
     background: color-mix(in srgb, var(--ink) 22%, transparent);
     transform: scaleX(0);
@@ -1117,7 +1117,7 @@
   /* The closing line gets a long runway of its own.
 
      On the default range it filled across about 440px of scrolling and landed
-     72px from the end of the document — the right end of the range was nearly
+     72px from the end of the document: the right end of the range was nearly
      spent, so the only room to slow it down was at the front. Measured at
      1440px: the heading's cover range starts around scrollY 5310 and the page
      stops at 5968, which is 56% of that range, so everything has to happen
@@ -1241,7 +1241,7 @@
    would pull away from the frame edge and expose the background.
 
    This animation also takes over `transform` from the curtain's scale-settle
-   transition, which is intended — animations outrank transitions, so in
+   transition, which is intended: animations outrank transitions, so in
    browsers with scroll timelines the parallax owns the transform and the
    curtain contributes only its wipe. Browsers without them keep the settle. */
 @keyframes parallax-drift {
@@ -1256,7 +1256,7 @@
 /* Half the travel, and only the zoom needed to cover it.
    The 1.12 above is not decoration: it is the headroom the 4% drift needs
    before the edges of the image show. On a screenshot, spending 12% of the
-   frame on that is free — there is nothing at the edges. On a portrait it
+   frame on that is free: there is nothing at the edges. On a portrait it
    costs the top of his head and the side of his face, which at hero size is
    the first thing you notice. */
 @keyframes parallax-drift-soft {
@@ -1271,7 +1271,7 @@
 /* The hero portrait: as little magnification as the travel allows.
    These two numbers are not independent. For the image to slide inside its
    frame without uncovering the edges it has to be taller than the frame, and
-   that excess is the zoom — the minimum is `1 + 2 x travel`. At 5% travel the
+   that excess is the zoom: the minimum is `1 + 2 x travel`. At 5% travel the
    floor is 1.10 and it was set to 1.14, so a tenth of the picture was being
    thrown away for nothing. At 3% the floor is 1.06, which is what this is: the
    exact amount, with the crop cut from 14% to 6%.
@@ -1324,7 +1324,7 @@
      either: a scroll-driven animation takes its progress from the timeline, so
      duration is ignored entirely. The animation kept filling, and an animated
      property beats a plain declaration, so the image stayed parked at the end
-     of its drift — zoomed and offset, with the crop that comes with it.
+     of its drift: zoomed and offset, with the crop that comes with it.
      Cancelling the animation is what lets the rule above apply. */
   .parallax {
     animation: none !important;
@@ -1694,7 +1694,7 @@
      instead of fading into place.
 
      `::after` rather than `::before`, and no negative z-index, because this one
-     has to sit above the element's own background — the header pill has one. */
+     has to sit above the element's own background: the header pill has one. */
   .wipe-stroke {
     position: relative;
   }
@@ -1722,19 +1722,19 @@
 
      It is doing a job a rule was asked to stop doing. Left as dark type on the
      white page directly under a white section, no amount of padding made it
-     read as a different place — it looked like Contact carrying on. A hairline
+     read as a different place: it looked like Contact carrying on. A hairline
      across the top would fix that in one line, and that is the one thing ruled
      out: it was there, it read as the page ending twice, and it went. Changing
      the ground separates the two without drawing a divider.
 
      This was near-black first, which separated decisively and was wrong. Pure
      black against pure white is the largest jump available anywhere, and on a
-     page this light it read as a hole punched in the end rather than a close —
+     page this light it read as a hole punched in the end rather than a close;
      the more so because the footer is only about 7% of the page's height, so
      the problem was the intensity, never the area.
 
      A 9% wash of the accent instead: the same blue as everything else, almost
-     all the way to white. Not grey — grey was tried on the roadmap pill and
+     all the way to white. Not grey. Grey was tried on the roadmap pill and
      rejected, and it would have been the obvious wrong answer here too.
 
      The border is what makes this a card rather than a faint stain. A card
@@ -1764,14 +1764,14 @@
     /* Measured against the brightest the wash ever makes the ground under it,
        not against the flat panel. At #a0a5b5 the Availability label sat at
        3.6:1 as the mark drifted beneath it; this leaves the tightest run on the
-       card — the Back to top pill — just under 5:1, which is margin rather than
+       card (the Back to top pill) just under 5:1, which is margin rather than
        a pass by five hundredths. */
     --mute: #b5bac8;
     --hair: rgb(255 255 255 / 0.14);
     --accent: #93a3ff;
 
     /* `color`, explicitly. `body` resolves `var(--ink)` once and what inherits
-       down the tree is the computed black, not the variable — so the tokens
+       down the tree is the computed black, not the variable, so the tokens
        above would have recoloured every class that names one and left the
        plain links sitting black on a black card. */
     color: var(--ink);
@@ -1796,7 +1796,7 @@
     z-index: 0;
     /* Brighter than on the pale panel, and for the same reason it was fainter
        there: the wash has to read against its ground. At 0.1 on charcoal it had
-       disappeared — and at 0.22 it went too far the other way. The mark drifts
+       disappeared, and at 0.22 it went too far the other way. The mark drifts
        and turns, so over its loop it passes under the Availability label and
        under the Back to top pill, and at 0.22 it lifted the ground beneath them
        far enough to drop --mute to 3.6:1. Measured, not guessed: the text is
@@ -1821,7 +1821,7 @@
 
   /* Where you are in the project deck. Each card fills the screen, so from
      inside one there is no way to tell whether it is the second or the fifth,
-     or how many are left — and the section heading that says "6 projects"
+     or how many are left, and the section heading that says "6 projects"
      scrolled away several cards ago.
 
      It lives in the card rather than being pinned over the page: the cards are
@@ -1835,7 +1835,7 @@
     /* `relative` so the switcher list can be positioned against the bar. */
     position: fixed;
     /* Centred from the CSS rather than with a utility, because the hidden
-       state already owns `transform` — set both from one place and the two
+       state already owns `transform`: set both from one place and the two
        cannot cancel each other out. */
     left: 50%;
     opacity: 0;
@@ -1909,7 +1909,7 @@
 
   /* The list. Upward, because the bar it belongs to is already at the foot of
      the screen, and left-aligned with the name that opens it rather than
-     centred on the bar — a menu that does not start where its trigger does
+     centred on the bar: a menu that does not start where its trigger does
      reads as belonging to nothing. */
   .deck-menu {
     position: absolute;
@@ -1925,7 +1925,7 @@
     /* Solid, unlike the bar it hangs off. The bar is frosted because it is
        small and permanent and wants to sit lightly on whatever is behind it.
        This is neither: it is six lines of text, opened on purpose, and it
-       straddles the edge of the photograph — at 88% opacity the left half read
+       straddles the edge of the photograph: at 88% opacity the left half read
        over the image and the right half over white, with the seam running down
        the middle of the names. There is nothing behind it worth seeing. */
     background: var(--surface);

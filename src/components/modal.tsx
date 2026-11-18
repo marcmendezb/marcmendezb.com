@@ -16,7 +16,7 @@ type Props = {
  * A dialog over the page: the obligations, without the contents.
  *
  * Everything here is the part of a modal that is easy to get wrong and
- * invisible when it is right — the page behind it stops scrolling, focus goes
+ * invisible when it is right: the page behind it stops scrolling, focus goes
  * in and cannot leave, Escape closes it, and focus returns to whatever opened
  * it. The caller supplies only what is inside.
  *
@@ -25,7 +25,7 @@ type Props = {
  * underneath an overlay, so it is stopped as well.
  *
  * Rendered into `<body>`, so the fixed positioning cannot be captured by a
- * transformed ancestor further up the tree — and there are several on this
+ * transformed ancestor further up the tree, and there are several on this
  * page, between the parallax frames and the sticky cards.
  *
  * Note for whoever comes next: the carousel's lightbox is an older, separate

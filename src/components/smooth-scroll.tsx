@@ -34,7 +34,7 @@ const SLIDE_BREAKPOINT = 880
  * 4. Nothing else is intercepted. Keyboard scrolling, scrollbar dragging,
  *    find-in-page and focus scrolling all keep working, because Lenis moves the
  *    real scroll position instead of transforming a wrapper. That also keeps
- *    the CSS scroll-timeline animations in sync — they read the same
+ *    the CSS scroll-timeline animations in sync: they read the same
  *    `document.scrollingElement` Lenis is driving.
  */
 export function SmoothScroll() {
@@ -42,7 +42,7 @@ export function SmoothScroll() {
    * Clean links: the address bar never shows a fragment.
    *
    * Every in-page link keeps its `href="#work"` in the markup. That is what
-   * makes it a link rather than a div with a handler — it is announced as one,
+   * makes it a link rather than a div with a handler: it is announced as one,
    * it works with the keyboard, it opens in a new tab on a modified click, and
    * it still scrolls if the JavaScript never arrives. What changes is that the
    * default navigation is cancelled, so the browser never writes `#work` into
@@ -97,7 +97,7 @@ export function SmoothScroll() {
            "See the work" that lands you on the words "Selected work" has
            answered a question nobody asked: the heading is a label for the
            section, and the thing the link is offering is the project under it.
-           Every route into the section gets this — the hero button, the nav,
+           Every route into the section gets this: the hero button, the nav,
            the mobile menu and the footer index all point at `#work`, so the
            rule lives here, once, rather than in four `href`s that would have to
            be kept in step.
@@ -118,7 +118,7 @@ export function SmoothScroll() {
         
            With the deck running it is pinned to the top of the screen and its
            measured position is a lie, so the arithmetic in `cardTops` is the
-           only thing that knows where it belongs — and it belongs flush to the
+           only thing that knows where it belongs, and it belongs flush to the
            top, under the header, exactly where a wheel gesture would leave it.
         
            Below that the cards are ordinary blocks in a column, nothing is
@@ -149,9 +149,9 @@ export function SmoothScroll() {
      both, and nothing on the page writes one for anybody to arrive with.
 
      The `hashchange` listener covers the path the load-time strip cannot: a
-     fragment arriving on a URL the browser treats as the same document — a
+     fragment arriving on a URL the browser treats as the same document (a
      pasted `/#work` while the page is already open, or a back button after
-     one — changes the address without reloading anything, so no mount runs.
+     one) changes the address without reloading anything, so no mount runs.
      There the browser has already jumped to the section; the scroll is left
      alone and only the address is cleaned. */
   useEffect(() => {
@@ -211,8 +211,8 @@ export function SmoothScroll() {
      * So the decision moves to the front of the gesture instead of the end of
      * it. The first wheel event is read while the page is still parked on a
      * card, the neighbour in that direction is chosen, and every remaining
-     * event of that gesture — including the long inertia tail a trackpad
-     * throws off — is swallowed. The distance travelled stops depending on how
+     * event of that gesture (including the long inertia tail a trackpad
+     * throws off) is swallowed. The distance travelled stops depending on how
      * hard the flick was.
      *
      * Swallowing has to end on a clock, not on silence. A trackpad drag never
@@ -239,7 +239,7 @@ export function SmoothScroll() {
         so anything arriving before it lands belongs to the gesture that is
         already running, whatever the gap. Picking a smaller number means
         guessing where a slow turn stops being one turn, and every guess was
-        wrong — at 190ms an ordinary turn dealt three cards, at 350ms a lazy one
+        wrong: at 190ms an ordinary turn dealt three cards, at 350ms a lazy one
         still dealt two. There is nothing to guess here. */
     const QUIET_MS = SETTLE_MS
     /** Unbroken input this long deals the next card without the gesture having
@@ -247,7 +247,7 @@ export function SmoothScroll() {
         here that is a matter of taste rather than of physics: at 1500 a second
         card took real effort to reach, which was too much. A second of
         unbroken input is about five notches of a wheel turned at an ordinary
-        speed — more than any flick produces, less than a chore. Without this
+        speed: more than any flick produces, less than a chore. Without this
         path at all, a long drag would deal one card and then freeze the deck
         for as long as the finger kept moving, which is a bug this has had
         before. */
@@ -259,7 +259,7 @@ export function SmoothScroll() {
     
        "Has the last card landed?" is a floor and nothing beats it. "Is this a
        new push or the same turn still going?" is answered by silence, which is
-       the only thing that actually distinguishes them — not the gap between two
+       the only thing that actually distinguishes them: not the gap between two
        events, which is the same whether a wheel is turning slowly or being
        nudged twice. "Has this one gesture gone on long enough to earn another
        card?" is answered by its total length.
@@ -283,7 +283,7 @@ export function SmoothScroll() {
       // Pinch-to-zoom arrives as a wheel event with ctrl held.
       if (event.ctrlKey) return
 
-      /* A dialog is open over the page. Not `preventDefault` — the overlay has
+      /* A dialog is open over the page. Not `preventDefault`: the overlay has
          already locked the body, so the wheel does nothing on its own; this is
          only here to stop the deck dealing cards underneath something nobody
          can see past. */

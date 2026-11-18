@@ -11,12 +11,12 @@ export type GalleryImage = {
   /** Describe what the screen shows, not that it is a screenshot. */
   alt: string
   /**
-   * 'image' (the default — omit it) or 'video'.
+   * 'image' (the default, omit it) or 'video'.
    *
    * A video slide plays a silent, looping clip instead of a still, and unlike
    * a GIF it can actually be paused: the carousel's play/pause control calls
    * `.pause()`/`.play()` on it directly. A GIF rendered through `<img>` has no
-   * such API at all — the browser's own decoder just keeps looping, which is
+   * such API at all: the browser's own decoder just keeps looping, which is
    * why a GIF slide never really stopped when the slideshow did.
    */
   kind?: 'image' | 'video'
@@ -45,7 +45,7 @@ export type ProjectLink = {
    * Null while there is nowhere to go yet.
    *
    * Not an empty string and not `'#'`: those are both a link, and a link that
-   * goes nowhere is worse than no link at all — it takes focus, it is announced
+   * goes nowhere is worse than no link at all: it takes focus, it is announced
    * as a link, and it does nothing when you follow it. Null says the
    * destination does not exist yet, which is a different fact, and the card
    * sets it as a label rather than as something to click. The day a URL exists,
@@ -63,7 +63,7 @@ export type Project = {
   /** Stable key, also used as the DOM id. */
   slug: string
   title: string
-  /** Kind of work — shown in the meta line above the title. */
+  /** Kind of work: shown in the meta line above the title. */
   kind: string
   /** One or two lines: what it is and what you did. */
   /**
@@ -77,7 +77,7 @@ export type Project = {
    * Concrete result. Numbers land hardest. `null` hides the line.
    *
    * TODO: this is the biggest remaining upgrade available to the page. Every
-   * entry below is honest about scope but silent about outcome — one real
+   * entry below is honest about scope but silent about outcome: one real
    * figure per project (users, revenue, load time, conversion lift) would do
    * more for this section than any amount of rewriting.
    */
@@ -118,7 +118,7 @@ export type Project = {
 }
 
 /**
- * SCAFFOLDING — the Marqo screenshots, borrowed so the other projects can be
+ * SCAFFOLDING: the Marqo screenshots, borrowed so the other projects can be
  * judged with pictures in them instead of grey panels.
  *
  * These are not the projects they are attached to. The alt text is deliberately
@@ -128,7 +128,7 @@ export type Project = {
  * `reportPlaceholders()` counts every project still pointing here and says so
  * on each `pnpm dev`, so this cannot go live quietly. Anyone using a screen
  * reader on one of these cards today is told it is a Marqo screenshot, which
- * is true and confusing — the fix is real images, not better wording. Replace
+ * is true and confusing: the fix is real images, not better wording. Replace
  * per project by swapping `gallery: previewGallery` for that project's own
  * images.
  */
@@ -174,11 +174,11 @@ export const projects: readonly Project[] = [
     outcome: null,
     role: 'Product, brand, build',
     year: 'Since 2026',
-    // Ten now, not six — a deliberate exception to "a card is a signal, not a
+    // Ten now, not six: a deliberate exception to "a card is a signal, not a
     // dependency list" (the rule the rest of this file still follows). Added
     // on request, for the names a reviewer recognises on sight: Tailwind CSS,
     // Drizzle ORM and Playwright. Auth.js, Vitest and Caddy are still left out
-    // — real, but none of them changes what a reader takes away from the row.
+    // real, but none of them changes what a reader takes away from the row.
     tags: [
       'Next.js',
       'TypeScript',
@@ -211,7 +211,7 @@ export const projects: readonly Project[] = [
       },
       {
         // Video, not a GIF: a GIF in an <img> has no API this page can call,
-        // so the pause button could never actually stop one — the browser's
+        // so the pause button could never actually stop one: the browser's
         // own decoder just keeps looping regardless of anything React does.
         src: '/work/tessel/tessel-02.mp4',
         kind: 'video',
@@ -401,7 +401,7 @@ export const projects: readonly Project[] = [
  * Full-stack on both sides: seven years as a marketing technologist and four
  * as a developer are different tenures, but neither one is the "real" job
  * with the other bolted on. AI tooling sits inside the developer discipline
- * rather than as a third item of its own — coding agents are a development
+ * rather than as a third item of its own: coding agents are a development
  * capability here, not a separate identity.
  */
 export type Discipline = {
@@ -491,7 +491,7 @@ export const disciplines: readonly Discipline[] = [
 
 /**
  * The three dates that explain the combination. Rendered as a short timeline in
- * the About section rather than as a CV-style employment history — the shape of
+ * the About section rather than as a CV-style employment history: the shape of
  * the career is the argument, not the list of employers.
  */
 export type Milestone = {

@@ -9,7 +9,7 @@ Zürich. It is not a portfolio archive and not a blog. Success is one email.
 
 ## Users
 
-Primarily **Swiss recruiters and hiring managers** — often non-technical,
+Primarily **Swiss recruiters and hiring managers**: often non-technical,
 scanning dozens of candidates, deciding in under thirty seconds. They screen for
 three things before anything else: can this person legally work here, when can
 they start, and will a Barcelona-based applicant genuinely relocate.
@@ -26,7 +26,7 @@ development, ships.
 
 Three words: **precise, plainspoken, unhurried.**
 
-Swiss International Style — the actual lineage, not a pastiche of it. Grid,
+Swiss International Style: the actual lineage, not a pastiche of it. Grid,
 hairlines, enormous grotesque headline, generous white space, no ornament. The
 confidence comes from what is left out.
 
@@ -62,4 +62,4 @@ adjectives doing a verb's work.
    load-bearing evidence, not polish. A janky page contradicts the copy.
 3. **Never claim what isn't verified.** Legally sensitive or unverifiable fields
    render as nothing rather than as a guess.
-4. **Restraint over decoration** — but restraint with intent. Safe is invisible.
+4. **Restraint over decoration**, but restraint with intent. Safe is invisible.

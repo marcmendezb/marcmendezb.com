@@ -7,22 +7,22 @@ Static Next.js site. No database, no API, no third-party scripts. Every route is
 prerendered at build time, so it can be hosted anywhere.
 
 **This repo is public on purpose.** If you're a recruiter or hiring manager
-reading this, treat it as a work sample, not just the source behind a page —
+reading this, treat it as a work sample, not just the source behind a page:
 it's the same practice as the client work it describes, applied to itself.
 A few places worth a direct look rather than taking the claim on faith:
 
-- [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — typecheck, lint,
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml): typecheck, lint,
   format and build run on every push; the
   [Actions tab](https://github.com/marcmendezb/marcmendezb/actions) has the
   history.
-- [`next.config.ts`](next.config.ts) — the CSP and the rest of the security
+- [`next.config.ts`](next.config.ts): the CSP and the rest of the security
   headers, each with the reasoning for the trade-off it makes.
-- [`tsconfig.json`](tsconfig.json) — strict mode plus
+- [`tsconfig.json`](tsconfig.json): strict mode plus
   `noUncheckedIndexedAccess`, `noUnusedLocals` and `noUnusedParameters`, not
   just `strict: true` and stopping there.
 - [Accessibility](#accessibility) and
   [Keeping dependencies patched](#keeping-dependencies-patched) below.
-- [`src/lib/config-check.ts`](src/lib/config-check.ts) — what still needs
+- [`src/lib/config-check.ts`](src/lib/config-check.ts): what still needs
   filling in is a terminal warning on every `pnpm dev`, not a note left for
   someone to find later. The "Launch checklist" below mirrors it.
 
@@ -36,7 +36,7 @@ pnpm dev          # http://localhost:3000
 | `pnpm dev` | Dev server, plus a terminal checklist of unfilled placeholders |
 | `pnpm build` | Production build |
 | `pnpm start` | Serve the production build |
-| `pnpm check` | Typecheck + lint + format check — what CI runs |
+| `pnpm check` | Typecheck + lint + format check: what CI runs |
 | `pnpm format` | Apply Prettier |
 
 ---
@@ -50,29 +50,29 @@ than guessed. `pnpm dev` lists whatever is still outstanding.
 [`src/content/projects.ts`](src/content/projects.ts). No component needs
 touching.**
 
-- [ ] **Domain** — set `NEXT_PUBLIC_SITE_URL`, or edit `site.url`. Drives
+- [ ] **Domain**: set `NEXT_PUBLIC_SITE_URL`, or edit `site.url`. Drives
       canonical URLs, OG tags, `sitemap.xml` and `robots.txt`.
-- [ ] **LinkedIn + GitHub** — `site.socials` currently holds guessed profile
+- [ ] **LinkedIn + GitHub**: `site.socials` currently holds guessed profile
       URLs. These also feed the `sameAs` field in the JSON-LD, which is how
       Google links this page to your profiles.
-- [ ] **CV** — drop the PDF in `public/`, set `site.cvPath`. Every download
+- [ ] **CV**: drop the PDF in `public/`, set `site.cvPath`. Every download
       button stays hidden until you do.
-- [ ] **Project links + screenshots** — four projects (`tessel`,
+- [ ] **Project links + screenshots**: four projects (`tessel`,
       `agency-tracker`, `client-sites`, `ai-tooling`) have no live URL,
       and the same four are still showing Marqo's own screenshots as
       stand-ins (`projects[].gallery`). A project with no `href` renders
       without a link rather than a dead `#`, but a borrowed screenshot reads
-      as finished and wrong — this is the one item here that must not go
+      as finished and wrong: this is the one item here that must not go
       live as-is.
-- [ ] **Project outcomes** — `projects[].outcome` is `null` on 7 of 7
+- [ ] **Project outcomes**: `projects[].outcome` is `null` on 7 of 7
       projects. A number ("first 200 users in 6 weeks", "0.9s LCP") is the
       single biggest upgrade available to this page.
-- [ ] **Education institutions** — `site.education[].institution` is `null`
+- [ ] **Education institutions**: `site.education[].institution` is `null`
       on 4 of 5 entries. Held back deliberately rather than guessed; not
       rendered on the page even once filled in, but worth completing for a
       fuller CV export later.
 
-`pnpm dev` is the source of truth for all of the above — it reprints the
+`pnpm dev` is the source of truth for all of the above: it reprints the
 current count on every server start, so this list can drift and the
 terminal won't.
 
@@ -103,19 +103,19 @@ typed files.
 
 Tailwind v4 for layout and typography. Design tokens are plain CSS custom
 properties registered through `@theme inline`, which is what lets a single
-`prefers-color-scheme` media query repaint the whole site — `text-ink` resolves
+`prefers-color-scheme` media query repaint the whole site: `text-ink` resolves
 to `var(--ink)` rather than a baked-in hex.
 
-The signature motion — the sliding nav highlight, the masked text swaps, the
-curtain wipes — stays in hand-written CSS in `globals.css`. Utilities are the
+The signature motion (the sliding nav highlight, the masked text swaps, the
+curtain wipes) stays in hand-written CSS in `globals.css`. Utilities are the
 wrong tool for that, and it's all keyed off `data-` attributes so the JavaScript
 never touches styles.
 
 ### Colour
 
 Monochrome, with one accent: `#2438e0`. The rule is that blue only ever marks
-**interaction** — every hover and focus state, the nav pill, the skip link, text
-selection — plus exactly one status signal, the "available" dot. Nothing static
+**interaction** (every hover and focus state, the nav pill, the skip link, text
+selection) plus exactly one status signal, the "available" dot. Nothing static
 and nothing decorative is blue, which is what keeps it reading as intentional.
 
 Filled hover states swap `border-color` alongside the background; without that
@@ -169,13 +169,13 @@ constrained, because smooth scroll is the effect most often done badly:
   starts to fight the user.
 - **Nothing else intercepted.** Lenis moves the real scroll position rather than
   transforming a wrapper, so keyboard scrolling, scrollbar dragging,
-  find-in-page and focus scrolling all behave normally — and the CSS scroll
+  find-in-page and focus scrolling all behave normally, and the CSS scroll
   timelines stay in sync, since they read the same scroller.
 
 Two integration details worth keeping: the mobile overlay calls
 `pauseSmoothScroll()` alongside its body lock (`overflow: hidden` alone doesn't
 stop Lenis's own loop), and `anchors` takes no offset because
-`scroll-padding-top` already clears the fixed nav — setting both landed anchored
+`scroll-padding-top` already clears the fixed nav: setting both landed anchored
 sections 128px down instead of 64.
 
 Everything honours `prefers-reduced-motion`: words at rest, sentence fully
@@ -188,13 +188,13 @@ inked, roadmap shown complete, scrolling native.
   Escape and returns focus to the button
 - `aria-current` tracks the visible section; the duplicated nav labels used by
   the hover animation are `aria-hidden`
-- Scroll reveals have a `<noscript>` fallback — without it, About and Contact
+- Scroll reveals have a `<noscript>` fallback: without it, About and Contact
   render blank for anyone with JavaScript disabled
 
 ### SEO
 
 Full metadata, Open Graph and Twitter cards, canonical URLs, sitemap and robots.
-JSON-LD describes a `Person`, a `WebSite` and the work as an `ItemList` — that's
+JSON-LD describes a `Person`, a `WebSite` and the work as an `ItemList`: that's
 what lets a search engine resolve "Marc Mendez" to a person rather than a
 string, and it's server-rendered so crawlers that don't run JavaScript still see
 it.
@@ -205,10 +205,10 @@ it.
 
 Every route is static, so any host works.
 
-**With a Next.js runtime** (Vercel, Netlify, Cloudflare Pages) — connect the
+**With a Next.js runtime** (Vercel, Netlify, Cloudflare Pages): connect the
 repo. Nothing to configure. `next.config.ts` sets the security headers.
 
-**Without one** (GitHub Pages, S3, nginx) — uncomment the two `output: 'export'`
+**Without one** (GitHub Pages, S3, nginx): uncomment the two `output: 'export'`
 lines at the bottom of `next.config.ts` and run `pnpm build`; the site lands in
 `out/`. Note that `headers()` is a no-op under static export, so configure the
 CSP and friends on your CDN instead.
@@ -216,7 +216,7 @@ CSP and friends on your CDN instead.
 ### A note on the CSP
 
 `script-src` includes `'unsafe-inline'`. Next.js bootstraps hydration with
-inline scripts, so without it React never hydrates and the navigation is dead —
+inline scripts, so without it React never hydrates and the navigation is dead,
 and the build doesn't catch it, only loading the page does. The strict
 alternative is a per-request nonce, which forces dynamic rendering and gives up
 the static output. For a page with no user input, no auth and no third-party
@@ -226,13 +226,13 @@ moment this site accepts input.
 ### Keeping dependencies patched
 
 Run `pnpm audit` before any deploy you care about. Next.js itself has shipped
-a handful of critical RCE advisories across the 16.x line — this repo tracks
+a handful of critical RCE advisories across the 16.x line: this repo tracks
 the latest patch release for that reason, not just for features.
 
 `package.json` pins a few transitive versions via `pnpm.overrides`
 (`brace-expansion`, `source-map-js`, `zod`, `minimatch`). All four sit several
-layers deep inside ESLint's and Tailwind's own toolchains — dev-time only,
-never shipped to the built site — but `pnpm audit` flags them regardless, and
+layers deep inside ESLint's and Tailwind's own toolchains (dev-time only,
+never shipped to the built site) but `pnpm audit` flags them regardless, and
 overriding them keeps the audit output meaningful instead of permanently
 noisy. One advisory (`picomatch`, also dev-only) has no upstream fix yet;
 re-run `pnpm audit` periodically and drop the override that's no longer

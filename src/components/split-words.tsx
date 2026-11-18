@@ -10,7 +10,7 @@ type Props = {
    * `plain` leaves the words in normal flow, for effects that only touch colour.
    */
   variant?: 'mask' | 'plain'
-  /** Total word count across all lines — drives the scroll-fill ranges. */
+  /** Total word count across all lines: drives the scroll-fill ranges. */
   total?: number
 }
 
@@ -21,7 +21,7 @@ type Props = {
  * slide, whereas words arriving in sequence reads as typesetting. It's the
  * difference between motion applied to text and motion that belongs to it.
  *
- * Rendered on the server — no layout thrash, no flash of unsplit text, and it
+ * Rendered on the server: no layout thrash, no flash of unsplit text, and it
  * costs no JavaScript.
  *
  * Accessibility: the spans are `aria-hidden` and the caller puts the full

@@ -1,7 +1,7 @@
 /**
  * Single source of truth for everything personal on this site.
  *
- * Components never hard-code names, URLs or copy — they read from here. Editing
+ * Components never hard-code names, URLs or copy: they read from here. Editing
  * this file is the only thing you need to do to keep the site current.
  *
  * Fields typed `| null` are ones that must not be guessed. They render nothing
@@ -33,7 +33,7 @@ export type EducationEntry = {
   qualification: string
   country: string
   /**
-   * The awarding school or university. `null` while unconfirmed — see the
+   * The awarding school or university. `null` while unconfirmed: see the
    * module comment on `| null` fields. Not rendered on the page even once
    * set; kept here so `reportPlaceholders()` can still flag it and so the
    * data is complete if a fuller CV page ever wants it.
@@ -58,7 +58,7 @@ export const site = {
    *
    * Both named outright rather than one leading. Seven years in marketing
    * and four building products are different tenures, but neither is the
-   * "real" job with the other bolted on — and a recruiter searching either
+   * "real" job with the other bolted on, and a recruiter searching either
    * term on its own should still land on this page.
    */
   role: 'Full-stack developer & marketing technologist',
@@ -89,20 +89,20 @@ export const site = {
   socials: [
     {
       label: 'LinkedIn',
-      // TODO: confirm — built from your handle, not verified.
+      // TODO: confirm (built from your handle, not verified).
       href: 'https://www.linkedin.com/in/marcmendez',
       description: 'LinkedIn profile',
     },
     {
       label: 'GitHub',
-      // TODO: confirm — built from your handle, not verified.
+      // TODO: confirm (built from your handle, not verified).
       href: 'https://github.com/marcmendez',
       description: 'GitHub profile',
     },
   ] satisfies SocialLink[],
 
   // ---------------------------------------------------------------------------
-  // Job search — the facts Swiss recruiters screen on first
+  // Job search: the facts Swiss recruiters screen on first
   // ---------------------------------------------------------------------------
 
   hiring: {
@@ -113,7 +113,7 @@ export const site = {
     targetLocation: 'Zürich, Switzerland',
 
     /**
-     * Where Marc moved from, not where he's moving to — he already lives in
+     * Where Marc moved from, not where he's moving to: he already lives in
      * the Zürich area (see `currentLocation`). Surfaced once, in About's
      * prose, so the page doesn't read as having skipped the relocation that
      * already happened.
@@ -146,14 +146,14 @@ export const site = {
 
   /**
    * Worth its own block rather than a footnote. Switzerland runs on vocational
-   * training — the Berufsbildung route is the mainstream path there, not a
-   * fallback — so these read as credentials to a Swiss recruiter in a way
+   * training: the Berufsbildung route is the mainstream path there, not a
+   * fallback, so these read as credentials to a Swiss recruiter in a way
    * they might not elsewhere.
    *
    * Four entries, not one: a web development diploma on its own undersold the
    * marketing side, which has its own formal qualification rather than being
    * self-taught. The unfinished bachelor's stays in rather than getting
-   * quietly dropped — "left Public Relations partway through for a vocational
+   * quietly dropped: "left Public Relations partway through for a vocational
    * diploma instead" is a more honest shape of a career than hiding the
    * detour.
    *

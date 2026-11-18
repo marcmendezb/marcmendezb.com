@@ -24,7 +24,7 @@ export function Reveal({ children, className = '', as: Tag = 'div' }: Props) {
   const { ref, inView } = useInView<HTMLElement>()
 
   return (
-    // @ts-expect-error — a single ref type can't satisfy every tag in the union,
+    // @ts-expect-error: a single ref type can't satisfy every tag in the union,
     // and narrowing it properly costs more than it's worth for four tags.
     <Tag ref={ref} data-visible={inView} className={className}>
       {children}

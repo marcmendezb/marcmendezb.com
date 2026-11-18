@@ -22,7 +22,7 @@ type Props = {
  * "open in a new tab" on a middle click, neither of which is true.
  *
  * It is dressed exactly like the real links beside it, because to a reader it
- * is the same kind of offer — a thing on this card you can go and look at. The
+ * is the same kind of offer: a thing on this card you can go and look at. The
  * difference is where it takes you, not what it is.
  *
  * While `video.src` is null the dialog holds the poster frame on its own. No

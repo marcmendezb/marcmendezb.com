@@ -68,7 +68,7 @@ export function Work() {
                   other three edges: the negative margin cancels the section's
                   `--edge` padding on the outer side only, and the height is
                   capped below the viewport so there is air above and below.
-                  Rounded on the inner corners alone — the two that are not
+                  Rounded on the inner corners alone: the two that are not
                   sitting on a screen edge. */}
               <Reveal
                 /* Off both edges on a phone, off one on a desktop. There is no
@@ -114,7 +114,7 @@ export function Work() {
               {/* The copy takes the photograph's band and works to its edges.
                   Centred inside a full-screen slide it was a 348px lump adrift
                   in a 950px row, sharing no edge with the 684px picture beside
-                  it — two columns in the same slide with nothing lining up.
+                  it: two columns in the same slide with nothing lining up.
                   Given the same height and pushed apart, the title meets the
                   top of the photograph and the copy runs down from there in
                   its own rhythm, with the space left over falling below it
@@ -129,7 +129,7 @@ export function Work() {
                   an inconsistency. The copy has to be free to grow: on a narrow
                   desktop it wraps to more lines than the band holds, and a
                   fixed height would spill the links out of the slide. The frame
-                  has to be the opposite — the carousel inside it is sized
+                  has to be the opposite: the carousel inside it is sized
                   `height: 100%`, and a percentage measured against a parent
                   whose height is `auto` resolves to `auto` rather than to its
                   `min-height`. Give the frame a minimum instead of a height and
@@ -182,7 +182,7 @@ export function Work() {
 
                   {/* Plain type. The word-by-word ink fill that used to run here
                     is driven by a view timeline, which measures an element
-                    against the scroller as it passes — and these cards now pin
+                    against the scroller as it passes, and these cards now pin
                     themselves to the top of the screen, so a pinned title stops
                     moving and its fill freezes part way through. The effect
                     could not survive the slides, so it is gone rather than half

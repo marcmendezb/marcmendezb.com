@@ -28,10 +28,10 @@ const CLOSE_DELAY_MS = 140
  * Fixed rather than sitting inside a card, and low rather than anywhere else:
  * the photograph in each card is inset vertically, so the strip along the
  * bottom of the screen is the one band that is empty on every card whichever
- * side the image is on — which is also why it can sit dead centre without ever
+ * side the image is on, which is also why it can sit dead centre without ever
  * landing on an image, and so never has to fight for contrast.
  *
- * Desktop only — below 880px the cards are not a deck at all: nothing pins,
+ * Desktop only. Below 880px the cards are not a deck at all: nothing pins,
  * nothing snaps, and a floating badge would just cover the page.
  */
 export function DeckIndex({ projects }: Props) {
@@ -45,7 +45,7 @@ export function DeckIndex({ projects }: Props) {
   /* Which card is current. A band across the middle of the viewport: a card
      takes over when it reaches the centre, not when it first appears at the
      edge. While one rides up over the one pinned beneath it both cross that
-     line at once, so the highest index wins — the one painted on top is the
+     line at once, so the highest index wins: the one painted on top is the
      one being read. */
   useEffect(() => {
     const cards = Array.from(
@@ -80,7 +80,7 @@ export function DeckIndex({ projects }: Props) {
      decides when to let go: the stack stops touching it as soon as its last
      edge rises past roughly the lower fifth, so the badge leaves within about
      200px of the final card instead of a thousand. Putting the band near the
-     top does the opposite — the stack keeps reaching it until it has left the
+     top does the opposite: the stack keeps reaching it until it has left the
      screen entirely. */
   useEffect(() => {
     const wrapper =
@@ -107,7 +107,7 @@ export function DeckIndex({ projects }: Props) {
 
   /* Derived, not synchronised. The menu has no business being open once the
      badge itself has gone, and an effect that pushed `setOpen(false)` whenever
-     the badge left would be a second source of truth for the same fact — plus
+     the badge left would be a second source of truth for the same fact, plus
      a cascading render every time the deck is entered or left. */
   const menuOpen = open && visible
 
@@ -146,13 +146,13 @@ export function DeckIndex({ projects }: Props) {
       /* `inert` the moment it starts leaving, not when it finishes. The fade
          takes 450ms and `visibility` waits for it, which left a window where
          the badge was fully transparent and its controls were still in the tab
-         order — a keyboard user could land on something nobody can see. */
+         order: a keyboard user could land on something nobody can see. */
       inert={!visible}
       className="deck-index nav-pill fixed bottom-[clamp(18px,3.2vh,34px)] z-40 hidden items-center gap-[clamp(10px,1vw,14px)] p-1.5 min-[880px]:flex"
     >
       {/* The name and the list are one object, and the only one that opens it.
           The handlers used to sit on the bar, so brushing the arrows on the way
-          to the next card threw the whole list up over the photograph — the
+          to the next card threw the whole list up over the photograph: the
           list belongs to the name, not to the bar, and a pointer that never
           went near the name never asked for it. Wrapping them also gives the
           list something to be positioned against that is the width of its own
@@ -174,7 +174,7 @@ export function DeckIndex({ projects }: Props) {
           aria-controls="deck-switcher"
           /* Named outright rather than by its contents. Each span here is a flex
            item, and flex items are blockified, so the name computed from the
-           text came out as "Marqo , project 1 of 6" — the layout inserts a
+           text came out as "Marqo , project 1 of 6": the layout inserts a
            separator between blocks that no amount of punctuation in the markup
            can take back. The visible label still leads the spoken one, which is
            what WCAG 2.5.3 asks for. */

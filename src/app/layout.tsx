@@ -11,7 +11,7 @@ import {
 import './globals.css'
 
 /**
- * Inter, self-hosted by next/font — no request to Google, no layout shift.
+ * Inter, self-hosted by next/font: no request to Google, no layout shift.
  * Exposed as a CSS variable that globals.css folds into `--font-sans`, ahead of
  * the Helvetica fallback stack.
  */
@@ -123,7 +123,7 @@ export default function RootLayout({
             effect instead, the browser has already begun its own smooth scroll
             towards the section by the time the effect resets the page to the
             top; the two fight, and Lenis then adopts whatever position that
-            left behind as its target — reliably 96px down the page, which is
+            left behind as its target: reliably 96px down the page, which is
             neither the top nor the section. Removing the fragment before the
             browser reads it means that scroll is never started.
 
@@ -144,7 +144,7 @@ export default function RootLayout({
             execute JavaScript still see it. */}
         <script
           type="application/ld+json"
-          // Content comes from local, typed config — not user input — and is
+          // Content comes from local, typed config (not user input) and is
           // escaped by serialiseSchema before it reaches the DOM.
           dangerouslySetInnerHTML={{ __html: serialiseSchema(schema) }}
         />

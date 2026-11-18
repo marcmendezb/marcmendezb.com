@@ -13,7 +13,7 @@ structure and type, not palette. The accent is the only chromatic event.
 | `--surface` | `#ffffff` | `#0a0a0a` | Page ground |
 | `--ink` | `#0a0a0a` | `#f4f4f2` | Primary text |
 | `--soft` | `#333333` | `#c4c4c0` | Body copy |
-| `--mute` | `#717171` | `#8f8f8b` | Secondary text — **AA floor, do not lighten** |
+| `--mute` | `#717171` | `#8f8f8b` | Secondary text: **AA floor, do not lighten** |
 | `--hair` | `rgb(0 0 0 / .10)` | `rgb(255 255 255 / .14)` | Rules and borders |
 | `--accent` | `#2438e0` | `#6c7bff` | Interaction + availability |
 
@@ -46,7 +46,7 @@ throughout, tight negative tracking on display sizes (`-0.035em` at hero,
 
 ## Layout
 
-Strict, visible grid — the Swiss option, not the asymmetric one. Hairline rules
+Strict, visible grid: the Swiss option, not the asymmetric one. Hairline rules
 separate sections and carry the structure. Left-aligned; nothing centered.
 
 `--edge: clamp(22px, 4.5vw, 64px)` is the single page gutter. Single breakpoint

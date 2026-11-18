@@ -6,7 +6,7 @@ type Props = {
   alt: string
   /** Responsive hint for the browser's image picker. */
   sizes: string
-  /** Set on the LCP image only — it opts out of lazy loading and preloads. */
+  /** Set on the LCP image only: it opts out of lazy loading and preloads. */
   priority?: boolean
   /** Extra classes on the image, for choosing where `object-cover` crops. */
   className?: string
@@ -17,7 +17,7 @@ type Props = {
  *
  * When `src` is null this renders a tonal panel instead of a broken image.
  * That's deliberate: the site should look finished before every screenshot
- * exists, and the placeholder costs zero bytes and zero requests — the original
+ * exists, and the placeholder costs zero bytes and zero requests: the original
  * markup inlined 162KB of base64 placeholder gradients to achieve the same
  * thing.
  *

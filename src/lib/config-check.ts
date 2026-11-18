@@ -17,27 +17,27 @@ export function reportPlaceholders() {
     site.url.includes('marcmendez.com') &&
     !process.env.NEXT_PUBLIC_SITE_URL
   ) {
-    todo.push('site.url — still the default domain (set NEXT_PUBLIC_SITE_URL)')
+    todo.push('site.url: still the default domain (set NEXT_PUBLIC_SITE_URL)')
   }
   if (!site.cvPath) {
-    todo.push('site.cvPath — no CV yet; every download button is hidden')
+    todo.push('site.cvPath: no CV yet; every download button is hidden')
   }
   if (!site.hiring.workEligibility) {
     todo.push(
-      'site.hiring.workEligibility — unset; Swiss recruiters screen on this first',
+      'site.hiring.workEligibility: unset; Swiss recruiters screen on this first',
     )
   }
   for (const social of site.socials) {
     if (social.href.endsWith('/marcmendez')) {
       todo.push(
-        `site.socials — ${social.label} URL built from your handle, unverified`,
+        `site.socials: ${social.label} URL built from your handle, unverified`,
       )
     }
   }
   const outcomeless = projects.filter((project) => !project.outcome)
   if (outcomeless.length > 0) {
     todo.push(
-      `projects — ${outcomeless.length} with no outcome; one real number each is the biggest win available`,
+      `projects: ${outcomeless.length} with no outcome; one real number each is the biggest win available`,
     )
   }
   /* A link with no destination does not count as having one, or Tessel would
@@ -47,14 +47,14 @@ export function reportPlaceholders() {
   )
   if (linkless.length > 0) {
     todo.push(
-      `projects — ${linkless.length} without a live URL (${linkless
+      `projects: ${linkless.length} without a live URL (${linkless
         .map((project) => project.slug)
         .join(', ')})`,
     )
   }
   /* Borrowed art is its own item, and a louder one than a missing image: a grey
      panel reads as unfinished, whereas someone else's screenshot on your card
-     reads as finished and wrong. Identity comparison, not contents — a project
+     reads as finished and wrong. Identity comparison, not contents: a project
      that happens to ship four images is not borrowing anything. */
   const borrowed = projects.filter(
     (project) =>
@@ -63,7 +63,7 @@ export function reportPlaceholders() {
   )
   if (borrowed.length > 0) {
     todo.push(
-      `projects — ${borrowed.length} are showing MARQO'S screenshots as stand-ins ` +
+      `projects: ${borrowed.length} are showing MARQO'S screenshots as stand-ins ` +
         `(${borrowed.map((project) => project.slug).join(', ')}); these must not go live`,
     )
   }
@@ -76,7 +76,7 @@ export function reportPlaceholders() {
   )
   if (imageless.length > 0) {
     todo.push(
-      `projects — ${imageless.length} still showing the placeholder panel`,
+      `projects: ${imageless.length} still showing the placeholder panel`,
     )
   }
 
@@ -85,7 +85,7 @@ export function reportPlaceholders() {
   )
   if (uninstituted.length > 0) {
     todo.push(
-      `site.education — ${uninstituted.length} of ${site.education.length} entries have no institution name yet`,
+      `site.education: ${uninstituted.length} of ${site.education.length} entries have no institution name yet`,
     )
   }
 

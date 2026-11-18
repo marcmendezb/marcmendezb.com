@@ -9,7 +9,7 @@ export const contentType = 'image/png'
 
 /**
  * The card that renders when this link is pasted into LinkedIn, Slack or
- * WhatsApp — which, for a job search, is most of how it will actually be seen.
+ * WhatsApp, which, for a job search, is most of how it will actually be seen.
  *
  * Generated at build time, so it costs nothing at request time and works
  * identically under `output: 'export'`.

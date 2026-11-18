@@ -113,7 +113,7 @@ export function buildWorkSchema() {
  * Serialise for injection into a <script type="application/ld+json"> tag.
  *
  * `<` is escaped so a stray angle bracket in any content field can't close the
- * script tag early — the classic JSON-LD injection hole.
+ * script tag early: the classic JSON-LD injection hole.
  */
 export function serialiseSchema(schema: unknown): string {
   return JSON.stringify(schema).replace(/</g, '\\u003c')

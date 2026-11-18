@@ -15,7 +15,7 @@ type Options = {
  * One-shot on purpose: re-animating an element every time it re-enters the
  * viewport is distracting when scrolling back up.
  *
- * Note there's no `prefers-reduced-motion` branch here — globals.css already
+ * Note there's no `prefers-reduced-motion` branch here: globals.css already
  * pins `.reveal` and `.curtain` to their final state under that media query,
  * so the observer can run either way and CSS decides whether anything moves.
  */

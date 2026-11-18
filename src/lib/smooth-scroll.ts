@@ -14,7 +14,7 @@ let instance: Lenis | null = null
  
    Lenis already knows it is stopped, and that was not enough. The deck's wheel
    handler moves cards with `force: true`, which exists so a second push during
-   a card's travel is not dropped — and `force` is precisely the flag that
+   a card's travel is not dropped, and `force` is precisely the flag that
    overrides `isStopped`. So an overlay could freeze the page and the wheel
    would still deal cards underneath it. The handler needs to ask a question
    Lenis does not answer: not "are you stopped" but "has anyone asked you to
@@ -81,7 +81,7 @@ export function scrollToY(y: number, duration = 0.85) {
  *
  * Neither branch passes an offset. `scroll-padding-top` in globals.css already
  * reserves the height of the fixed nav, and both Lenis and `scrollIntoView`
- * honour it — adding it again here landed every section 128px down instead
+ * honour it: adding it again here landed every section 128px down instead
  * of 64.
  *
  * `start()` before scrolling because the mobile menu stops Lenis while it is

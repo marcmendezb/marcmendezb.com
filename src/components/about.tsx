@@ -177,7 +177,7 @@ export function About() {
           facts looked like a fourth roadmap column. Separation has to say
           "different kind of content", not just "next row". */}
       {/* Three panels in the roadmap's clothing: same hairline, same translucent
-          surface over the brand mark, same blur. A smaller radius though — a
+          surface over the brand mark, same blur. A smaller radius though: a
           capsule curve on a box this narrow would eat its own corners. The
           inner rules lose their top border because the panel edge already does
           that job.

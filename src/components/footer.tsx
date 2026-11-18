@@ -6,7 +6,7 @@ import { site } from '@/content/site'
  * ground.
  *
  * Four columns rather than two. Two blocks of narrow content in a panel this
- * wide leaves the middle empty however they are aligned — the gap has to go
+ * wide leaves the middle empty however they are aligned: the gap has to go
  * somewhere, and pushing it to the edges just pools it. Splitting the same
  * space into four even tracks puts the whitespace inside the columns, where it
  * reads as air instead of as a hole.
@@ -58,7 +58,7 @@ export function Footer() {
           {/* Two columns from the smallest screen up, four once there is room.
               A single column stacked Index, Elsewhere and Availability into a
               column of three short lists with a hand's width of nothing between
-              each — a footer half a screen taller than its contents, on the one
+              each: a footer half a screen taller than its contents, on the one
               device where height is the scarce thing. Index and Elsewhere are
               two and three words wide; they were never going to need a whole
               phone each. */}
@@ -199,7 +199,7 @@ export function Footer() {
               sit opposite, and a lone notice pushed to the left edge of a
               full-width rule reads as the other half having fallen off. */}
           <p className="border-hair text-mute mt-[clamp(36px,6vh,64px)] border-t pt-6 text-center text-[13px]">
-            {/* Rendered on the server, so this is a static string in the HTML —
+            {/* Rendered on the server, so this is a static string in the HTML:
                 no hydration mismatch from the client's clock disagreeing with
                 the server's, which is the classic `new Date()`-in-a-footer
                 bug. */}

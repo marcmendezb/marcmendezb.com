@@ -19,7 +19,7 @@
  * carry colour.
  *
  * Deliberately not a Markdown parser. It handles two delimiters and leaves
- * everything else — asterisks in the middle of a word, `brand*`, a stray one —
+ * everything else (asterisks in the middle of a word, `brand*`, a stray one)
  * as the literal text it is.
  */
 
@@ -65,7 +65,7 @@ export function emphasisSegments(text: string): EmphasisSegment[] {
  *
  * The descriptions are read twice: once by the page, which sets the emphasis,
  * and once by `structured-data.ts`, which hands them to search engines as the
- * `description` of a CreativeWork. Asterisks have no meaning there — they would
+ * `description` of a CreativeWork. Asterisks have no meaning there: they would
  * simply be published, in a field nobody on the team ever looks at again.
  */
 export function emphasisPlain(text: string): string {

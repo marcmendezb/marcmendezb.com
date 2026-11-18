@@ -1,6 +1,7 @@
 # marcmendez.com
 
-Personal landing page — fullstack developer & designer, relocating to Zürich.
+Personal landing page of Marc Mendez, full-stack developer and marketing
+technologist, based in the Zürich area.
 
 Static Next.js site. No database, no API, no third-party scripts. Every route is
 prerendered at build time, so it can be hosted anywhere.
@@ -31,26 +32,29 @@ touching.**
 
 - [ ] **Domain** — set `NEXT_PUBLIC_SITE_URL`, or edit `site.url`. Drives
       canonical URLs, OG tags, `sitemap.xml` and `robots.txt`.
-- [ ] **Email** — confirm `site.email` is real and forwards somewhere you read.
 - [ ] **LinkedIn + GitHub** — `site.socials` currently holds guessed profile
       URLs. These also feed the `sameAs` field in the JSON-LD, which is how
       Google links this page to your profiles.
-- [ ] **Work eligibility** — `site.hiring.workEligibility` is `null`. It is the
-      first thing a Swiss recruiter screens for, and it is a legal claim about
-      you, so nothing here fills it in for you. Uncomment the line that is true.
-      While `null`, the field simply doesn't render.
-- [ ] **Availability** — `site.hiring.availableFrom` says *March 2026*. Make it
-      your real earliest start date.
 - [ ] **CV** — drop the PDF in `public/`, set `site.cvPath`. Every download
       button stays hidden until you do.
-- [ ] **Project links + screenshots** — `projects[].href` and `.image`. A
-      project with no `href` renders without a link rather than a dead `#`.
-- [ ] **Capabilities** — `capabilities` in `projects.ts` lists tools inferred
-      from the original draft. **Verify these.** Only list what you'd be happy
-      being interviewed on.
-- [ ] **Project outcomes** — `projects[].outcome` is `null` everywhere. A number
-      ("first 200 users in 6 weeks", "0.9s LCP") is the single biggest upgrade
-      available to this page.
+- [ ] **Project links + screenshots** — four projects (`tessel`,
+      `agency-tracker`, `client-sites`, `ai-tooling`) have no live URL,
+      and the same four are still showing Marqo's own screenshots as
+      stand-ins (`projects[].gallery`). A project with no `href` renders
+      without a link rather than a dead `#`, but a borrowed screenshot reads
+      as finished and wrong — this is the one item here that must not go
+      live as-is.
+- [ ] **Project outcomes** — `projects[].outcome` is `null` on 7 of 7
+      projects. A number ("first 200 users in 6 weeks", "0.9s LCP") is the
+      single biggest upgrade available to this page.
+- [ ] **Education institutions** — `site.education[].institution` is `null`
+      on 4 of 5 entries. Held back deliberately rather than guessed; not
+      rendered on the page even once filled in, but worth completing for a
+      fuller CV export later.
+
+`pnpm dev` is the source of truth for all of the above — it reprints the
+current count on every server start, so this list can drift and the
+terminal won't.
 
 ---
 
@@ -62,7 +66,7 @@ src/
 │   ├── layout.tsx           Metadata, fonts, JSON-LD, no-JS fallback
 │   ├── page.tsx             Section composition
 │   ├── globals.css          Design tokens + the bespoke animations
-│   ├── icon.tsx             Favicon, generated at build
+│   ├── icon.png · apple-icon.png   Static favicons
 │   ├── opengraph-image.tsx  Social card, generated at build
 │   ├── sitemap.ts · robots.ts · manifest.ts
 │   └── not-found.tsx
@@ -198,3 +202,18 @@ alternative is a per-request nonce, which forces dynamic rendering and gives up
 the static output. For a page with no user input, no auth and no third-party
 scripts there's no injection vector to defend against. Revisit that trade the
 moment this site accepts input.
+
+### Keeping dependencies patched
+
+Run `pnpm audit` before any deploy you care about. Next.js itself has shipped
+a handful of critical RCE advisories across the 16.x line — this repo tracks
+the latest patch release for that reason, not just for features.
+
+`package.json` pins a few transitive versions via `pnpm.overrides`
+(`brace-expansion`, `source-map-js`, `zod`, `minimatch`). All four sit several
+layers deep inside ESLint's and Tailwind's own toolchains — dev-time only,
+never shipped to the built site — but `pnpm audit` flags them regardless, and
+overriding them keeps the audit output meaningful instead of permanently
+noisy. One advisory (`picomatch`, also dev-only) has no upstream fix yet;
+re-run `pnpm audit` periodically and drop the override that's no longer
+needed once one lands.

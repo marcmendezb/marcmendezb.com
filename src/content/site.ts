@@ -39,8 +39,11 @@ export type EducationEntry = {
    * data is complete if a fuller CV page ever wants it.
    */
   institution: string | null
-  /** Set only for a programme that was left unfinished. */
-  completed?: false
+  /**
+   * A short note shown beside the country, e.g. "not completed" or "starts
+   * February 2026". Omit for a plain finished qualification.
+   */
+  status?: string
 }
 
 export const site = {
@@ -158,8 +161,17 @@ export const site = {
    * they mean nothing to a Swiss recruiter and would read as noise next to
    * credentials they do recognise. "Higher" vs "Intermediate" carries the
    * same distinction in plain English.
+   *
+   * The data science degree leads the list: it's the one a reader should
+   * notice first, not something to find by reading to the end.
    */
   education: [
+    {
+      qualification: 'Data Science and Artificial Intelligence (BSc)',
+      country: 'Spain',
+      institution: 'Universidad Internacional de Valencia (VIU)',
+      status: 'starts February 2026',
+    },
     {
       qualification: 'Higher Vocational Diploma, Web Application Development',
       country: 'Spain',
@@ -180,7 +192,7 @@ export const site = {
       qualification: 'Public Relations, Marketing and Advertising (BA)',
       country: 'Spain',
       institution: null, // TODO: the university's name
-      completed: false,
+      status: 'not completed',
     },
   ] satisfies EducationEntry[],
 

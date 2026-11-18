@@ -196,7 +196,7 @@ export function About() {
                 <dt className="text-sm">{entry.qualification}</dt>
                 <dd className="text-mute mt-0.5 text-sm">
                   {entry.country}
-                  {entry.completed === false ? ', not completed' : ''}
+                  {entry.status ? `, ${entry.status}` : ''}
                 </dd>
               </div>
             ))}

@@ -6,6 +6,26 @@ technologist, based in the Zürich area.
 Static Next.js site. No database, no API, no third-party scripts. Every route is
 prerendered at build time, so it can be hosted anywhere.
 
+**This repo is public on purpose.** If you're a recruiter or hiring manager
+reading this, treat it as a work sample, not just the source behind a page —
+it's the same practice as the client work it describes, applied to itself.
+A few places worth a direct look rather than taking the claim on faith:
+
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — typecheck, lint,
+  format and build run on every push; the
+  [Actions tab](https://github.com/marcmendezb/marcmendezb/actions) has the
+  history.
+- [`next.config.ts`](next.config.ts) — the CSP and the rest of the security
+  headers, each with the reasoning for the trade-off it makes.
+- [`tsconfig.json`](tsconfig.json) — strict mode plus
+  `noUncheckedIndexedAccess`, `noUnusedLocals` and `noUnusedParameters`, not
+  just `strict: true` and stopping there.
+- [Accessibility](#accessibility) and
+  [Keeping dependencies patched](#keeping-dependencies-patched) below.
+- [`src/lib/config-check.ts`](src/lib/config-check.ts) — what still needs
+  filling in is a terminal warning on every `pnpm dev`, not a note left for
+  someone to find later. The "Launch checklist" below mirrors it.
+
 ```bash
 pnpm install
 pnpm dev          # http://localhost:3000

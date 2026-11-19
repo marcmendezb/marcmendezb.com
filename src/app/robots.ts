@@ -1,7 +1,9 @@
 import type { MetadataRoute } from 'next'
-import { site } from '@/content/site'
+import { getSite } from '@/content/site'
 
 export default function robots(): MetadataRoute.Robots {
+  const site = getSite('en')
+
   return {
     rules: [
       {

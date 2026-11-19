@@ -1,11 +1,40 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
-import { site } from '@/content/site'
+import { notFound } from 'next/navigation'
+import { getSite } from '@/content/site'
+import { isLocale, locales, type Locale } from '@/i18n/locales'
 
-export const alt = `${site.name} | ${site.role}`
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }))
+}
+
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
+
+/**
+ * The two-word headline, echoing the one in Hero. "Marketer" stays an English
+ * loanword in German and Spanish too, the same call as "MarTech" in
+ * `site.ts`: it's shorter and more recognisable than a literal translation,
+ * and it keeps the punchy two-word shape the headline depends on.
+ */
+const headline: Record<Locale, readonly [string, string]> = {
+  en: ['Developer.', 'Marketer.'],
+  de: ['Entwickler.', 'Marketer.'],
+  es: ['Desarrollador.', 'Marketer.'],
+}
+
+const available: Record<Locale, string> = {
+  en: 'Available',
+  de: 'Verfügbar',
+  es: 'Disponible',
+}
+
+const euCitizen: Record<Locale, string> = {
+  en: 'EU citizen',
+  de: 'EU-Bürger',
+  es: 'Ciudadano UE',
+}
 
 /**
  * The card that renders when this link is pasted into LinkedIn, Slack or
@@ -14,8 +43,18 @@ export const contentType = 'image/png'
  * Generated at build time, so it costs nothing at request time and works
  * identically under `output: 'export'`.
  */
-export default async function OpenGraphImage() {
+export default async function OpenGraphImage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale: rawLocale } = await params
+  if (!isLocale(rawLocale)) notFound()
+  const locale = rawLocale
+
+  const site = getSite(locale)
   const { hiring } = site
+  const [line1, line2] = headline[locale]
 
   // Read from disk and inline as a data URI: Satori has no network and no
   // notion of the site's own origin at build time, so a `/brand/...` path would
@@ -55,8 +94,8 @@ export default async function OpenGraphImage() {
           lineHeight: 1.02,
         }}
       >
-        <div>Developer.</div>
-        <div>Marketer.</div>
+        <div>{line1}</div>
+        <div>{line2}</div>
       </div>
 
       <div
@@ -69,13 +108,13 @@ export default async function OpenGraphImage() {
         }}
       >
         {/* Single text nodes on purpose: Satori requires an explicit
-              `display` on any element with more than one child, and JSX
-              interpolation splits these into several text nodes. */}
+                `display` on any element with more than one child, and JSX
+                interpolation splits these into several text nodes. */}
         <div>{hiring.currentLocation.split(',')[0]}</div>
         <div style={{ color: '#d8d8d6' }}>|</div>
-        <div>Available</div>
+        <div>{available[locale]}</div>
         <div style={{ color: '#d8d8d6' }}>|</div>
-        <div>EU citizen</div>
+        <div>{euCitizen[locale]}</div>
       </div>
     </div>,
     { ...size },

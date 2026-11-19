@@ -2,8 +2,57 @@ import Image from 'next/image'
 import { Reveal } from '@/components/reveal'
 import { SectionHeading } from '@/components/section-heading'
 import { SplitWords } from '@/components/split-words'
-import { learning, timeline } from '@/content/projects'
-import { site } from '@/content/site'
+import { getLearning, getTimeline } from '@/content/projects'
+import { getSite } from '@/content/site'
+import type { Locale } from '@/i18n/locales'
+
+const title: Record<Locale, string> = {
+  en: 'About',
+  de: 'Über mich',
+  es: 'Sobre mí',
+}
+
+const lead: Record<Locale, string> = {
+  en: 'I build the product and the growth around it.',
+  de: 'Ich baue das Produkt und das Wachstum darum herum.',
+  es: 'Construyo el producto y el crecimiento a su alrededor.',
+}
+
+const paragraph1: Record<Locale, string> = {
+  en: 'Most people who build web products pick up conversion later, as something bolted on once the thing works. I came at it from both sides: seven years as a full-stack MarTech specialist, three as a full-stack developer, with neither one supporting the other. So conversion is already in the structure when I build, not retrofitted after launch: what the page is for, what it asks of you, what happens after you say yes.',
+  de: 'Die meisten, die Webprodukte bauen, kümmern sich erst später um Konversion, als etwas, das nachträglich angeflanscht wird, sobald die Sache funktioniert. Ich kam von beiden Seiten: sieben Jahre als Full-Stack-MarTech-Spezialist, drei als Full-Stack-Entwickler, wobei keiner dem anderen untergeordnet war. Konversion steckt deshalb schon in der Struktur, wenn ich baue, nicht nachträglich eingebaut nach dem Launch: wofür die Seite da ist, was sie von dir verlangt, was passiert, nachdem du Ja gesagt hast.',
+  es: 'La mayoría de quienes construyen productos web se ocupan de la conversión más tarde, como algo añadido una vez que la cosa ya funciona. Yo llegué desde los dos lados: siete años como especialista full-stack en MarTech, tres como desarrollador full-stack, sin que uno dependiera del otro. Por eso la conversión ya está en la estructura cuando construyo, no añadida después del lanzamiento: para qué sirve la página, qué te pide, qué pasa después de que dices que sí.',
+}
+
+const paragraph2: Record<Locale, string> = {
+  en: 'It shows up as coherence. The positioning, the site, the product and the ads all answer to one idea, instead of three people each defending their own piece of it.',
+  de: 'Das zeigt sich als Kohärenz. Positionierung, Website, Produkt und Anzeigen folgen alle derselben Idee, statt dass drei Leute jeweils ihr eigenes Stück verteidigen.',
+  es: 'Esto se traduce en coherencia. El posicionamiento, el sitio, el producto y los anuncios responden todos a una misma idea, en lugar de tres personas defendiendo cada una su propio trozo.',
+}
+
+const backgroundLabel: Record<Locale, string> = {
+  en: 'Background',
+  de: 'Werdegang',
+  es: 'Trayectoria',
+}
+
+const educationLabel: Record<Locale, string> = {
+  en: 'Education',
+  de: 'Ausbildung',
+  es: 'Formación',
+}
+
+const languagesLabel: Record<Locale, string> = {
+  en: 'Languages',
+  de: 'Sprachen',
+  es: 'Idiomas',
+}
+
+const currentlyLearningLabel: Record<Locale, string> = {
+  en: 'Currently learning',
+  de: 'Aktuell am Lernen',
+  es: 'Actualmente aprendiendo',
+}
 
 /**
  * About.
@@ -18,8 +67,17 @@ import { site } from '@/content/site'
  * and the factual blocks get to run horizontally, which is how a progression of
  * years wants to be read anyway.
  */
-export function About() {
+export function About({ locale }: { locale: Locale }) {
+  const site = getSite(locale)
+  const timeline = getTimeline(locale)
+  const learning = getLearning(locale)
   const { hiring, languages, education } = site
+
+  const availableLine: Record<Locale, string> = {
+    en: `available ${hiring.availableFrom}`,
+    de: `verfügbar ab ${hiring.availableFrom}`,
+    es: `disponible desde ${hiring.availableFrom}`,
+  }
 
   return (
     <section
@@ -50,7 +108,7 @@ export function About() {
 
       <SectionHeading
         id="about-heading"
-        title="About"
+        title={title[locale]}
         meta={hiring.currentLocation.split(',')[0] ?? ''}
       />
 
@@ -61,13 +119,11 @@ export function About() {
         <p className="ink-line block max-w-[16ch] text-[clamp(1.5rem,3vw,2.4rem)] leading-[1.15] font-semibold tracking-[-0.02em]">
           {/* A <p> has role=paragraph, which prohibits aria-label, so the
               sentence is exposed once as a visually-hidden string instead. */}
-          <span className="sr-only">
-            I build the product and the growth around it.
-          </span>
+          <span className="sr-only">{lead[locale]}</span>
           <SplitWords
-            text="I build the product and the growth around it."
+            text={lead[locale]}
             variant="plain"
-            total={9}
+            total={lead[locale].split(' ').length}
           />
         </p>
 
@@ -75,25 +131,30 @@ export function About() {
           {/* Deliberately does not retell the timeline below it. The dates are
               in the next band; this is the part the dates don't explain. */}
           <div className="text-soft max-w-[52ch] space-y-4">
+            <p>{paragraph1[locale]}</p>
+            <p>{paragraph2[locale]}</p>
             <p>
-              Most people who build web products pick up conversion later, as
-              something bolted on once the thing works. I came at it from both
-              sides: seven years as a full-stack MarTech specialist, three as a
-              full-stack developer, with neither one supporting the other. So
-              conversion is already in the structure when I build, not
-              retrofitted after launch: what the page is for, what it asks of
-              you, what happens after you say yes.
-            </p>
-            <p>
-              It shows up as coherence. The positioning, the site, the product
-              and the ads all answer to one idea, instead of three people each
-              defending their own piece of it.
-            </p>
-            <p>
-              Originally from {hiring.origin.split(',')[0]}, I&rsquo;m based
-              near {hiring.targetLocation.split(',')[0]} already, available{' '}
-              {hiring.availableFrom}, with no permit or relocation to sort out.{' '}
-              {site.openTo}
+              {locale === 'de' ? (
+                <>
+                  Ursprünglich aus {hiring.origin.split(',')[0]}, wohne ich
+                  bereits in der Nähe von {hiring.targetLocation.split(',')[0]},{' '}
+                  {availableLine[locale]}, ohne Bewilligung oder Umzug zu
+                  klären. {site.openTo}
+                </>
+              ) : locale === 'es' ? (
+                <>
+                  Originario de {hiring.origin.split(',')[0]}, ya vivo cerca de{' '}
+                  {hiring.targetLocation.split(',')[0]}, {availableLine[locale]}
+                  , sin permiso ni traslado que resolver. {site.openTo}
+                </>
+              ) : (
+                <>
+                  Originally from {hiring.origin.split(',')[0]}, I&rsquo;m based
+                  near {hiring.targetLocation.split(',')[0]} already,{' '}
+                  {availableLine[locale]}, with no permit or relocation to sort
+                  out. {site.openTo}
+                </>
+              )}
             </p>
           </div>
         </Reveal>
@@ -121,7 +182,7 @@ export function About() {
             The horizontal padding is not decorative: with a capsule radius the
             corners curve inward by half the block's height, so the first and
             last columns need that much clearance or they sit in the curve. */}
-        <h3 className="sr-only">Background</h3>
+        <h3 className="sr-only">{backgroundLabel[locale]}</h3>
         <ol className="roadmap grid grid-cols-1 min-[720px]:grid-cols-3">
           {timeline.map((milestone, index) => {
             // `--i` goes on the two elements whose transition-delay reads it,
@@ -186,7 +247,7 @@ export function About() {
           read as one cluster rather than as a band and a separate afterthought. */}
       <Reveal className="reveal mt-[clamp(16px,2vw,28px)] grid grid-cols-1 items-start gap-[clamp(16px,2vw,28px)] min-[720px]:grid-cols-3">
         <div className="border-hair bg-surface/60 rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(20px,2.4vw,32px)] py-[clamp(20px,2.2vw,28px)] backdrop-blur-2xl">
-          <h3 className="mb-3 text-sm font-medium">Education</h3>
+          <h3 className="mb-3 text-sm font-medium">{educationLabel[locale]}</h3>
           <dl>
             {education.map((entry) => (
               <div
@@ -204,7 +265,7 @@ export function About() {
         </div>
 
         <div className="border-hair bg-surface/60 rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(20px,2.4vw,32px)] py-[clamp(20px,2.2vw,28px)] backdrop-blur-2xl">
-          <h3 className="mb-3 text-sm font-medium">Languages</h3>
+          <h3 className="mb-3 text-sm font-medium">{languagesLabel[locale]}</h3>
           <dl>
             {languages.map((language) => (
               <div
@@ -221,7 +282,9 @@ export function About() {
         <div className="border-hair bg-surface/60 rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(20px,2.4vw,32px)] py-[clamp(20px,2.2vw,28px)] backdrop-blur-2xl">
           {/* Saying what you're mid-way through reads as more credible than a
               list where everything is already mastered. */}
-          <h3 className="mb-3 text-sm font-medium">Currently learning</h3>
+          <h3 className="mb-3 text-sm font-medium">
+            {currentlyLearningLabel[locale]}
+          </h3>
           <ul>
             {learning.map((item) => (
               <li

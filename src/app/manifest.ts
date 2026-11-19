@@ -1,7 +1,15 @@
 import type { MetadataRoute } from 'next'
-import { site } from '@/content/site'
+import { getSite } from '@/content/site'
 
+/**
+ * One manifest for the whole origin, not one per locale: a PWA install
+ * prompt is a property of the site, not of a path, and `manifest.(js|ts)`
+ * must live at the app root to be picked up at all. English, to match
+ * `reportPlaceholders()`'s own English-only check.
+ */
 export default function manifest(): MetadataRoute.Manifest {
+  const site = getSite('en')
+
   return {
     name: `${site.name} | ${site.role}`,
     short_name: site.name,

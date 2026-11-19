@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import type { GalleryImage } from '@/content/projects'
+import type { Locale } from '@/i18n/locales'
 
 /** How long each slide holds before advancing. */
 const INTERVAL_MS = 3000
@@ -99,6 +100,53 @@ type Props = {
   /** Project name, used to name the carousel and its controls for screen readers. */
   label: string
   sizes: string
+  locale: Locale
+}
+
+const groupLabel = (label: string, count: number, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return `${label}, ${count} Bilder`
+    case 'es':
+      return `${label}, ${count} imágenes`
+    default:
+      return `${label}, ${count} images`
+  }
+}
+
+const playSlideshow: Record<Locale, string> = {
+  en: 'Play slideshow',
+  de: 'Diashow abspielen',
+  es: 'Reproducir diapositivas',
+}
+
+const pauseSlideshow: Record<Locale, string> = {
+  en: 'Pause slideshow',
+  de: 'Diashow anhalten',
+  es: 'Pausar diapositivas',
+}
+
+const goToImage = (i: number, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return `Zu Bild ${i} wechseln`
+    case 'es':
+      return `Ir a la imagen ${i}`
+    default:
+      return `Go to image ${i}`
+  }
+}
+
+const previousImage: Record<Locale, string> = {
+  en: 'Previous image',
+  de: 'Vorheriges Bild',
+  es: 'Imagen anterior',
+}
+
+const nextImage: Record<Locale, string> = {
+  en: 'Next image',
+  de: 'Nächstes Bild',
+  es: 'Siguiente imagen',
 }
 
 /**
@@ -124,7 +172,7 @@ type Props = {
  * has something it can actually call `.pause()` on. See `GalleryImage` in
  * `content/projects.ts` for why that distinction exists.
  */
-export function Carousel({ images, label, sizes }: Props) {
+export function Carousel({ images, label, sizes, locale }: Props) {
   /* Which slide is up, which one it displaced, and which way it came from.
      All three move together, so they live in one object: with the outgoing
      slide in its own state the two setters could land in different renders and
@@ -300,7 +348,7 @@ export function Carousel({ images, label, sizes }: Props) {
     <div
       role="group"
       aria-roledescription="carousel"
-      aria-label={`${label}, ${count} images`}
+      aria-label={groupLabel(label, count, locale)}
       // Read by the CSS so the slide zoom freezes with the timer. The bar
       // carries its own copy because it is a sibling, not a descendant.
       data-paused={paused}
@@ -388,7 +436,7 @@ export function Carousel({ images, label, sizes }: Props) {
           if (swipe.justSwiped()) return
           toggle()
         }}
-        aria-label={paused ? 'Play slideshow' : 'Pause slideshow'}
+        aria-label={paused ? playSlideshow[locale] : pauseSlideshow[locale]}
         className="absolute inset-0 z-10"
       />
 
@@ -431,7 +479,7 @@ export function Carousel({ images, label, sizes }: Props) {
         <button
           type="button"
           onClick={toggle}
-          aria-label={paused ? 'Play slideshow' : 'Pause slideshow'}
+          aria-label={paused ? playSlideshow[locale] : pauseSlideshow[locale]}
           className="carousel-btn"
         >
           {paused ? <PlayIcon /> : <PauseIcon />}
@@ -444,7 +492,7 @@ export function Carousel({ images, label, sizes }: Props) {
               <button
                 type="button"
                 onClick={() => go(i)}
-                aria-label={`Go to image ${i + 1}`}
+                aria-label={goToImage(i + 1, locale)}
                 aria-current={i === index ? 'true' : undefined}
                 className="slide-bar block w-full"
                 data-active={i === index}
@@ -477,7 +525,7 @@ export function Carousel({ images, label, sizes }: Props) {
         <button
           type="button"
           onClick={() => go(index - 1, 'back')}
-          aria-label="Previous image"
+          aria-label={previousImage[locale]}
           className="carousel-btn"
         >
           <ArrowIcon direction="left" />
@@ -485,7 +533,7 @@ export function Carousel({ images, label, sizes }: Props) {
         <button
           type="button"
           onClick={() => go(index + 1, 'forward')}
-          aria-label="Next image"
+          aria-label={nextImage[locale]}
           className="carousel-btn"
         >
           <ArrowIcon direction="right" />

@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { site } from '@/content/site'
+import { LocaleSwitcher } from '@/components/locale-switcher'
+import { getSite } from '@/content/site'
+import type { Locale } from '@/i18n/locales'
 import { pauseSmoothScroll, resumeSmoothScroll } from '@/lib/smooth-scroll'
 
 /** Width in px below which the pill is swapped for the burger menu. */
@@ -11,7 +13,72 @@ const MOBILE_BREAKPOINT = 880
 /** Height of the header rail. Mirrors `--nav-h` in globals.css. */
 const NAV_HEIGHT = 80
 
-export function Nav() {
+const primaryLabel: Record<Locale, string> = {
+  en: 'Primary',
+  de: 'Primär',
+  es: 'Principal',
+}
+
+const sectionsLabel: Record<Locale, string> = {
+  en: 'Sections',
+  de: 'Bereiche',
+  es: 'Secciones',
+}
+
+const getInTouch: Record<Locale, string> = {
+  en: 'Get in touch',
+  de: 'Kontakt aufnehmen',
+  es: 'Contactar',
+}
+
+const openMenuLabel: Record<Locale, string> = {
+  en: 'Open menu',
+  de: 'Menü öffnen',
+  es: 'Abrir menú',
+}
+
+const closeMenuLabel: Record<Locale, string> = {
+  en: 'Close menu',
+  de: 'Menü schliessen',
+  es: 'Cerrar menú',
+}
+
+/* Each visible word is a substring of that state's aria-label above (WCAG
+   2.5.3): "Menü" sits inside "Menü öffnen", "Schliessen" inside "Menü
+   schliessen", and the Spanish pair mirrors it the same way. */
+const menuWord: Record<Locale, string> = { en: 'Menu', de: 'Menü', es: 'Menú' }
+const closeWord: Record<Locale, string> = {
+  en: 'Close',
+  de: 'Schliessen',
+  es: 'Cerrar',
+}
+
+const menuDialogLabel: Record<Locale, string> = {
+  en: 'Menu',
+  de: 'Menü',
+  es: 'Menú',
+}
+
+const mobileLabel: Record<Locale, string> = {
+  en: 'Mobile',
+  de: 'Mobil',
+  es: 'Móvil',
+}
+
+const directLabel: Record<Locale, string> = {
+  en: 'Direct',
+  de: 'Direkt',
+  es: 'Directo',
+}
+
+const available: Record<Locale, string> = {
+  en: 'Available',
+  de: 'Verfügbar',
+  es: 'Disponible',
+}
+
+export function Nav({ locale }: { locale: Locale }) {
+  const site = getSite(locale)
   const [activeIndex, setActiveIndex] = useState(-1)
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -60,8 +127,13 @@ export function Nav() {
   // --- Scroll spy -----------------------------------------------------------
 
   useEffect(() => {
-    const sections = site.nav.map((item) =>
-      document.getElementById(item.section),
+    // The three section ids, not `site.nav` itself: the ids are structural and
+    // never vary by locale, while `site.nav` is a fresh array on every render
+    // once it comes from `getSite(locale)`, which would otherwise make this
+    // effect a dependency on an object that looks like it changes but never
+    // does in a way that matters here.
+    const sections = ['disciplines', 'work', 'about'].map((id) =>
+      document.getElementById(id),
     )
     const hero = document.getElementById('hero')
 
@@ -186,7 +258,7 @@ export function Nav() {
           pills are small enough not to be in the way, and navigation that
           moves on its own is one more thing to think about. */}
       <header
-        aria-label="Primary"
+        aria-label={primaryLabel[locale]}
         className={[
           // Sits above the overlay (z-55), not below it. `position: fixed` plus
           // a z-index makes this header its own stacking context, so a higher
@@ -225,7 +297,7 @@ export function Nav() {
             positioned against it: it used to get that for free from the
             absolute centring this replaces. */}
           <nav
-            aria-label="Sections"
+            aria-label={sectionsLabel[locale]}
             className="nav-pill relative hidden items-center gap-0.5 p-[5px] min-[880px]:flex"
           >
             <span
@@ -269,6 +341,18 @@ export function Nav() {
             })}
           </nav>
 
+          {/* Between the section links and the CTA, on request: the one piece
+              of chrome every page needs regardless of which section it's
+              showing, so it sits with the other persistent controls rather
+              than inside the nav pill it would otherwise compete with for
+              space. The trigger renders its own `nav-pill`, the same object
+              as the CTA beside it, rather than sitting inside an extra one. */}
+          <LocaleSwitcher
+            locale={locale}
+            ghost={overHero}
+            className="z-10 hidden min-[880px]:block"
+          />
+
           {/* `data-ghost` is read by the CSS, which takes the pill's surface
             away over the photograph and sets the stroke and label white. That
             is the only difference between the two states: the hover is the same
@@ -278,7 +362,7 @@ export function Nav() {
             data-ghost={overHero}
             className="nav-pill nav-cta wipe-fill ease-brand hover:border-accent z-10 hidden px-[18px] py-2.5 text-sm font-medium whitespace-nowrap min-[880px]:block"
           >
-            Get in touch
+            {getInTouch[locale]}
           </a>
 
           <button
@@ -287,7 +371,9 @@ export function Nav() {
             onClick={() => (menuOpen ? closeMenu() : setMenuOpen(true))}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={
+              menuOpen ? closeMenuLabel[locale] : openMenuLabel[locale]
+            }
             className="nav-pill ease-brand hover:text-accent px-[18px] py-2.5 text-sm font-medium min-[880px]:hidden"
           >
             {/* A word, not two stacked lines. The burger was the one piece of
@@ -301,10 +387,10 @@ export function Nav() {
               above ("Menu" in "Open menu"), so speech input still reaches it. */}
             <span className="swap-mask">
               <span className="swap-track" data-open={menuOpen}>
-                <span>Menu</span>
+                <span>{menuWord[locale]}</span>
                 {/* Both copies are always in the DOM; the aria-label says which
                   action the button performs, so this one is not announced. */}
-                <span aria-hidden="true">Close</span>
+                <span aria-hidden="true">{closeWord[locale]}</span>
               </span>
             </span>
           </button>
@@ -319,7 +405,7 @@ export function Nav() {
         ref={overlayRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Menu"
+        aria-label={menuDialogLabel[locale]}
         data-open={menuOpen}
         inert={!menuOpen}
         className="overlay bg-surface fixed inset-0 z-55 overflow-y-auto overscroll-contain min-[880px]:hidden"
@@ -353,7 +439,10 @@ export function Nav() {
               below the links instead of all of it pooling under them. With the
               rules and arrows gone there is nothing else holding the middle of
               the panel together. */}
-          <nav aria-label="Mobile" className="my-auto flex flex-col py-[4vh]">
+          <nav
+            aria-label={mobileLabel[locale]}
+            className="my-auto flex flex-col py-[4vh]"
+          >
             {site.nav.map((item, index) => (
               <a
                 key={item.section}
@@ -371,6 +460,13 @@ export function Nav() {
             ))}
           </nav>
 
+          <div
+            style={{ '--i': 2.5 } as React.CSSProperties}
+            className="menu-in"
+          >
+            <LocaleSwitcher locale={locale} />
+          </div>
+
           {/* mt-auto pins this to the bottom on a tall phone and lets it sit
               directly under the links on a short one, instead of the fixed
               three-row grid that left a third of the screen empty. */}
@@ -379,7 +475,7 @@ export function Nav() {
               style={{ '--i': 3 } as React.CSSProperties}
               className="menu-in text-mute text-[11px] tracking-[0.14em] uppercase"
             >
-              Direct
+              {directLabel[locale]}
             </p>
             <a
               href={`mailto:${site.email}`}
@@ -413,7 +509,7 @@ export function Nav() {
                     className="status-spin size-3"
                   />
                 </span>
-                Available
+                {available[locale]}
               </span>
             </p>
           </div>

@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import { site } from '@/content/site'
+import { notFound } from 'next/navigation'
+import { getSite } from '@/content/site'
+import { locales, localeTag, isLocale } from '@/i18n/locales'
 import { reportPlaceholders } from '@/lib/config-check'
 import {
   buildPersonSchema,
@@ -8,7 +10,7 @@ import {
   buildWorkSchema,
   serialiseSchema,
 } from '@/lib/structured-data'
-import './globals.css'
+import '../globals.css'
 
 /**
  * Inter, self-hosted by next/font: no request to Google, no layout shift.
@@ -21,59 +23,81 @@ const inter = Inter({
   display: 'swap',
 })
 
-const title = `${site.name} | ${site.role}`
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }))
+}
 
-export const metadata: Metadata = {
-  // Makes every relative URL below (OG images, canonical) absolute.
-  metadataBase: new URL(site.url),
-  title: {
-    default: title,
-    template: `%s | ${site.name}`,
-  },
-  description: site.description,
-  applicationName: site.name,
-  authors: [{ name: site.name, url: site.url }],
-  creator: site.name,
-  publisher: site.name,
-  keywords: [
-    'fullstack developer',
-    'frontend developer',
-    'product designer',
-    'React developer Zürich',
-    'Next.js developer Switzerland',
-    'web developer Zürich',
-    site.name,
-  ],
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    type: 'profile',
-    locale: 'en_GB',
-    url: site.url,
-    siteName: site.name,
-    title,
+export async function generateMetadata({
+  params,
+}: LayoutProps<'/[locale]'>): Promise<Metadata> {
+  const { locale: rawLocale } = await params
+  if (!isLocale(rawLocale)) notFound()
+
+  const site = getSite(rawLocale)
+  const title = `${site.name} | ${site.role}`
+
+  // One canonical per locale, and every other locale listed as an
+  // alternate: this is what stops Google treating /de and /es as duplicates
+  // of /en instead of as the same page in three languages. Trailing slash on
+  // every URL here, matching `trailingSlash: true` in next.config.ts: the
+  // slash-less form is a 308 away from the one the server actually renders,
+  // and a canonical or hreflang URL shouldn't cost a crawler a redirect hop.
+  const languages = Object.fromEntries(
+    locales.map((locale) => [localeTag[locale], `${site.url}/${locale}/`]),
+  )
+
+  return {
+    metadataBase: new URL(site.url),
+    title: {
+      default: title,
+      template: `%s | ${site.name}`,
+    },
     description: site.description,
-    firstName: 'Marc',
-    lastName: 'Mendez',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title,
-    description: site.description,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    applicationName: site.name,
+    authors: [{ name: site.name, url: site.url }],
+    creator: site.name,
+    publisher: site.name,
+    keywords: [
+      'fullstack developer',
+      'frontend developer',
+      'MarTech specialist',
+      'React developer Zürich',
+      'Next.js developer Switzerland',
+      'web developer Zürich',
+      site.name,
+    ],
+    alternates: {
+      canonical: `/${rawLocale}/`,
+      languages,
+    },
+    openGraph: {
+      type: 'profile',
+      locale: localeTag[rawLocale],
+      url: `${site.url}/${rawLocale}/`,
+      siteName: site.name,
+      title,
+      description: site.description,
+      firstName: 'Marc',
+      lastName: 'Mendez',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: site.description,
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-      'max-video-preview': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+      },
     },
-  },
-  category: 'technology',
+    category: 'technology',
+  }
 }
 
 export const viewport: Viewport = {
@@ -87,17 +111,26 @@ export const viewport: Viewport = {
   themeColor: '#ffffff',
 }
 
-export default function RootLayout({
+export default async function LocaleLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  params,
+}: LayoutProps<'/[locale]'>) {
+  const { locale: rawLocale } = await params
+  if (!isLocale(rawLocale)) notFound()
+  const locale = rawLocale
+
   // Prints a checklist to the dev server terminal while anything is still on a
   // placeholder value. No-op in production.
   reportPlaceholders()
 
-  const schema = [buildPersonSchema(), buildWebSiteSchema(), buildWorkSchema()]
+  const schema = [
+    buildPersonSchema(locale),
+    buildWebSiteSchema(locale),
+    buildWorkSchema(locale),
+  ]
 
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang={localeTag[locale]} className={inter.variable}>
       <body className="bg-surface text-ink antialiased">
         {/* Scroll reveals start at opacity 0 and are switched on by an
             IntersectionObserver. Without this fallback, a visitor with

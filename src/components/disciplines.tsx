@@ -2,7 +2,21 @@ import { Reveal } from '@/components/reveal'
 import { SectionHeading } from '@/components/section-heading'
 import { SplitWords } from '@/components/split-words'
 import { ToolPills } from '@/components/tool-pills'
-import { disciplines } from '@/content/projects'
+import { getDisciplines } from '@/content/projects'
+import type { Locale } from '@/i18n/locales'
+import { toolkitLabel } from '@/lib/toolkit-label'
+
+const title: Record<Locale, string> = {
+  en: 'What I do',
+  de: 'Was ich mache',
+  es: 'Qué hago',
+}
+
+const meta: Record<Locale, string> = {
+  en: 'Two disciplines, one way of working',
+  de: 'Zwei Disziplinen, eine Arbeitsweise',
+  es: 'Dos disciplinas, una forma de trabajar',
+}
 
 /**
  * The two disciplines, as a numbered-feeling list rather than a card grid.
@@ -12,7 +26,9 @@ import { disciplines } from '@/content/projects'
  * A sequence separated by hairlines reads as two parts of one practice
  * instead, and it matches the grid the rest of the page is built on.
  */
-export function Disciplines() {
+export function Disciplines({ locale }: { locale: Locale }) {
+  const disciplines = getDisciplines(locale)
+
   return (
     <section
       id="disciplines"
@@ -21,8 +37,8 @@ export function Disciplines() {
     >
       <SectionHeading
         id="disciplines-heading"
-        title="What I do"
-        meta="Two disciplines, one way of working"
+        title={title[locale]}
+        meta={meta[locale]}
         rule={false}
       />
 
@@ -79,7 +95,10 @@ export function Disciplines() {
 
             <div>
               <p className="text-soft max-w-[46ch]">{discipline.body}</p>
-              <ToolPills tools={discipline.tools} label={discipline.name} />
+              <ToolPills
+                tools={discipline.tools}
+                label={toolkitLabel(discipline.name, locale)}
+              />
             </div>
           </Reveal>
         ))}

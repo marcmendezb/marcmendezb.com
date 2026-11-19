@@ -1,13 +1,52 @@
 import { Reveal } from '@/components/reveal'
 import { SplitWords } from '@/components/split-words'
-import { site } from '@/content/site'
+import { getSite } from '@/content/site'
+import type { Locale } from '@/i18n/locales'
 
-export function Contact() {
+const buildHeading = (city: string, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return `Lass uns etwas in ${city} bauen.`
+    case 'es':
+      return `Construyamos algo en ${city}.`
+    default:
+      return `Let’s build something in ${city}.`
+  }
+}
+
+const intro = (
+  availableFrom: string,
+  responseTime: string,
+  locale: Locale,
+): string => {
+  switch (locale) {
+    case 'de':
+      return `EU-Bürger, keine Bewilligung zu klären, verfügbar ab ${availableFrom}. E-Mail ist der schnellste Weg, mich zu erreichen. Ich antworte ${responseTime}.`
+    case 'es':
+      return `Ciudadano de la UE, sin permiso que resolver, disponible desde ${availableFrom}. El correo es la forma más rápida de contactarme. Respondo ${responseTime}.`
+    default:
+      return `EU citizen, no permit to sort out, available ${availableFrom}. Email is the fastest way to reach me. I reply ${responseTime}.`
+  }
+}
+
+const or: Record<Locale, string> = { en: 'or', de: 'oder', es: 'o' }
+
+const downloadCV: Record<Locale, string> = {
+  en: 'Download CV',
+  de: 'CV herunterladen',
+  es: 'Descargar CV',
+}
+
+export function Contact({ locale }: { locale: Locale }) {
+  const site = getSite(locale)
   const { hiring, cvPath } = site
 
   // Built as one string so the word count that drives the scroll-fill stays
-  // correct if the destination city ever changes.
-  const heading = `Let’s build something in ${hiring.targetLocation.split(',')[0]}.`
+  // correct if the destination city or language ever changes.
+  const heading = buildHeading(
+    hiring.targetLocation.split(',')[0] ?? '',
+    locale,
+  )
   const headingWords = heading.split(' ').length
 
   return (
@@ -30,8 +69,7 @@ export function Contact() {
         </h2>
 
         <p className="text-soft mt-6 max-w-[48ch]">
-          EU citizen, no permit to sort out, available {hiring.availableFrom}.
-          Email is the fastest way to reach me. I reply {hiring.responseTime}.
+          {intro(hiring.availableFrom, hiring.responseTime, locale)}
         </p>
 
         <a
@@ -42,7 +80,7 @@ export function Contact() {
         </a>
 
         <p className="text-mute mt-4 text-[15px]">
-          or{' '}
+          {or[locale]}{' '}
           <a
             href={`tel:${site.phone.replace(/\s/g, '')}`}
             className="underline-sweep ease-brand hover:text-accent transition-colors duration-300"
@@ -72,7 +110,7 @@ export function Contact() {
                 download
                 className="underline-sweep ease-brand hover:text-accent transition-colors duration-300"
               >
-                Download CV
+                {downloadCV[locale]}
                 <span className="sr-only"> (PDF)</span>
               </a>
             </li>

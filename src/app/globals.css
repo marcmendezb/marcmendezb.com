@@ -253,6 +253,143 @@
     color: var(--on-accent);
   }
 
+  /* --- Locale switcher ------------------------------------------------------
+
+     Deliberately the same object as the project switcher on the work deck
+     (`.deck-switcher-wrap` / `.deck-menu` below): a named trigger with a
+     chevron, opened by hover or focus. Two controls that do the same kind of
+     job, naming the current one of several and opening a list to change it,
+     read as one control language instead of two widgets that happen to sit
+     near each other.
+
+     It differs from the deck version in exactly the ways its position
+     requires: this one opens downward from a header pill rather than upward
+     from a badge at the foot of the screen, and the panel hangs off the
+     trigger's right edge rather than its left, since this sits near the
+     right end of the header and a left-aligned panel would run off the
+     viewport. */
+  .locale-switcher-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .locale-name {
+    gap: 7px;
+    padding: 0 16px;
+    color: inherit;
+  }
+
+  .locale-name:hover,
+  .locale-name:focus-visible,
+  .locale-name[aria-expanded='true'] {
+    color: var(--accent);
+  }
+
+  /* Ghost mode (`.nav-pill[data-ghost='true']`, set further up this file)
+     already takes this trigger's background and border away and its colour
+     to white; the hover/expanded accent tint above needs its own escape
+     hatch on top of that, the same one the CTA beside it uses, since the
+     brand blue has no guaranteed ground to sit on over the photograph. */
+  .locale-name[data-ghost='true']:hover,
+  .locale-name[data-ghost='true']:focus-visible,
+  .locale-name[data-ghost='true'][aria-expanded='true'] {
+    color: #ffffff;
+    opacity: 0.75;
+  }
+
+  .locale-chevron {
+    color: var(--mute);
+    transition:
+      transform 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+
+  .locale-name[data-ghost='true'] .locale-chevron {
+    color: inherit;
+    opacity: 0.6;
+  }
+
+  .locale-name:hover .locale-chevron,
+  .locale-name[aria-expanded='true'] .locale-chevron {
+    color: var(--accent);
+  }
+
+  .locale-name[data-ghost='true']:hover .locale-chevron,
+  .locale-name[data-ghost='true'][aria-expanded='true'] .locale-chevron {
+    color: #ffffff;
+    opacity: 1;
+  }
+
+  .locale-chevron[data-open='true'] {
+    transform: rotate(180deg);
+  }
+
+  .locale-menu {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    min-width: 168px;
+    padding: 6px;
+    border: 1px solid var(--hair);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.04),
+      0 24px 60px -28px rgb(0 0 0 / 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.22s var(--ease),
+      transform 0.22s var(--ease),
+      visibility 0s linear 0.22s;
+  }
+
+  .locale-menu[data-open='true'] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.22s var(--ease),
+      transform 0.22s var(--ease),
+      visibility 0s;
+  }
+
+  .locale-menu-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    color: var(--ink);
+    transition: background-color 0.2s var(--ease);
+  }
+
+  .locale-menu-item:hover,
+  .locale-menu-item:focus-visible {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  .locale-menu-title {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .locale-menu-note {
+    font-size: 12px;
+    color: var(--mute);
+    white-space: nowrap;
+  }
+
+  .locale-menu-item[aria-current='true'] .locale-menu-title,
+  .locale-menu-item[aria-current='true'] .locale-menu-note {
+    color: var(--accent);
+  }
+
   /* --- Nav pill ----------------------------------------------------------- */
 
   .pill-highlight {

@@ -1,12 +1,16 @@
+import type { Locale } from '@/i18n/locales'
+
 /**
  * Single source of truth for everything personal on this site.
  *
- * Components never hard-code names, URLs or copy: they read from here. Editing
- * this file is the only thing you need to do to keep the site current.
+ * Components never hard-code names, URLs or copy: they call `getSite(locale)`
+ * and read from the result. Editing this file is the only thing you need to
+ * do to keep the site current, in all three languages at once.
  *
  * Fields typed `| null` are ones that must not be guessed. They render nothing
- * until you fill them in, so an unfinished field is invisible rather than wrong.
- * `pnpm dev` prints a checklist of everything still unset.
+ * until you fill them in, so an unfinished field is invisible rather than
+ * wrong. `pnpm dev` prints a checklist of everything still unset, checked
+ * against the English copy only: nullability doesn't vary by language.
  */
 
 export type NavLink = {
@@ -46,13 +50,8 @@ export type EducationEntry = {
   status?: string
 }
 
-export const site = {
-  // ---------------------------------------------------------------------------
-  // Identity
-  // ---------------------------------------------------------------------------
-
-  name: 'Marc Mendez',
-
+/** Everything that reads differently per language. */
+type LocalizedSite = {
   /**
    * Used in <title>, OG tags and the JSON-LD `jobTitle`.
    *
@@ -64,180 +63,285 @@ export const site = {
    * "MarTech specialist", not "marketing technologist": it's the literal
    * string Swiss postings use for this (PwC's Marketing Technology Lead,
    * Salesforce's MarTech-focused Marketing Architect, Source Group's
-   * MarTech Engineer, all Zürich), and it's what the `<title>` tag, the
-   * OG card and the JSON-LD `jobTitle` all inherit from this one field.
+   * MarTech Engineer, all Zürich), and it's what the `<title>` tag, the OG
+   * card and the JSON-LD `jobTitle` all inherit from this one field. Kept
+   * as the English loanword in German and Spanish too: that's how the term
+   * is actually used in both markets, not translated.
    */
-  role: 'Full-stack developer & MarTech specialist',
-
-  /**
-   * Canonical origin, no trailing slash. Drives canonical URLs, OG tags,
-   * sitemap and robots.txt.
-   *
-   * TODO: point this at your real domain before launch.
-   */
-  url:
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : 'https://marcmendez.com'),
-
+  role: string
   /** <150 chars. What Google shows, and what appears when someone pastes the link. */
-  description:
-    'Full-stack developer and MarTech specialist. Seven years in marketing, three building products. Based near Zürich, available now.',
-
-  // ---------------------------------------------------------------------------
-  // Contact
-  // ---------------------------------------------------------------------------
-
-  email: 'marcmendezb@gmail.com',
-  phone: '+34 669 27 24 83',
-
-  socials: [
-    {
-      label: 'LinkedIn',
-      // TODO: confirm (built from your handle, not verified).
-      href: 'https://www.linkedin.com/in/marcmendez',
-      description: 'LinkedIn profile',
-    },
-    {
-      label: 'GitHub',
-      // TODO: confirm (built from your handle, not verified).
-      href: 'https://github.com/marcmendez',
-      description: 'GitHub profile',
-    },
-  ] satisfies SocialLink[],
-
-  // ---------------------------------------------------------------------------
-  // Job search: the facts Swiss recruiters screen on first
-  // ---------------------------------------------------------------------------
-
+  description: string
+  socials: readonly [linkedin: string, github: string]
   hiring: {
-    // Elsau is the actual village; Winterthur is the city it sits beside and
-    // the name a recruiter will recognise, the same way the hero's status
-    // line and the mobile menu split on the city before the comma.
-    currentLocation: 'Winterthur, Switzerland',
-    targetLocation: 'Zürich, Switzerland',
+    origin: string
+    availableFrom: string
+    workArrangement: string
+    workEligibility: string
+    responseTime: string
+  }
+  education: readonly {
+    qualification: string
+    country: string
+    status?: string
+  }[]
+  languages: readonly { name: string; level: string }[]
+  openTo: string
+  nav: readonly [whatIDo: string, work: string, about: string]
+}
 
-    /**
-     * Where Marc moved from, not where he's moving to: he already lives in
-     * the Zürich area (see `currentLocation`). Surfaced once, in About's
-     * prose, so the page doesn't read as having skipped the relocation that
-     * already happened.
-     */
-    origin: 'Barcelona, Spain',
+/**
+ * Awarding institution per education entry, same order as the `education`
+ * arrays below. A proper noun, so it doesn't vary by locale; kept separate
+ * rather than repeated inside all three `education` arrays.
+ */
+const educationInstitutions: readonly (string | null)[] = [
+  'Universidad Internacional de Valencia (VIU)',
+  null, // TODO: the centre's name
+  null, // TODO: the centre's name
+  null, // TODO: the centre's name
+  null, // TODO: the university's name
+]
 
-    /**
-     * Zero days' notice.
-     *
-     * The short status chips (hero, mobile menu, OG card) just say "Available"
-     * on its own; this only fills in the prose sentences in About and Contact,
-     * where "available now" reads naturally. If the date ever stops being
-     * immediate, change this to something like "from March" and revisit those
-     * chips so they say "Available from March" instead.
-     */
-    availableFrom: 'now',
-
-    workArrangement: 'On-site, hybrid or remote',
-
-    /**
-     * The single biggest filter in the Swiss market. An EU passport removes the
-     * recruiter's first objection before they have to ask, so it is stated
-     * plainly rather than left to be inferred.
-     */
-    workEligibility: 'EU citizen, no Swiss permit needed',
-
-    /** Reply-time promise, used in the contact section. */
-    responseTime: 'within 24 hours',
+const localized: Record<Locale, LocalizedSite> = {
+  en: {
+    role: 'Full-stack developer & MarTech specialist',
+    description:
+      'Full-stack developer and MarTech specialist. Seven years in marketing, three building products. Based near Zürich, available now.',
+    socials: ['LinkedIn profile', 'GitHub profile'],
+    hiring: {
+      origin: 'Barcelona, Spain',
+      availableFrom: 'now',
+      workArrangement: 'On-site, hybrid or remote',
+      workEligibility: 'EU citizen, no Swiss permit needed',
+      responseTime: 'within 24 hours',
+    },
+    education: [
+      {
+        qualification: 'Data Science and Artificial Intelligence (BSc)',
+        country: 'Spain',
+        status: 'starts February 2026',
+      },
+      {
+        qualification: 'Higher Vocational Diploma, Web Application Development',
+        country: 'Spain',
+      },
+      {
+        qualification: 'Higher Vocational Diploma, Marketing and Advertising',
+        country: 'Spain',
+      },
+      {
+        qualification:
+          'Intermediate Vocational Diploma, Administrative Assistance',
+        country: 'Spain',
+      },
+      {
+        qualification: 'Public Relations, Marketing and Advertising (BA)',
+        country: 'Spain',
+        status: 'not completed',
+      },
+    ],
+    languages: [
+      { name: 'Spanish', level: 'Native' },
+      { name: 'Catalan', level: 'Native' },
+      { name: 'English', level: 'Professional (B2)' },
+      { name: 'German', level: 'Learning (A1)' },
+    ],
+    openTo: 'Marketing roles, development roles, or both.',
+    nav: ['What I do', 'Work', 'About'],
   },
-
-  /**
-   * Worth its own block rather than a footnote. Switzerland runs on vocational
-   * training: the Berufsbildung route is the mainstream path there, not a
-   * fallback, so these read as credentials to a Swiss recruiter in a way
-   * they might not elsewhere.
-   *
-   * Four entries, not one: a web development diploma on its own undersold the
-   * marketing side, which has its own formal qualification rather than being
-   * self-taught. The unfinished bachelor's stays in rather than getting
-   * quietly dropped: "left Public Relations partway through for a vocational
-   * diploma instead" is a more honest shape of a career than hiding the
-   * detour.
-   *
-   * The Spanish qualification codes (CFGS, CFGM) are left out on purpose:
-   * they mean nothing to a Swiss recruiter and would read as noise next to
-   * credentials they do recognise. "Higher" vs "Intermediate" carries the
-   * same distinction in plain English.
-   *
-   * The data science degree leads the list: it's the one a reader should
-   * notice first, not something to find by reading to the end.
-   */
-  education: [
-    {
-      qualification: 'Data Science and Artificial Intelligence (BSc)',
-      country: 'Spain',
-      institution: 'Universidad Internacional de Valencia (VIU)',
-      status: 'starts February 2026',
+  de: {
+    role: 'Full-Stack-Entwickler & MarTech-Spezialist',
+    description:
+      'Full-Stack-Entwickler und MarTech-Spezialist. Sieben Jahre Marketing, drei Jahre Produktentwicklung. Wohnhaft bei Zürich, ab sofort verfügbar.',
+    socials: ['LinkedIn-Profil', 'GitHub-Profil'],
+    hiring: {
+      origin: 'Barcelona, Spanien',
+      availableFrom: 'sofort',
+      workArrangement: 'Vor Ort, hybrid oder remote',
+      workEligibility: 'EU-Bürger, keine Schweizer Bewilligung nötig',
+      responseTime: 'innerhalb von 24 Stunden',
     },
-    {
-      qualification: 'Higher Vocational Diploma, Web Application Development',
-      country: 'Spain',
-      institution: null, // TODO: the centre's name
+    education: [
+      {
+        qualification: 'Data Science und künstliche Intelligenz (BSc)',
+        country: 'Spanien',
+        status: 'Start Februar 2026',
+      },
+      {
+        qualification: 'Höhere Fachausbildung, Webentwicklung',
+        country: 'Spanien',
+      },
+      {
+        qualification: 'Höhere Fachausbildung, Marketing und Werbung',
+        country: 'Spanien',
+      },
+      {
+        qualification: 'Mittlere Fachausbildung, Büroassistenz',
+        country: 'Spanien',
+      },
+      {
+        qualification: 'Public Relations, Marketing und Werbung (BA)',
+        country: 'Spanien',
+        status: 'nicht abgeschlossen',
+      },
+    ],
+    languages: [
+      { name: 'Spanisch', level: 'Muttersprache' },
+      { name: 'Katalanisch', level: 'Muttersprache' },
+      { name: 'Englisch', level: 'Fliessend (B2)' },
+      { name: 'Deutsch', level: 'Lernend (A1)' },
+    ],
+    openTo: 'Marketing-Rollen, Entwicklungs-Rollen, oder beides.',
+    nav: ['Leistungen', 'Projekte', 'Über mich'],
+  },
+  es: {
+    role: 'Desarrollador full-stack y especialista en MarTech',
+    description:
+      'Desarrollador full-stack y especialista en MarTech. Siete años en marketing, tres construyendo productos. Vivo cerca de Zúrich, disponible ya.',
+    socials: ['Perfil de LinkedIn', 'Perfil de GitHub'],
+    hiring: {
+      origin: 'Barcelona, España',
+      availableFrom: 'ya',
+      workArrangement: 'Presencial, híbrido o remoto',
+      workEligibility: 'Ciudadano de la UE, sin permiso suizo necesario',
+      responseTime: 'en menos de 24 horas',
     },
-    {
-      qualification: 'Higher Vocational Diploma, Marketing and Advertising',
-      country: 'Spain',
-      institution: null, // TODO: the centre's name
+    education: [
+      {
+        qualification: 'Grado en Ciencia de Datos e Inteligencia Artificial',
+        country: 'España',
+        status: 'empieza en febrero de 2026',
+      },
+      {
+        qualification:
+          'Ciclo Formativo de Grado Superior, Desarrollo de Aplicaciones Web',
+        country: 'España',
+      },
+      {
+        qualification:
+          'Ciclo Formativo de Grado Superior, Marketing y Publicidad',
+        country: 'España',
+      },
+      {
+        qualification: 'Ciclo Formativo de Grado Medio, Gestión Administrativa',
+        country: 'España',
+      },
+      {
+        qualification: 'Relaciones Públicas, Marketing y Publicidad (grado)',
+        country: 'España',
+        status: 'sin terminar',
+      },
+    ],
+    languages: [
+      { name: 'Español', level: 'Nativo' },
+      { name: 'Catalán', level: 'Nativo' },
+      { name: 'Inglés', level: 'Profesional (B2)' },
+      { name: 'Alemán', level: 'Aprendiendo (A1)' },
+    ],
+    openTo: 'Roles de marketing, de desarrollo, o ambos.',
+    nav: ['Qué hago', 'Proyectos', 'Sobre mí'],
+  },
+}
+
+export function getSite(locale: Locale) {
+  const t = localized[locale]
+
+  return {
+    // ---------------------------------------------------------------------
+    // Identity — same in every language
+    // ---------------------------------------------------------------------
+    name: 'Marc Mendez',
+    role: t.role,
+
+    /**
+     * Canonical origin, no trailing slash. Drives canonical URLs, OG tags,
+     * sitemap and robots.txt.
+     *
+     * TODO: point this at your real domain before launch.
+     */
+    url:
+      process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : 'https://marcmendez.com'),
+
+    description: t.description,
+
+    // ---------------------------------------------------------------------
+    // Contact
+    // ---------------------------------------------------------------------
+
+    email: 'marcmendezb@gmail.com',
+    phone: '+34 669 27 24 83',
+
+    socials: [
+      {
+        label: 'LinkedIn',
+        // TODO: confirm (built from your handle, not verified).
+        href: 'https://www.linkedin.com/in/marcmendez',
+        description: t.socials[0],
+      },
+      {
+        label: 'GitHub',
+        // TODO: confirm (built from your handle, not verified).
+        href: 'https://github.com/marcmendez',
+        description: t.socials[1],
+      },
+    ] satisfies readonly SocialLink[],
+
+    // ---------------------------------------------------------------------
+    // Job search: the facts Swiss recruiters screen on first
+    // ---------------------------------------------------------------------
+
+    hiring: {
+      // Elsau is the actual village; Winterthur is the city it sits beside
+      // and the name a recruiter will recognise, the same way the hero's
+      // status line and the mobile menu split on the city before the comma.
+      // Not translated: a place name stays the same in every language.
+      currentLocation: 'Winterthur, Switzerland',
+      targetLocation: 'Zürich, Switzerland',
+      origin: t.hiring.origin,
+      availableFrom: t.hiring.availableFrom,
+      workArrangement: t.hiring.workArrangement,
+      workEligibility: t.hiring.workEligibility,
+      responseTime: t.hiring.responseTime,
     },
-    {
-      qualification:
-        'Intermediate Vocational Diploma, Administrative Assistance',
-      country: 'Spain',
-      institution: null, // TODO: the centre's name
-    },
-    {
-      qualification: 'Public Relations, Marketing and Advertising (BA)',
-      country: 'Spain',
-      institution: null, // TODO: the university's name
-      status: 'not completed',
-    },
-  ] satisfies EducationEntry[],
 
-  languages: [
-    { name: 'Spanish', level: 'Native' },
-    { name: 'Catalan', level: 'Native' },
-    { name: 'English', level: 'Professional (B2)' },
-    { name: 'German', level: 'Learning (A1)' },
-  ] satisfies Language[],
+    education: t.education.map((entry, i) => ({
+      ...entry,
+      institution: educationInstitutions[i] ?? null,
+    })) satisfies readonly EducationEntry[],
 
-  /**
-   * What you're open to. Kept broad on purpose: you're looking at marketing
-   * roles, development roles and the combination.
-   */
-  openTo: 'Marketing roles, development roles, or both.',
+    languages: t.languages satisfies readonly Language[],
 
-  /**
-   * Path to your CV, served from `public/`. `null` hides every download button.
-   *
-   * TODO: drop the PDF at `public/marc-mendez-cv.pdf` and set this.
-   */
-  cvPath: null as string | null,
+    openTo: t.openTo,
 
-  // ---------------------------------------------------------------------------
-  // Navigation
-  // ---------------------------------------------------------------------------
+    /**
+     * Path to your CV, served from `public/`. `null` hides every download
+     * button. One PDF regardless of locale: a CV is a single, dated
+     * document, not a page that re-renders per visitor.
+     *
+     * TODO: drop the PDF at `public/marc-mendez-cv.pdf` and set this.
+     */
+    cvPath: null as string | null,
 
-  /* Contact is deliberately not here. The header carries a "Get in touch"
-     button that goes to the same section, and listing it twice in one strip of
-     chrome made the button look like a duplicate of the link beside it rather
-     than the one thing the page is asking you to do.
+    // ---------------------------------------------------------------------
+    // Navigation
+    // ---------------------------------------------------------------------
 
-     This list also drives the scroll spy, the mobile menu and the footer index,
-     so the three stay in step by construction. */
-  nav: [
-    { label: 'What I do', section: 'disciplines' },
-    { label: 'Work', section: 'work' },
-    { label: 'About', section: 'about' },
-  ] satisfies NavLink[],
-} as const
+    /* Contact is deliberately not here. The header carries a "Get in touch"
+       button that goes to the same section, and listing it twice in one strip
+       of chrome made the button look like a duplicate of the link beside it
+       rather than the one thing the page is asking you to do.
 
-export type Site = typeof site
+       This list also drives the scroll spy, the mobile menu and the footer
+       index, so the three stay in step by construction. */
+    nav: [
+      { label: t.nav[0], section: 'disciplines' },
+      { label: t.nav[1], section: 'work' },
+      { label: t.nav[2], section: 'about' },
+    ] satisfies readonly NavLink[],
+  } as const
+}
+
+export type Site = ReturnType<typeof getSite>

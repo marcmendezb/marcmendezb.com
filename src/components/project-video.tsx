@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Modal } from '@/components/modal'
 import type { ProjectVideo as Video } from '@/content/projects'
+import type { Locale } from '@/i18n/locales'
 
 type Props = {
   label: string
@@ -12,6 +13,35 @@ type Props = {
   video: Video
   /** True when the copy is set ragged-left against media on the right. */
   mirrored: boolean
+  locale: Locale
+}
+
+const opensAVideo = (title: string, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return ` für ${title}, öffnet ein Video`
+    case 'es':
+      return ` para ${title}, abre un vídeo`
+    default:
+      return ` for ${title}, opens a video`
+  }
+}
+
+const videoLabel = (title: string, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return `${title}, Video`
+    case 'es':
+      return `${title}, vídeo`
+    default:
+      return `${title}, video`
+  }
+}
+
+const closeLabel: Record<Locale, string> = {
+  en: 'Close',
+  de: 'Schliessen',
+  es: 'Cerrar',
 }
 
 /**
@@ -31,7 +61,7 @@ type Props = {
  * The day a file lands in `src`, the same dialog renders a player instead and
  * uses this image as its poster, with no other change.
  */
-export function ProjectVideo({ label, title, video, mirrored }: Props) {
+export function ProjectVideo({ label, title, video, mirrored, locale }: Props) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -46,7 +76,7 @@ export function ProjectVideo({ label, title, video, mirrored }: Props) {
         {label}
         {/* One string with its own leading space: a bare {' '} between elements
             is collapsed out of the accessible name. */}
-        <span className="sr-only">{` for ${title}, opens a video`}</span>
+        <span className="sr-only">{opensAVideo(title, locale)}</span>
         <span
           aria-hidden="true"
           className="bg-ink ease-brand group-hover/link:bg-accent block h-px w-[26px] transition-[width,background-color] duration-400 group-hover/link:w-[44px]"
@@ -56,7 +86,8 @@ export function ProjectVideo({ label, title, video, mirrored }: Props) {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        label={`${title}, video`}
+        label={videoLabel(title, locale)}
+        closeLabel={closeLabel[locale]}
       >
         {/* 16:9 and capped against the viewport's height as well as its width,
             so a wide short window does not push the frame off the top and

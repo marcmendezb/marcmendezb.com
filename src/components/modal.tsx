@@ -9,6 +9,8 @@ type Props = {
   onClose: () => void
   /** Names the dialog for assistive tech. There is no visible heading inside. */
   label: string
+  /** Accessible name for the close button. */
+  closeLabel?: string
   children: React.ReactNode
 }
 
@@ -34,7 +36,13 @@ type Props = {
  * change about something else. If a third modal ever appears, fold that one in
  * here first.
  */
-export function Modal({ open, onClose, label, children }: Props) {
+export function Modal({
+  open,
+  onClose,
+  label,
+  closeLabel = 'Close',
+  children,
+}: Props) {
   /* The dialog itself, not the box inside it: the close button sits outside
      that box, and a trap that searched only the contents would have found
      nothing to hold on a dialog whose only control is the close. */
@@ -113,7 +121,7 @@ export function Modal({ open, onClose, label, children }: Props) {
       <button
         type="button"
         onClick={close}
-        aria-label="Close"
+        aria-label={closeLabel}
         className="lightbox-close"
       >
         <CloseIcon />

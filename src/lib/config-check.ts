@@ -1,5 +1,5 @@
-import { previewGallery, previewPoster, projects } from '@/content/projects'
-import { site } from '@/content/site'
+import { getProjects, previewGallery, previewPoster } from '@/content/projects'
+import { getSite } from '@/content/site'
 
 /**
  * Development-only reminder of everything still on its placeholder value.
@@ -7,10 +7,16 @@ import { site } from '@/content/site'
  * The point is that an unfinished site should nag you in the terminal rather
  * than quietly go live with a placeholder email and three dead project
  * links. Runs on the server during `pnpm dev`; compiled out of production.
+ *
+ * Checked against English only. Nullability (a missing URL, an unset
+ * institution) is a property of the data, not of the language it's read in,
+ * so checking all three locales would just print the same list three times.
  */
 export function reportPlaceholders() {
   if (process.env.NODE_ENV !== 'development') return
 
+  const site = getSite('en')
+  const projects = getProjects('en')
   const todo: string[] = []
 
   if (

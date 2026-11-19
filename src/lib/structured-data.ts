@@ -1,6 +1,8 @@
-import { disciplines, projects } from '@/content/projects'
-import { site } from '@/content/site'
+import { getDisciplines, getProjects } from '@/content/projects'
+import { getSite } from '@/content/site'
 import { emphasisPlain } from '@/lib/emphasis'
+import type { Locale } from '@/i18n/locales'
+import { localeTag } from '@/i18n/locales'
 
 /**
  * Schema.org JSON-LD.
@@ -9,8 +11,14 @@ import { emphasisPlain } from '@/lib/emphasis'
  * string, and it's what feeds the knowledge panel and the AI answer engines
  * recruiters increasingly search through. It costs ~1KB and is the single
  * highest-leverage SEO addition to a personal site.
+ *
+ * One schema per locale, matching whichever language the page it's embedded
+ * in actually renders: a JSON-LD block that describes an English jobTitle
+ * under a German page is a mismatch a search engine can penalise rather than
+ * resolve.
  */
-export function buildPersonSchema() {
+export function buildPersonSchema(locale: Locale) {
+  const site = getSite(locale)
   const { hiring } = site
 
   return {
@@ -20,12 +28,14 @@ export function buildPersonSchema() {
     name: site.name,
     jobTitle: site.role,
     description: site.description,
-    url: site.url,
+    url: `${site.url}/${locale}`,
     email: `mailto:${site.email}`,
     telephone: site.phone,
     // `sameAs` is how a search engine links this page to your other profiles.
     sameAs: site.socials.map((social) => social.href),
-    knowsAbout: disciplines.flatMap((discipline) => discipline.tools),
+    knowsAbout: getDisciplines(locale).flatMap(
+      (discipline) => discipline.tools,
+    ),
     knowsLanguage: site.languages.map((language) => ({
       '@type': 'Language',
       name: language.name,
@@ -51,15 +61,17 @@ export function buildPersonSchema() {
 /**
  * The page itself, tied back to the Person node above via `mainEntity`.
  */
-export function buildWebSiteSchema() {
+export function buildWebSiteSchema(locale: Locale) {
+  const site = getSite(locale)
+
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    '@id': `${site.url}/#website`,
-    url: site.url,
+    '@id': `${site.url}/${locale}#website`,
+    url: `${site.url}/${locale}`,
     name: `${site.name} | ${site.role}`,
     description: site.description,
-    inLanguage: 'en',
+    inLanguage: localeTag[locale],
     mainEntity: { '@id': `${site.url}/#person` },
   }
 }
@@ -68,12 +80,14 @@ export function buildWebSiteSchema() {
  * Each project as a CreativeWork, so the work section is machine-readable too.
  * Projects without a live URL are still listed; the link is simply omitted.
  */
-export function buildWorkSchema() {
+export function buildWorkSchema(locale: Locale) {
+  const site = getSite(locale)
+
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Selected work',
-    itemListElement: projects.map((project, index) => ({
+    itemListElement: getProjects(locale).map((project, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       item: {

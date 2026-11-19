@@ -15,7 +15,7 @@ const LERP = 0.18
 
 type Props = {
   tools: readonly string[]
-  /** Names the list for screen readers, e.g. "Marketing toolkit". */
+  /** The full, already-localized accessible name, e.g. "Marketing toolkit". See `toolkitLabel`. */
   label: string
   /** Spacing above the list, which differs between the two places it appears. */
   className?: string
@@ -309,7 +309,7 @@ export function ToolPills({ tools, label, className = 'mt-5' }: Props) {
     // negative margin on the list absorbs the last row's share.
     <ul
       ref={listRef}
-      aria-label={`${label} toolkit`}
+      aria-label={label}
       className={`tool-pills -mb-2 flex flex-wrap gap-x-2 gap-y-0 ${className}`}
     >
       {tools.map((tool, i) => (

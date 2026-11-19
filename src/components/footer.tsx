@@ -1,5 +1,41 @@
 import Image from 'next/image'
-import { site } from '@/content/site'
+import { getSite } from '@/content/site'
+import type { Locale } from '@/i18n/locales'
+
+const backToTop: Record<Locale, string> = {
+  en: 'Back to top',
+  de: 'Nach oben',
+  es: 'Volver arriba',
+}
+
+const indexLabel: Record<Locale, string> = {
+  en: 'Index',
+  de: 'Index',
+  es: 'Índice',
+}
+
+const elsewhereLabel: Record<Locale, string> = {
+  en: 'Elsewhere',
+  de: 'Anderswo',
+  es: 'En otros sitios',
+}
+
+const availabilityLabel: Record<Locale, string> = {
+  en: 'Availability',
+  de: 'Verfügbarkeit',
+  es: 'Disponibilidad',
+}
+
+const availableLine = (availableFrom: string, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return `Verfügbar ab ${availableFrom}`
+    case 'es':
+      return `Disponible desde ${availableFrom}`
+    default:
+      return `Available ${availableFrom}`
+  }
+}
 
 /**
  * The last thing a recruiter sees, and the only place on the page that changes
@@ -21,7 +57,8 @@ import { site } from '@/content/site'
  * repetition that earns itself: someone who skimmed the middle still leaves
  * knowing where he is, when he is free, and that there is no permit to arrange.
  */
-export function Footer() {
+export function Footer({ locale }: { locale: Locale }) {
+  const site = getSite(locale)
   const { hiring } = site
 
   return (
@@ -90,7 +127,7 @@ export function Footer() {
                 href="#hero"
                 className="wipe-stroke border-hair text-mute ease-brand hover:text-accent mt-7 inline-block rounded-full border px-[20px] py-2.5 text-sm font-medium whitespace-nowrap transition-colors duration-300"
               >
-                Back to top
+                {backToTop[locale]}
               </a>
             </div>
 
@@ -102,7 +139,7 @@ export function Footer() {
                 offers two identical entries with no way to tell them apart. */}
             <nav aria-labelledby="footer-index">
               <h2 id="footer-index" className="footer-label">
-                Index
+                {indexLabel[locale]}
               </h2>
               <ul className="mt-5 flex flex-col gap-3 text-[15px]">
                 {site.nav.map((item) => (
@@ -124,7 +161,7 @@ export function Footer() {
                 anyone browsing by landmark. */}
             <div>
               <h2 id="footer-elsewhere" className="footer-label">
-                Elsewhere
+                {elsewhereLabel[locale]}
               </h2>
               <ul
                 aria-labelledby="footer-elsewhere"
@@ -152,7 +189,7 @@ export function Footer() {
                 lines. */}
             <div className="col-span-2 min-[560px]:col-span-1">
               <h2 id="footer-availability" className="footer-label">
-                Availability
+                {availabilityLabel[locale]}
               </h2>
               {/* The route line lives under the headline and in the mobile
                   menu; here it was the third time on one screen, counting the
@@ -175,7 +212,7 @@ export function Footer() {
                       />
                     </span>
                   </span>
-                  Available {hiring.availableFrom}
+                  {availableLine(hiring.availableFrom, locale)}
                 </li>
                 {hiring.workEligibility ? (
                   <li className="flex items-start gap-2.5">

@@ -1,8 +1,23 @@
+import type { Locale } from '@/i18n/locales'
+
 /**
  * Work, disciplines and stack.
  *
  * A hiring manager gives the work section about twenty seconds, so each entry
  * leads with what Marc *did*, not what the thing *is*.
+ *
+ * English lives on the arrays below (`projects`, `disciplines`, `timeline`,
+ * `learning`), unconditionally: it's the language every other field in this
+ * file (slugs, tags, links) is already written in, and it's what
+ * `reportPlaceholders()` checks. German and Spanish live in the `translations`
+ * maps further down, keyed by slug/index so a reordering of the English array
+ * doesn't silently misalign them. Components call `getProjects(locale)` etc.,
+ * never the base arrays directly.
+ *
+ * `previewGallery`/`previewPoster` are scaffolding, not copy: borrowed Marqo
+ * screenshots standing in until a project has its own. They stay English in
+ * every locale, the same way a "lorem ipsum" placeholder wouldn't get
+ * translated either.
  */
 
 export type GalleryImage = {
@@ -575,3 +590,346 @@ export const learning: readonly string[] = [
   'Servers & infrastructure',
   'German',
 ] as const
+
+// ---------------------------------------------------------------------------
+// German and Spanish translations
+// ---------------------------------------------------------------------------
+
+type ProjectTranslation = {
+  kind: string
+  description: string
+  role: string
+  shorthand: string
+  imageAlt: string
+  /** Positional, parallel to the base project's own `gallery` array. Omitted
+   *  entirely for a project still on `previewGallery`: that gallery is
+   *  scaffolding, not copy, so there's nothing of its own to translate. */
+  galleryAlt?: readonly string[]
+  /** Only tessel has a video today. */
+  videoPosterAlt?: string
+}
+
+const projectTranslations: Record<
+  'de' | 'es',
+  Record<string, ProjectTranslation>
+> = {
+  de: {
+    tessel: {
+      kind: 'CRM | ERP',
+      description:
+        'Ein CRM für Agenturen, das zu einem vollständigen ERP mit Kundenportal wird und später zu einem SaaS, das andere Agenturen kaufen können. Modul für Modul aufgebaut (Vertrieb, Projekte, Finanzen, Betrieb) auf einem gemeinsamen Datenmodell, mit KI, die in den Ablauf eingewoben ist statt als separates Modul angeflanscht: Entwürfe für Follow-up-E-Mails, Zusammenfassungen der Historie eines Deals. Ausgeliefert in 10 Sprachen mit automatischer Spracherkennung. Von Anfang an Multi-Tenant, **auf Datenbankebene erzwungen** mit Postgres Row-Level Security, mit einer vollständigen Testsuite und einer eigenen CI/CD-Pipeline, die auf einen selbst gehosteten VPS deployt. Produkt, Marke und den gesamten Aufbau habe ich selbst gemacht.',
+      role: 'Produkt, Marke, Umsetzung',
+      shorthand: 'Multi-Tenant-CRM für Agenturen',
+      imageAlt: 'Tessel, ein Multi-Tenant-CRM und ERP für Agenturen',
+      galleryAlt: [
+        'Das Tessel-Startdashboard auf einem Laptop: Pipeline-Wert, aktive Projekte und eine überfällige Aufgabe mit einer KI-generierten Follow-up-E-Mail daneben geöffnet, ein Tonalitäts-Wähler mit „Formal, Freundlich, Kurz"',
+        'Ein Smartphone dreht sich und zeigt den Tessel-Startbildschirm, mit derselben KI-generierten Follow-up-E-Mail und demselben Tonalitäts-Wähler wie auf dem Laptop',
+        'Das Tessel-Aufgabenboard auf einem Laptop, Spalten für Zu erledigen, In Bearbeitung, In Prüfung und Erledigt',
+        'Ein Smartphone dreht sich und zeigt Tessels mobile Navigation: Start, Notizen und Unterhaltungen, dann die Bereiche Vertrieb und Projekte',
+      ],
+      videoPosterAlt:
+        'Das Tessel-Logo mit dem Slogan „Deine ganze Agentur, in einem Tool."',
+    },
+    northbridge: {
+      kind: 'Fiktive Marke',
+      description:
+        'Eine fiktive Treuhand- und Buchhaltungsfirma in Zürich, Briefing, Markenbildung und Fotografie (KI-generiert), von mir komplett von Grund auf entwickelt. Fünf Sprachen, fünf Länder, und **eine Steuerfristen-Engine, die für jedes Land die echten, belegten Einreichungsfristen berechnet** statt sie fest zu hinterlegen, sodass der Kalender für nächstes Jahr bereits korrekt ist.',
+      role: 'Briefing, Marke und Umsetzung',
+      shorthand: 'Fiktive Zürcher Treuhandfirma',
+      imageAlt:
+        'Sonnenlicht, das durch ein Bogenfenster auf eine Gipswand fällt, ein Eukalyptuszweig im Vordergrund, von der Startseite einer fiktiven Zürcher Treuhandfirma',
+      galleryAlt: [
+        'Sonnenlicht, das durch ein Bogenfenster auf eine Gipswand fällt, ein Eukalyptuszweig im Vordergrund, von der Startseite einer fiktiven Zürcher Treuhandfirma',
+        'Ein Steuerkalender mit MWST-, Einkommenssteuer-, Lohn- und Beitragsfristen über das ganze Jahr, mit der nächsten Frist, 30. November für die MWST Q3, separat hervorgehoben',
+        'Die deutschsprachige Kontaktseite mit der Überschrift „Reden wir über deine Zahlen", die eine Antwort bis Mittag des nächsten Werktags verspricht',
+        'Eine Formularbestätigungsseite mit einem laufenden Countdown bis zur Antwort, unter einem Bogen, der das Fenster der Startseite aufgreift',
+      ],
+    },
+    'santo-corte': {
+      kind: 'Fiktive Marke',
+      description:
+        'Eine fiktive Barbershop-Marke, Briefing und Branding inklusive, von mir komplett erfunden und umgesetzt. Das Briefing verlangte eine einfache Broschürenseite, die später zu einem Buchungssystem ausgebaut werden könnte; umgesetzt wurde mehr als das: ein Vollbild-Hero, der beim Scrollen durch **eine 300-Bilder-Canvas-Sequenz mit echter Alpha-Transparenz** blättert statt durch ein Video, mit GSAP und Lenis, die alles darunter animieren, durchgehend mit einem Fallback für reduzierte Bewegung.',
+      role: 'Briefing, Marke und Umsetzung',
+      shorthand: 'Fiktive Barbershop-Marke',
+      imageAlt:
+        'Eine gravierte Friseurschere mit der Gravur „Santo Corte" in gotischer Schrift, vor einem dunklen, unscharfen Barbershop-Interieur',
+      galleryAlt: [
+        'Eine gravierte Friseurschere mit der Gravur „Santo Corte" in gotischer Schrift, vor einem dunklen, unscharfen Barbershop-Interieur',
+        'Ein Vintage-Friseurstuhl mit gefalteten Heisshandtüchern und einem Rasiermesser darauf, dahinter das Wortzeichen „Santo Corte" an der Betonwand',
+        'Ein Rasiermesser, ein Rasierpinsel, eine Schere und ein Kamm, ausgelegt auf einem Stahltablett',
+        'Der Gründer in einem T-Shirt mit der Aufschrift „Santo Corte, Architects of Style", mit Kamm und Schere in der Hand im Barbershop',
+      ],
+    },
+    marqo: {
+      kind: 'SaaS',
+      description:
+        'Mein erstes SaaS: ein Rechner für den Autohandel, der Käufern und Händlern sagt, was wirklich Sinn ergibt zu kaufen. Produktstrategie, Marke, Marketing-Website und **die gesamte Umsetzung** habe ich selbst gemacht.',
+      role: 'Produkt, Marke, Umsetzung und Wachstum',
+      shorthand: 'SaaS für den Autohandel',
+      imageAlt: 'Marqo-Kaufentscheidungsrechner für den Autohandel',
+      galleryAlt: [
+        'Die Marqo-Landingpage auf einem Laptop, Headline fragt, wie viel an diesem Auto wirklich verdient wurde',
+        'Drei Smartphone-Bildschirme nebeneinander: Lagerbestand, Kaufrechner und Benachrichtigungen',
+        'Das Marqo-Dashboard auf einem Tablet, mit Fahrzeugen im Bestand, gebundenem Kapital und durchschnittlicher Marge',
+        'Die Marqo-Website geöffnet in einem Smartphone-Browser, mit beiden Händen gehalten',
+      ],
+    },
+    'freelance-practice': {
+      kind: 'Freelance-Praxis',
+      description:
+        '**Strategie, Design und Code aus einer Hand.** Ich arbeite zuerst die Positionierung aus und baue dann die Website, die sie trägt. Kunden, die normalerweise zwei Leute beauftragen würden, beauftragen einen.',
+      role: 'Strategie, Design, Umsetzung',
+      shorthand: 'Freelance-Praxis',
+      imageAlt: 'Website der Freelance-Praxis',
+    },
+    'agency-tracker': {
+      kind: 'Web-App | Kunde',
+      description:
+        'Projektmanagement für eine Agentur, mit Live-Synchronisierung zwischen Team und Kunde. Zwei Rollen, richtige Authentifizierung, und Berechtigungen so gesetzt, dass ein Kunde nur sieht, was er sehen soll. Entstanden aus einem echten Workflow-Problem und **im produktiven Einsatz**.',
+      role: 'Vollständige Umsetzung',
+      shorthand: 'Projekt-Tracker für Agenturen',
+      imageAlt: 'Dashboard des Agentur-Projekt-Trackers',
+    },
+    'client-sites': {
+      kind: 'Kundenprojekt',
+      description:
+        'Websites und Designsysteme für lokale Unternehmen, darunter Autohändler. **Keine Vorlagen.** Jedes Projekt beginnt damit, was das Unternehmen verkaufen muss, und bekommt ein Designsystem, das genau darauf aufgebaut ist.',
+      role: 'Strategie, Design & Umsetzung',
+      shorthand: 'Websites und Branding',
+      imageAlt: 'Auswahl an Kundenwebsites und Markensystemen',
+    },
+    'ai-tooling': {
+      kind: 'F&E',
+      description:
+        'Eine VS-Code-Erweiterung, mit der ich **mehrere KI-Coding-Agenten gleichzeitig** beobachten und steuern kann, statt den Überblick darüber zu verlieren, was jeder einzelne gerade tut. Dazu Experimente mit lokalen Coding-Modellen auf gewöhnlicher Hardware.',
+      role: 'Alleinige Forschung & Entwicklung',
+      shorthand: 'Multi-Agenten-Entwicklungstool',
+      imageAlt:
+        'VS-Code-Erweiterung zur Beobachtung von Multi-Agenten-Coding-Sitzungen',
+    },
+  },
+  es: {
+    tessel: {
+      kind: 'CRM | ERP',
+      description:
+        'Un CRM para agencias que escala hasta convertirse en un ERP completo con portal de cliente, y más adelante en un SaaS que otras agencias puedan comprar. Construido módulo a módulo (ventas, proyectos, finanzas, operaciones) sobre un único modelo de datos, con IA integrada en el flujo en lugar de añadida como un módulo aparte: redactando correos de seguimiento, resumiendo el historial de un trato. Lanzado en 10 idiomas, con detección automática de idioma. Multi-tenant desde el primer día, **reforzado a nivel de base de datos** con seguridad a nivel de fila (RLS) de Postgres, con una suite de pruebas completa y su propio pipeline de CI/CD que despliega en un VPS autogestionado. El producto, la marca y toda la construcción los hice yo.',
+      role: 'Producto, marca, construcción',
+      shorthand: 'CRM multi-tenant para agencias',
+      imageAlt: 'Tessel, un CRM y ERP multi-tenant para agencias',
+      galleryAlt: [
+        'El panel de inicio de Tessel en un portátil: valor del pipeline, proyectos activos y una tarea atrasada con un correo de seguimiento redactado por IA abierto al lado, un selector de tono con "Formal, Cercano, Breve"',
+        'Un teléfono girando para mostrar la pantalla de inicio de Tessel, con el mismo correo de seguimiento redactado por IA y el mismo selector de tono que en el portátil',
+        'El tablero de tareas de Tessel en un portátil, columnas para Por hacer, En curso, En revisión y Hecho',
+        'Un teléfono girando para mostrar la navegación móvil de Tessel: Inicio, Notas y Conversaciones, y después las secciones de Ventas y Proyectos',
+      ],
+      videoPosterAlt:
+        'El logotipo de Tessel, con el eslogan "Toda tu agencia, en una sola herramienta."',
+    },
+    northbridge: {
+      kind: 'Marca ficticia',
+      description:
+        'Una fiduciaria y firma contable ficticia en Zúrich, con brief, branding y fotografía (generada por IA) construidos desde cero por mí. Cinco idiomas, cinco países, y **un motor de plazos fiscales que calcula las fechas reales y verificadas de cada país** en lugar de fijarlas a mano, de modo que el calendario del año siguiente ya es correcto.',
+      role: 'Brief, marca y construcción',
+      shorthand: 'Fiduciaria ficticia de Zúrich',
+      imageAlt:
+        'Luz solar atravesando una ventana en arco sobre una pared de yeso, una rama de eucalipto en primer plano, en la página de inicio de una fiduciaria ficticia de Zúrich',
+      galleryAlt: [
+        'Luz solar atravesando una ventana en arco sobre una pared de yeso, una rama de eucalipto en primer plano, en la página de inicio de una fiduciaria ficticia de Zúrich',
+        'Un calendario fiscal con los plazos de IVA, impuesto sobre la renta, nóminas y cotizaciones a lo largo del año, destacando por separado el siguiente plazo, el 30 de noviembre para el IVA del tercer trimestre',
+        'La página de contacto en alemán, con el titular "Reden wir über deine Zahlen" (hablemos de tus números), que promete respuesta antes del mediodía del siguiente día laborable',
+        'Una página de confirmación de formulario con una cuenta atrás en directo hasta la respuesta, bajo un arco que recuerda a la ventana de la portada',
+      ],
+    },
+    'santo-corte': {
+      kind: 'Marca ficticia',
+      description:
+        'Una marca de barbería ficticia, con brief y branding incluidos, inventada y construida desde cero por mí. El brief pedía un sitio folleto básico que más adelante pudiera crecer hacia un sistema de reservas; lo que se construyó va más allá: un hero a pantalla completa que, al hacer scroll, recorre **una secuencia de canvas de 300 fotogramas con transparencia alfa real** en lugar de un vídeo, con GSAP y Lenis animando todo lo que hay debajo, con alternativa de movimiento reducido en todo el sitio.',
+      role: 'Brief, marca y construcción',
+      shorthand: 'Marca ficticia de barbería',
+      imageAlt:
+        'Unas tijeras de barbero grabadas con "Santo Corte" en tipografía gótica, suspendidas sobre un interior de barbería difuso y en penumbra',
+      galleryAlt: [
+        'Unas tijeras de barbero grabadas con "Santo Corte" en tipografía gótica, suspendidas sobre un interior de barbería difuso y en penumbra',
+        'Un sillón de barbero vintage con toallas calientes dobladas y una navaja de afeitar colocada encima, con el logotipo "Santo Corte" en la pared de hormigón detrás',
+        'Una navaja de afeitar, una brocha, unas tijeras y un peine colocados sobre una bandeja de acero',
+        'El fundador con una camiseta que dice "Santo Corte, Architects of Style", sujetando un peine y unas tijeras en la barbería',
+      ],
+    },
+    marqo: {
+      kind: 'SaaS',
+      description:
+        'Mi primer SaaS: una calculadora para el sector del motor que dice a compradores y concesionarios qué compra tiene realmente sentido. La estrategia de producto, la marca, el sitio de marketing y **toda la construcción** los hice yo.',
+      role: 'Producto, marca, construcción y crecimiento',
+      shorthand: 'SaaS de venta de coches',
+      imageAlt:
+        'Calculadora de decisión de compra Marqo para el sector del motor',
+      galleryAlt: [
+        'La página de inicio de Marqo en un portátil, con un titular que pregunta cuánto se ganó realmente con este coche',
+        'Tres pantallas de móvil una junto a otra: stock, la calculadora de compra y las alertas',
+        'El panel de Marqo en una tablet, mostrando coches en stock, dinero inmovilizado y margen medio',
+        'El sitio de Marqo abierto en el navegador de un móvil, sujetado con ambas manos',
+      ],
+    },
+    'freelance-practice': {
+      kind: 'Práctica freelance',
+      description:
+        '**Estrategia, diseño y código desde una sola persona.** Primero defino el posicionamiento y después construyo el sitio que lo sostiene. Los clientes que normalmente contratarían a dos personas contratan a una.',
+      role: 'Estrategia, diseño, construcción',
+      shorthand: 'Práctica freelance',
+      imageAlt: 'Sitio web de la práctica freelance',
+    },
+    'agency-tracker': {
+      kind: 'Aplicación web | Cliente',
+      description:
+        'Gestión de proyectos para una agencia, con sincronización en tiempo real entre el equipo y el cliente. Dos roles, autenticación real y permisos configurados para que el cliente solo vea lo que debe ver. Surgió de un problema real de flujo de trabajo y **está en producción**.',
+      role: 'Construcción completa',
+      shorthand: 'Gestor de proyectos para agencias',
+      imageAlt: 'Panel del Agency project tracker',
+    },
+    'client-sites': {
+      kind: 'Trabajo para clientes',
+      description:
+        'Sitios web y sistemas de diseño para negocios locales, entre ellos concesionarios de coches. **Sin plantillas.** Cada uno parte de lo que el negocio necesita vender, y recibe un sistema de diseño construido a partir de eso.',
+      role: 'Estrategia, diseño y construcción',
+      shorthand: 'Sitios y branding',
+      imageAlt: 'Selección de sitios web y sistemas de marca para clientes',
+    },
+    'ai-tooling': {
+      kind: 'I+D',
+      description:
+        'Una extensión de VS Code que me permite observar y dirigir **varios agentes de codificación con IA a la vez**, en lugar de perder de vista lo que cada uno está haciendo. Además de experimentos ejecutando modelos de código locales en hardware corriente.',
+      role: 'I+D en solitario',
+      shorthand: 'Herramienta de desarrollo multiagente',
+      imageAlt:
+        'Extensión de VS Code para observar sesiones de codificación con varios agentes',
+    },
+  },
+}
+
+export function getProjects(locale: Locale): readonly Project[] {
+  if (locale === 'en') return projects
+
+  const t = projectTranslations[locale]
+  return projects.map((project) => {
+    const tr = t[project.slug]
+    if (!tr) return project
+
+    return {
+      ...project,
+      kind: tr.kind,
+      description: tr.description,
+      role: tr.role,
+      shorthand: tr.shorthand,
+      imageAlt: tr.imageAlt,
+      gallery: tr.galleryAlt
+        ? project.gallery.map((image, i) => ({
+            ...image,
+            alt: tr.galleryAlt?.[i] ?? image.alt,
+          }))
+        : project.gallery,
+      video:
+        project.video && tr.videoPosterAlt
+          ? { ...project.video, posterAlt: tr.videoPosterAlt }
+          : project.video,
+    }
+  })
+}
+
+type DisciplineTranslation = Pick<Discipline, 'name' | 'claim' | 'body'>
+
+const disciplineTranslations: Record<
+  'de' | 'es',
+  readonly DisciplineTranslation[]
+> = {
+  de: [
+    {
+      name: 'Full-Stack-Entwickler',
+      claim: 'Ich baue es selbst',
+      body: 'Echte Produkte, keine Mockups: Firmenwebsites, Landingpages, Marketing-Automation, SaaS, Web-Apps, interne Software. Ich bringe sie vom Frontend bis zum Deployment, wobei Coding-Agenten echte Arbeit neben mir leisten statt nur im Editor zu autovervollständigen. Es gibt keine Übergabe, weil es niemanden gibt, an den übergeben werden könnte.',
+    },
+    {
+      name: 'Full-Stack-MarTech-Spezialist',
+      claim: 'Ich weiss, warum es verkauft',
+      body: 'Zuerst die Strategie, dann der MarTech-Stack, der ihr dient: SEO, Paid Acquisition, Social Media, Landingpages, CRO, E-Mail und die Automation dahinter. Sieben Jahre davon, bevor ich eine einzige Zeile Produktionscode geschrieben habe, weshalb ich schon beim Bauen an Konversion denke, nicht erst danach.',
+    },
+  ],
+  es: [
+    {
+      name: 'Desarrollador full-stack',
+      claim: 'Lo construyo yo mismo',
+      body: 'Productos reales, no maquetas: sitios corporativos, landing pages, automatización de marketing, SaaS, aplicaciones web, software interno. Los llevo desde el frontend hasta el despliegue, con agentes de codificación haciendo trabajo real a mi lado en lugar de solo autocompletar en el editor. No hay traspaso, porque no hay nadie a quien traspasar.',
+    },
+    {
+      name: 'Especialista full-stack en MarTech',
+      claim: 'Sé por qué vende',
+      body: 'Primero la estrategia, después el stack de MarTech que la sirve: SEO, adquisición de pago, redes sociales, landing pages, CRO, email y la automatización detrás de todo ello. Siete años haciendo esto antes de escribir una sola línea de código en producción, por eso ya pienso en conversión mientras construyo, no después.',
+    },
+  ],
+}
+
+export function getDisciplines(locale: Locale): readonly Discipline[] {
+  if (locale === 'en') return disciplines
+
+  const t = disciplineTranslations[locale]
+  return disciplines.map((discipline, i) => ({
+    ...discipline,
+    ...t[i],
+  }))
+}
+
+type MilestoneTranslation = Pick<Milestone, 'label' | 'detail'>
+
+const timelineTranslations: Record<
+  'de' | 'es',
+  readonly MilestoneTranslation[]
+> = {
+  de: [
+    {
+      label: 'Einstieg ins Marketing',
+      detail: 'Gelernt, was Leute zum Klicken, Kaufen und Wiederkommen bringt.',
+    },
+    {
+      label: 'Webentwicklung studiert',
+      detail:
+        'Ich wollte die Produkte selbst bauen, nicht nur das Briefing dafür schreiben.',
+    },
+    {
+      label: 'KI-nativ geworden',
+      detail:
+        'Täglich Coding-Agenten, plus die Tools, die ich darum herum baue.',
+    },
+  ],
+  es: [
+    {
+      label: 'Empecé en marketing',
+      detail: 'Aprendiendo qué hace que la gente haga clic, compre y vuelva.',
+    },
+    {
+      label: 'Estudié desarrollo web',
+      detail:
+        'Quería construir los productos, no solo escribir el brief para ellos.',
+    },
+    {
+      label: 'Me volví nativo en IA',
+      detail:
+        'Agentes de codificación cada día, además de las herramientas que construyo a su alrededor.',
+    },
+  ],
+}
+
+export function getTimeline(locale: Locale): readonly Milestone[] {
+  if (locale === 'en') return timeline
+
+  const t = timelineTranslations[locale]
+  return timeline.map((milestone, i) => ({ ...milestone, ...t[i] }))
+}
+
+const learningTranslations: Record<'de' | 'es', readonly string[]> = {
+  de: ['Server & Infrastruktur', 'Deutsch'],
+  es: ['Servidores e infraestructura', 'Alemán'],
+}
+
+export function getLearning(locale: Locale): readonly string[] {
+  if (locale === 'en') return learning
+  return learningTranslations[locale]
+}

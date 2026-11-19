@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { cardTops } from '@/lib/deck'
+import type { Locale } from '@/i18n/locales'
 import { scrollToY } from '@/lib/smooth-scroll'
 
 type Entry = {
@@ -13,6 +14,35 @@ type Entry = {
 
 type Props = {
   projects: readonly Entry[]
+  locale: Locale
+}
+
+const switcherLabel = (
+  title: string,
+  current: number,
+  total: number,
+  locale: Locale,
+): string => {
+  switch (locale) {
+    case 'de':
+      return `${title}, Projekt ${current} von ${total}. Projekt wählen`
+    case 'es':
+      return `${title}, proyecto ${current} de ${total}. Elegir un proyecto`
+    default:
+      return `${title}, project ${current} of ${total}. Choose a project`
+  }
+}
+
+const previousProject: Record<Locale, string> = {
+  en: 'Previous project',
+  de: 'Vorheriges Projekt',
+  es: 'Proyecto anterior',
+}
+
+const nextProject: Record<Locale, string> = {
+  en: 'Next project',
+  de: 'Nächstes Projekt',
+  es: 'Siguiente proyecto',
 }
 
 /** How long the menu waits before closing, so the pointer can cross the gap. */
@@ -34,7 +64,7 @@ const CLOSE_DELAY_MS = 140
  * Desktop only. Below 880px the cards are not a deck at all: nothing pins,
  * nothing snaps, and a floating badge would just cover the page.
  */
-export function DeckIndex({ projects }: Props) {
+export function DeckIndex({ projects, locale }: Props) {
   const total = projects.length
   const [active, setActive] = useState<number | null>(null)
   const [inDeck, setInDeck] = useState(false)
@@ -178,9 +208,12 @@ export function DeckIndex({ projects }: Props) {
            separator between blocks that no amount of punctuation in the markup
            can take back. The visible label still leads the spoken one, which is
            what WCAG 2.5.3 asks for. */
-          aria-label={`${currentProject?.title ?? ''}, project ${
-            current + 1
-          } of ${total}. Choose a project`}
+          aria-label={switcherLabel(
+            currentProject?.title ?? '',
+            current + 1,
+            total,
+            locale,
+          )}
           onClick={() => setOpen((was) => !was)}
           className="deck-name"
         >
@@ -236,7 +269,7 @@ export function DeckIndex({ projects }: Props) {
       <button
         type="button"
         className="deck-btn"
-        aria-label="Previous project"
+        aria-label={previousProject[locale]}
         disabled={current === 0}
         onClick={() => go(current - 1)}
       >
@@ -245,7 +278,7 @@ export function DeckIndex({ projects }: Props) {
       <button
         type="button"
         className="deck-btn"
-        aria-label="Next project"
+        aria-label={nextProject[locale]}
         disabled={current === total - 1}
         onClick={() => go(current + 1)}
       >

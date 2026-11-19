@@ -1,14 +1,64 @@
 import Image from 'next/image'
 import { Media } from '@/components/media'
 import { SplitWords } from '@/components/split-words'
-import { site } from '@/content/site'
+import { getSite } from '@/content/site'
+import type { Locale } from '@/i18n/locales'
 
 /** Helper for the staggered fade-up entrance. */
 const delay = (seconds: number) =>
   ({ '--delay': `${seconds}s` }) as React.CSSProperties
 
-export function Hero() {
+/**
+ * "Marketer" stays an English loanword in German and Spanish too, the same
+ * call as "MarTech" in `site.ts`: it keeps the two single-word lines the
+ * stagger below depends on, where a literal translation would not.
+ */
+const headline: Record<Locale, readonly [string, string]> = {
+  en: ['Developer.', 'Marketer.'],
+  de: ['Entwickler.', 'Marketer.'],
+  es: ['Desarrollador.', 'Marketer.'],
+}
+
+const lede: Record<Locale, string> = {
+  en: 'I build web products end to end, and the growth around them.',
+  de: 'Ich baue Webprodukte von Anfang bis Ende, und das Wachstum darum herum.',
+  es: 'Construyo productos web de principio a fin, y el crecimiento alrededor de ellos.',
+}
+
+const subLede: Record<Locale, string> = {
+  en: 'Full-stack MarTech specialist for seven years, across SEO, paid acquisition, social media and CRO. Full-stack developer for three, shipping the products that marketing points to. The same person designs both, not handed between two teams.',
+  de: 'Sieben Jahre Full-Stack-MarTech-Spezialist, über SEO, Paid Acquisition, Social Media und CRO. Drei Jahre Full-Stack-Entwickler, der die Produkte liefert, auf die das Marketing zeigt. Dieselbe Person entwirft beides, nicht aufgeteilt auf zwei Teams.',
+  es: 'Especialista full-stack en MarTech durante siete años, en SEO, adquisición de pago, redes sociales y CRO. Desarrollador full-stack durante tres, entregando los productos a los que apunta el marketing. La misma persona diseña ambos, no repartidos entre dos equipos.',
+}
+
+const available: Record<Locale, string> = {
+  en: 'Available',
+  de: 'Verfügbar',
+  es: 'Disponible',
+}
+
+const seeTheWork: Record<Locale, string> = {
+  en: 'See the work',
+  de: 'Zu den Projekten',
+  es: 'Ver los proyectos',
+}
+
+const downloadCV: Record<Locale, string> = {
+  en: 'Download CV',
+  de: 'CV herunterladen',
+  es: 'Descargar CV',
+}
+
+const letsTalk: Record<Locale, string> = {
+  en: "Let's talk",
+  de: 'Lass uns reden',
+  es: 'Hablemos',
+}
+
+export function Hero({ locale }: { locale: Locale }) {
+  const site = getSite(locale)
   const { hiring, cvPath } = site
+  const [line1, line2] = headline[locale]
 
   return (
     <section
@@ -53,14 +103,14 @@ export function Hero() {
             continues across both lines via `start`. */}
         <h1
           id="hero-heading"
-          aria-label="Developer. Marketer."
+          aria-label={`${line1} ${line2}`}
           className="text-[clamp(2.8rem,6.2vw,6rem)] leading-[0.98] font-semibold tracking-[-0.035em]"
         >
           <span className="block">
-            <SplitWords text="Developer." start={0} total={2} />
+            <SplitWords text={line1} start={0} total={2} />
           </span>
           <span className="block">
-            <SplitWords text="Marketer." start={1} total={2} />
+            <SplitWords text={line2} start={1} total={2} />
           </span>
         </h1>
 
@@ -71,7 +121,7 @@ export function Hero() {
           className="fade-up text-soft mt-[clamp(18px,3vh,32px)] max-w-[34ch] text-[clamp(1.05rem,1.55vw,1.3rem)]"
           style={delay(0.5)}
         >
-          I build web products end to end, and the growth around them.
+          {lede[locale]}
         </p>
 
         <p
@@ -81,10 +131,7 @@ export function Hero() {
           {/* Not "most teams hire twice for that": headcount framing prices the
               work by what it replaces and reads as an offer to be bought
               cheaply. The argument is that the decisions hold together. */}
-          Full-stack MarTech specialist for seven years, across SEO, paid
-          acquisition, social media and CRO. Full-stack developer for three,
-          shipping the products that marketing points to. The same person
-          designs both, not handed between two teams.
+          {subLede[locale]}
         </p>
 
         {/* The three facts a Swiss recruiter screens on, above the fold and in
@@ -141,7 +188,7 @@ export function Hero() {
                 />
               </span>
             </span>
-            Available
+            {available[locale]}
           </li>
           {hiring.workEligibility ? (
             <>
@@ -175,7 +222,7 @@ export function Hero() {
             href="#work"
             className="wipe-fill border-ink ease-brand hover:border-accent hover:text-on-accent inline-block rounded-full border px-[22px] py-3 text-sm font-medium transition-colors duration-300"
           >
-            See the work
+            {seeTheWork[locale]}
           </a>
           {cvPath ? (
             <a
@@ -183,14 +230,14 @@ export function Hero() {
               download
               className="wipe-stroke border-hair text-mute ease-brand hover:text-accent inline-block rounded-full border px-[22px] py-3 text-sm font-medium transition-colors duration-300"
             >
-              Download CV
+              {downloadCV[locale]}
             </a>
           ) : (
             <a
               href="#contact"
               className="wipe-stroke border-hair text-mute ease-brand hover:text-accent inline-block rounded-full border px-[22px] py-3 text-sm font-medium transition-colors duration-300"
             >
-              Let&rsquo;s talk
+              {letsTalk[locale]}
             </a>
           )}
         </div>

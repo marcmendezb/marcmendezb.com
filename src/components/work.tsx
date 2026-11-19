@@ -6,9 +6,63 @@ import { ProjectVideo } from '@/components/project-video'
 import { Reveal } from '@/components/reveal'
 import { SectionHeading } from '@/components/section-heading'
 import { ToolPills } from '@/components/tool-pills'
-import { projects } from '@/content/projects'
+import { getProjects } from '@/content/projects'
+import type { Locale } from '@/i18n/locales'
+import { toolkitLabel } from '@/lib/toolkit-label'
 
-export function Work() {
+const title: Record<Locale, string> = {
+  en: 'Selected work',
+  de: 'Ausgewählte Projekte',
+  es: 'Proyectos seleccionados',
+}
+
+const meta = (count: number, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return `${count} Projekte | Produkte, Kundenarbeit und F&E`
+    case 'es':
+      return `${count} proyectos | productos, trabajo para clientes e I+D`
+    default:
+      return `${count} projects | products, client work and R&D`
+  }
+}
+
+const projectCount = (index: number, total: number, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return `Projekt ${index} von ${total}`
+    case 'es':
+      return `Proyecto ${index} de ${total}`
+    default:
+      return `Project ${index} of ${total}`
+  }
+}
+
+const notAvailableYet = (title: string, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return ` für ${title}, noch nicht verfügbar`
+    case 'es':
+      return ` para ${title}, no disponible aún`
+    default:
+      return ` for ${title}, not available yet`
+  }
+}
+
+const opensInNewTab = (title: string, locale: Locale): string => {
+  switch (locale) {
+    case 'de':
+      return ` für ${title}, öffnet in einem neuen Tab`
+    case 'es':
+      return ` para ${title}, se abre en una pestaña nueva`
+    default:
+      return ` for ${title}, opens in a new tab`
+  }
+}
+
+export function Work({ locale }: { locale: Locale }) {
+  const projects = getProjects(locale)
+
   return (
     <section
       id="work"
@@ -21,8 +75,8 @@ export function Work() {
       <div className="px-edge">
         <SectionHeading
           id="work-heading"
-          title="Selected work"
-          meta={`${projects.length} projects | products, client work and R&D`}
+          title={title[locale]}
+          meta={meta(projects.length, locale)}
         />
       </div>
 
@@ -33,7 +87,7 @@ export function Work() {
           The gap is gone: each article is a viewport tall and carries its own
           breathing room, and a gap on top of that just pushed the next slide
           out of alignment with the screen. */}
-      <DeckIndex projects={projects} />
+      <DeckIndex projects={projects} locale={locale} />
 
       <div className="grid">
         {projects.map((project, index) => {
@@ -94,6 +148,7 @@ export function Work() {
                     images={project.gallery}
                     label={project.title}
                     sizes="(max-width: 880px) 100vw, 54vw"
+                    locale={locale}
                   />
                 ) : (
                   <Media
@@ -149,7 +204,7 @@ export function Work() {
                     card instead of hearing a floating badge re-announce
                     itself. */}
                   <p className="sr-only">
-                    Project {index + 1} of {projects.length}
+                    {projectCount(index + 1, projects.length, locale)}
                   </p>
 
                   <p
@@ -217,7 +272,7 @@ export function Work() {
 
                   <ToolPills
                     tools={project.tags}
-                    label={project.title}
+                    label={toolkitLabel(project.title, locale)}
                     className={`mt-[18px] ${mediaSecond ? 'min-[880px]:justify-end' : ''}`}
                   />
 
@@ -242,6 +297,7 @@ export function Work() {
                               title={project.title}
                               video={project.video}
                               mirrored={mediaSecond}
+                              locale={locale}
                             />
                           ) : link.href === null ? (
                             /* Named, but not offered. The destination does not
@@ -260,7 +316,7 @@ export function Work() {
                             >
                               {link.label}
                               <span className="sr-only">
-                                {` for ${project.title}, not available yet`}
+                                {notAvailableYet(project.title, locale)}
                               </span>
                               <span
                                 aria-hidden="true"
@@ -289,7 +345,7 @@ export function Work() {
                                 accessible name, which ran this together as
                                 "Landing pagefor Marqo". */}
                               <span className="sr-only">
-                                {` for ${project.title}, opens in a new tab`}
+                                {opensInNewTab(project.title, locale)}
                               </span>
                               <span
                                 aria-hidden="true"

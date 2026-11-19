@@ -240,6 +240,48 @@ export const projects: readonly Project[] = [
     },
   },
   {
+    slug: 'northbridge',
+    title: 'Northbridge Advisory',
+    kind: 'Fictional brand',
+    description:
+      "A fictional fiduciary and accounting firm in Zürich, brief, branding and photography (AI-generated) built from scratch by me. Five languages, five countries, and **a tax deadline engine that computes each country's real, sourced filing dates** instead of hard-coding them, so next year's calendar is already correct.",
+    outcome: null,
+    role: 'Brief, brand and build',
+    year: '2026',
+    tags: [
+      'Astro',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'GSAP',
+      'Cloudflare Pages',
+    ],
+    links: [{ label: 'Visit site', href: 'https://northbridge-124.pages.dev' }],
+    shorthand: 'Fictional Zürich fiduciary',
+    image: '/work/northbridge/northbridge-01.jpg',
+    imageAlt:
+      'Sunlight through an arched window falling across a plaster wall, a eucalyptus branch in the foreground, from the homepage of a fictional Zürich fiduciary',
+    gallery: [
+      {
+        src: '/work/northbridge/northbridge-01.jpg',
+        alt: 'Sunlight through an arched window falling across a plaster wall, a eucalyptus branch in the foreground, from the homepage of a fictional Zürich fiduciary',
+      },
+      {
+        src: '/work/northbridge/northbridge-02.jpg',
+        alt: 'A tax calendar showing VAT, income tax, payroll and contribution deadlines across the year, with the next deadline, 30 November for Q3 VAT, called out separately',
+      },
+      {
+        src: '/work/northbridge/northbridge-03.jpg',
+        alt: 'The German-language contact page, headlined "Reden wir über deine Zahlen," promising a reply by noon the next working day',
+      },
+      {
+        src: '/work/northbridge/northbridge-04.jpg',
+        alt: "A form confirmation page with a live countdown to reply, under an arch echoing the homepage's window",
+      },
+    ],
+    video: null,
+  },
+  {
     slug: 'santo-corte',
     title: 'Santo Corte',
     // Flagged right in the meta line, not just in the paragraph below it: a

@@ -64,7 +64,7 @@ touching.**
       without a link rather than a dead `#`, but a borrowed screenshot reads
       as finished and wrong: this is the one item here that must not go
       live as-is.
-- [ ] **Project outcomes**: `projects[].outcome` is `null` on 7 of 7
+- [ ] **Project outcomes**: `projects[].outcome` is `null` on 8 of 8
       projects. A number ("first 200 users in 6 weeks", "0.9s LCP") is the
       single biggest upgrade available to this page.
 - [ ] **Education institutions**: `site.education[].institution` is `null`

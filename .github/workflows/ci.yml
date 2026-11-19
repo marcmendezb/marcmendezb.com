@@ -35,6 +35,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # `PageProps`/`LayoutProps` and friends are ambient types Next.js
+      # generates into the gitignored `.next/types`, not part of the
+      # package. `pnpm typecheck` finds them locally only because something
+      # (next dev, next build, this same command) already ran first in that
+      # checkout; a fresh CI clone has no `.next` at all, so typecheck has to
+      # generate them itself before tsc ever runs.
+      - name: Generate route types
+        run: pnpm exec next typegen
+
       - name: Typecheck
         run: pnpm typecheck
 

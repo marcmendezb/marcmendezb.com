@@ -57,7 +57,7 @@ export const site = {
    * Used in <title>, OG tags and the JSON-LD `jobTitle`.
    *
    * Both named outright rather than one leading. Seven years in marketing
-   * and four building products are different tenures, but neither is the
+   * and three building products are different tenures, but neither is the
    * "real" job with the other bolted on, and a recruiter searching either
    * term on its own should still land on this page.
    *
@@ -83,7 +83,7 @@ export const site = {
 
   /** <150 chars. What Google shows, and what appears when someone pastes the link. */
   description:
-    'Full-stack developer and MarTech specialist. Seven years in marketing, four building products. Based near Zürich, available now.',
+    'Full-stack developer and MarTech specialist. Seven years in marketing, three building products. Based near Zürich, available now.',
 
   // ---------------------------------------------------------------------------
   // Contact

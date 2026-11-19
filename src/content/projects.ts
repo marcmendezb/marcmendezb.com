@@ -443,7 +443,7 @@ export const projects: readonly Project[] = [
 /**
  * The two disciplines, in no particular order.
  *
- * Full-stack on both sides: seven years as a MarTech specialist and four
+ * Full-stack on both sides: seven years as a MarTech specialist and three
  * as a developer are different tenures, but neither one is the "real" job
  * with the other bolted on. AI tooling sits inside the developer discipline
  * rather than as a third item of its own: coding agents are a development
@@ -558,13 +558,13 @@ export const timeline: readonly Milestone[] = [
     detail: 'Learning what makes people click, buy and come back.',
   },
   {
-    year: '2022',
+    year: '2023',
     label: 'Studied web development',
     detail:
       'I wanted to build the products, not just write the brief for them.',
   },
   {
-    year: '2024',
+    year: '2025',
     label: 'Went AI-native',
     detail: 'Coding agents every day, plus the tools I build around them.',
   },

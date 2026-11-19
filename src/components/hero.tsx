@@ -82,7 +82,7 @@ export function Hero() {
               work by what it replaces and reads as an offer to be bought
               cheaply. The argument is that the decisions hold together. */}
           Full-stack MarTech specialist for seven years, across SEO, paid
-          acquisition, social media and CRO. Full-stack developer for four,
+          acquisition, social media and CRO. Full-stack developer for three,
           shipping the products that marketing points to. The same person
           designs both, not handed between two teams.
         </p>

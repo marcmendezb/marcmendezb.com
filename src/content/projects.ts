@@ -292,7 +292,7 @@ export const projects: readonly Project[] = [
       'A fictional barbershop, brief and branding included, invented and built from scratch by me. The brief asked for a basic brochure site that could grow into a booking system later; what shipped goes further than that: a full-screen hero scroll-scrubbing **a 300-frame canvas sequence with real alpha transparency** instead of a video, GSAP and Lenis animating everything beneath it, with a reduced-motion fallback throughout.',
     outcome: null,
     role: 'Brief, brand and build',
-    year: '2024',
+    year: '2026',
     tags: ['React', 'TypeScript', 'Vite', 'GSAP', 'Lenis', 'Vercel'],
     links: [{ label: 'Visit site', href: 'https://santocorteweb.vercel.app/' }],
     shorthand: 'Fictional barbershop brand',
@@ -323,8 +323,11 @@ export const projects: readonly Project[] = [
     slug: 'marqo',
     title: 'Marqo',
     kind: 'SaaS',
+    // "My first SaaS" is stated outright; the growth since is left for the
+    // reader to notice on their own, set against Tessel's own, later, more
+    // demanding build, rather than claimed here.
     description:
-      'A SaaS for car retail, built around a calculator that tells buyers and dealers what actually makes sense to buy. I did the product strategy, the brand, the marketing site and **the whole build**.',
+      'My first SaaS: a car-retail calculator that tells buyers and dealers what actually makes sense to buy. I did the product strategy, the brand, the marketing site and **the whole build**.',
     outcome: null,
     role: 'Product, brand, build and growth',
     year: 'Since 2025',
@@ -375,7 +378,7 @@ export const projects: readonly Project[] = [
       '**Strategy, design and code from one person.** I work out the positioning first, then build the site that carries it. Clients who’d normally hire two people hire one.',
     outcome: null,
     role: 'Strategy, design, build',
-    year: 'Since 2023',
+    year: 'Since 2026',
     tags: ['Marketing strategy', 'Web design', 'CRO', 'Next.js'],
     links: [],
     shorthand: 'Freelance practice',
@@ -392,7 +395,7 @@ export const projects: readonly Project[] = [
       'Project management for an agency, with live sync between the team and the client. Two roles, proper auth, and permissions set so a client only sees what they’re meant to. It came out of a real workflow problem and it’s **running in production**.',
     outcome: null,
     role: 'Full build',
-    year: '2025',
+    year: '2026',
     tags: ['Vite', 'Supabase', 'Realtime', 'PostgreSQL', 'Netlify'],
     links: [], // TODO: add the live URL, or leave empty if it's private
     shorthand: 'Agency project tracker',
@@ -409,7 +412,7 @@ export const projects: readonly Project[] = [
       'Websites and design systems for local businesses, car dealers among them. **No templates.** Each one starts from what the business needs to sell, and gets a design system built around that.',
     outcome: null,
     role: 'Strategy, design & build',
-    year: 'Since 2022',
+    year: 'Since 2026',
     tags: ['Design systems', 'CRO', 'Technical SEO', 'Landing pages'],
     links: [],
     shorthand: 'Sites and branding',
@@ -426,7 +429,7 @@ export const projects: readonly Project[] = [
       'A VS Code extension that lets me watch and steer **several AI coding agents at once**, instead of losing track of what each one’s doing. Plus experiments running local coding models on ordinary hardware.',
     outcome: null,
     role: 'Solo R&D',
-    year: 'Since 2024',
+    year: 'Since 2026',
     tags: ['AI agents', 'VS Code', 'LLM APIs', 'Automation'],
     links: [],
     shorthand: 'Multi-agent dev tooling',

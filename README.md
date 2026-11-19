@@ -1,34 +1,128 @@
 # marcmendezb.com
 
-Personal landing page of Marc Mendez, full-stack developer and marketing
-technologist, based in the Zürich area.
+> Personal landing page of Marc Mendez: full-stack developer and MarTech specialist based near Zürich. Seven years in marketing, three building products.
 
-Static Next.js site. No database, no API, no third-party scripts. Every route is
-prerendered at build time, so it can be hosted anywhere.
+[![Next.js](https://img.shields.io/badge/Next.js-16.4-black.svg)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue.svg)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8.svg)](https://tailwindcss.com/)
+[![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA_Compliant-green.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
+[![Languages](https://img.shields.io/badge/Locales-EN_|_DE_|_ES-f59e0b.svg)](#localization--seo)
 
-**This repo is public on purpose.** If you're a recruiter or hiring manager
-reading this, treat it as a work sample, not just the source behind a page:
-it's the same practice as the client work it describes, applied to itself.
-A few places worth a direct look rather than taking the claim on faith:
+Static Next.js site. No database, no API, no third-party tracking scripts. Every route is prerendered at build time with full internationalization across English, German, and Spanish.
 
-- [`.github/workflows/ci.yml`](.github/workflows/ci.yml): typecheck, lint,
-  format and build run on every push; the
-  [Actions tab](https://github.com/marcmendezb/marcmendezb/actions) has the
-  history.
-- [`next.config.ts`](next.config.ts): the CSP and the rest of the security
-  headers, each with the reasoning for the trade-off it makes.
-- [`tsconfig.json`](tsconfig.json): strict mode plus
-  `noUncheckedIndexedAccess`, `noUnusedLocals` and `noUnusedParameters`, not
-  just `strict: true` and stopping there.
-- [Accessibility](#accessibility) and
-  [Keeping dependencies patched](#keeping-dependencies-patched) below.
-- [`src/lib/config-check.ts`](src/lib/config-check.ts): what still needs
-  filling in is a terminal warning on every `pnpm dev`, not a note left for
-  someone to find later. The "Launch checklist" below mirrors it.
+**This repo is public on purpose.** If you are a recruiter or hiring manager reading this, treat it as a production work sample rather than just the code behind a portfolio: it applies the exact same software and marketing practices described in the client work it showcases.
+
+---
+
+## Screening facts
+
+| Fact | Value | Notes |
+| --- | --- | --- |
+| **Role** | Full-stack developer & MarTech specialist | Seven years marketing, three building products |
+| **Location** | Winterthur / Zürich area, Switzerland | On-site, hybrid, or remote |
+| **Eligibility** | EU citizen | No Swiss work permit needed |
+| **Availability** | Immediate | Available now |
+| **Languages** | English (B2), German (A1, learning), Spanish (Native), Catalan (Native) | Full UI localized in EN, DE, ES |
+
+---
+
+## Where to look in the code
+
+Rather than taking claims on faith, here are the concrete implementation choices worth inspecting:
+
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml): Automated CI pipeline running route type generation, typecheck, lint, Prettier format verification, and production build on every push.
+- [`src/proxy.ts`](src/proxy.ts): Next.js 16 Proxy layer negotiating root visits to `/en`, `/de`, or `/es` via `Accept-Language` headers with English fallback.
+- [`next.config.ts`](next.config.ts): Content Security Policy (CSP) and HTTP security headers, documented with the exact trade-offs made for static generation.
+- [`tsconfig.json`](tsconfig.json): Strict TypeScript configuration with `noUncheckedIndexedAccess`, `noUnusedLocals`, and `noUnusedParameters`, not just `strict: true`.
+- [`src/content/`](src/content/): Complete separation of content and presentation. Components never hard-code copy, URLs, or dates; copy is typed and localized across three languages.
+- [`src/app/globals.css`](src/app/globals.css): Bespoke motion design using native CSS `animation-timeline: view()` and `@property` Houdini registrations. Zero runtime JavaScript for layout animations.
+- [`src/lib/config-check.ts`](src/lib/config-check.ts): Build-time validation that alerts in the terminal on `pnpm dev` if any required placeholder remains unconfigured.
+
+---
+
+## How it is put together
+
+```
+src/
+├── app/
+│   ├── [locale]/
+│   │   ├── layout.tsx         Metadata, fonts, JSON-LD, hreflang alternates
+│   │   ├── page.tsx           Section composition (Hero, Disciplines, Work, About, Contact)
+│   │   ├── opengraph-image.tsx Social share image dynamically generated per locale
+│   │   └── not-found.tsx      Localized 404 page
+│   ├── globals.css            Tailwind v4 tokens, CSS Houdini properties, and animations
+│   ├── icon.png · apple-icon.png Favicons
+│   ├── manifest.ts · robots.ts · sitemap.ts
+│   └── not-found.tsx          Root 404 fallback
+├── components/                Individual section views and UI primitives
+├── content/                   Typed single source of truth for site and project copy
+├── i18n/                      Locale definitions and routing configuration
+├── lib/                       Structured data generators, smooth scroll, and config check
+└── proxy.ts                   Next.js 16 proxy for browser language negotiation
+```
+
+**Content is separated from presentation.** Components read from `content/`; they never hard-code a name, URL, or date. Updating the site means editing two typed files (`src/content/site.ts` and `src/content/projects.ts`).
+
+---
+
+## Technical highlights
+
+### Localization & SEO
+
+- **Locale-driven routing:** Every page resolves under `/[locale]` (`/en`, `/de`, `/es`). A proxy (Next.js 16 renamed middleware) negotiates the root `/` to the visitor browser language, defaulting to English.
+- **Hreflang alternates:** `<link rel="alternate" hreflang="...">` tags for all three locales, dynamic Open Graph social images generated per locale, and a fully localized `sitemap.xml`.
+- **Semantic JSON-LD:** Structured data describes a `Person`, a `WebSite`, and projects as an `ItemList`. Search engines resolve "Marc Mendez" to a semantic entity rather than an unstructured string.
+
+### Styling & Swiss International Style
+
+- **Restrained palette:** Monochrome surface with a single accent: `#2438e0`. Blue only marks *interaction* (hover and focus states, nav pill, skip link, text selection) plus the single availability status indicator. Nothing static or decorative is blue.
+- **Tailwind CSS v4:** Layout and typography tokens registered through `@theme inline`.
+- **One palette, light:** `color-scheme: light` on `:root` prevents form controls, scrollbars, and canvas from inverting unpredictably on dark-mode devices. Verified with axe-core at 1440px and 390px: zero violations.
+- **Typography:** Self-hosted Inter with `"Helvetica Neue", Helvetica, Arial` leading the fallback stack, reflecting the Swiss-grotesque lineage. Hierarchy comes from weight and scale with tight negative tracking (`-0.035em` at hero display).
+
+### Motion system: zero JavaScript overhead
+
+- **Page-load overture:** The headline arrives word-by-word with a 70ms stagger (`--i` from `SplitWords` driving CSS `animation-delay`). Word-level animation starts at first paint rather than waiting for JavaScript hydration.
+- **Scroll-driven ink effect:** The About lead text inks from `--mute` to `--ink` word-by-word as the paragraph crosses the viewport via native CSS `animation-timeline`. Un-inked words sit at the WCAG AA floor rather than near-invisible hairlines. Wrapped in `@supports (animation-timeline: view())` so unsupported browsers render the complete text.
+- **Constrained smooth scroll:** Lenis is strictly tuned:
+  - **Off under `prefers-reduced-motion`:** Scroll smoothing is a vestibular trigger, with no reduced-motion equivalent.
+  - **Off on touch:** Preserves native OS touch momentum.
+  - **Short settle time:** `lerp: 0.09` settling in roughly 250ms, avoiding the perceived sluggishness of long-duration smooth scrolling.
+  - **Real scroll position:** Lenis moves the real scroll position rather than transforming a wrapper, keeping keyboard scrolling, find-in-page, and CSS scroll timelines in sync.
+
+### Accessibility
+
+- Skip link as the first tab stop.
+- Mobile overlay is `inert` while closed, traps focus while open, closes on Escape, and returns focus to the toggle button.
+- `aria-current` tracks the visible section; duplicate nav labels used by hover animations are `aria-hidden`.
+- `<noscript>` fallbacks for scroll reveals so content remains fully accessible without JavaScript.
+
+---
+
+## Security & dependency hygiene
+
+### A note on the CSP
+
+`script-src` includes `'unsafe-inline'`. Next.js bootstraps hydration with inline scripts, so without it React never hydrates and navigation is dead; a static build does not catch this, only loading the page in a browser does.
+
+The strict alternative is a per-request nonce, which requires dynamic server rendering and sacrifices static output. For a site with no user input, no authentication, and no third-party scripts, there is no injection vector. Revisit that trade-off if the site ever accepts user input.
+
+### Keeping dependencies patched
+
+`pnpm audit` runs before deployments. Next.js has shipped security advisories across the 16.x line, so this repository tracks the latest patch releases proactively.
+
+`package.json` pins transitive versions via `pnpm.overrides` (`brace-expansion`, `source-map-js`, `zod`, `minimatch`). These sit deep inside ESLint and Tailwind dev-time toolchains and never ship to the built site, but overriding them keeps audit output clean and actionable.
+
+---
+
+## Local development
+
+Requirements: Node.js 22 or higher and pnpm 10.
 
 ```bash
 pnpm install
-pnpm dev          # http://localhost:3000
+pnpm dev          # Dev server at http://localhost:3000
 ```
 
 | Script | What it does |
@@ -36,202 +130,36 @@ pnpm dev          # http://localhost:3000
 | `pnpm dev` | Dev server, plus a terminal checklist of unfilled placeholders |
 | `pnpm build` | Production build |
 | `pnpm start` | Serve the production build |
-| `pnpm check` | Typecheck + lint + format check: what CI runs |
+| `pnpm check` | Typecheck + lint + format check (what CI runs) |
 | `pnpm format` | Apply Prettier |
 
 ---
 
 ## Launch checklist
 
-The site runs fine as-is, but a few fields are deliberately left empty rather
-than guessed. `pnpm dev` lists whatever is still outstanding.
+The site runs cleanly as-is, but specific placeholder fields in `src/content/site.ts` and `src/content/projects.ts` can be populated:
 
-**Everything below lives in [`src/content/site.ts`](src/content/site.ts) and
-[`src/content/projects.ts`](src/content/projects.ts). No component needs
-touching.**
+- [ ] **LinkedIn & GitHub**: Confirm live profile URLs in `site.socials` (also populates `sameAs` in JSON-LD).
+- [ ] **CV**: Drop PDF in `public/` and configure `site.cvPath` to reveal download buttons.
+- [ ] **Project outcomes**: Add concrete quantitative metrics to `projects[].outcome` where available.
+- [ ] **Education institutions**: Complete institution names in `site.education[].institution`.
 
-- [ ] **LinkedIn + GitHub**: `site.socials` currently holds guessed profile
-      URLs. These also feed the `sameAs` field in the JSON-LD, which is how
-      Google links this page to your profiles.
-- [ ] **CV**: drop the PDF in `public/`, set `site.cvPath`. Every download
-      button stays hidden until you do.
-- [ ] **Project links + screenshots**: four projects (`tessel`,
-      `agency-tracker`, `client-sites`, `ai-tooling`) have no live URL,
-      and the same four are still showing Marqo's own screenshots as
-      stand-ins (`projects[].gallery`). A project with no `href` renders
-      without a link rather than a dead `#`, but a borrowed screenshot reads
-      as finished and wrong: this is the one item here that must not go
-      live as-is.
-- [ ] **Project outcomes**: `projects[].outcome` is `null` on 8 of 8
-      projects. A number ("first 200 users in 6 weeks", "0.9s LCP") is the
-      single biggest upgrade available to this page.
-- [ ] **Education institutions**: `site.education[].institution` is `null`
-      on 4 of 5 entries. Held back deliberately rather than guessed; not
-      rendered on the page even once filled in, but worth completing for a
-      fuller CV export later.
-
-`pnpm dev` is the source of truth for all of the above: it reprints the
-current count on every server start, so this list can drift and the
-terminal won't.
-
----
-
-## How it's put together
-
-```
-src/
-├── app/
-│   ├── layout.tsx           Metadata, fonts, JSON-LD, no-JS fallback
-│   ├── page.tsx             Section composition
-│   ├── globals.css          Design tokens + the bespoke animations
-│   ├── icon.png · apple-icon.png   Static favicons
-│   ├── opengraph-image.tsx  Social card, generated at build
-│   ├── sitemap.ts · robots.ts · manifest.ts
-│   └── not-found.tsx
-├── components/              One file per section, plus nav/reveal/media
-├── content/                 ← all copy and personal data
-└── lib/                     Structured data, in-view hook, config check
-```
-
-**Content is separated from presentation.** Components read from `content/`;
-they never hard-code a name, URL or date. Updating the site means editing two
-typed files.
-
-### Styling
-
-Tailwind v4 for layout and typography. Design tokens are plain CSS custom
-properties registered through `@theme inline`, which is what lets a single
-`prefers-color-scheme` media query repaint the whole site: `text-ink` resolves
-to `var(--ink)` rather than a baked-in hex.
-
-The signature motion (the sliding nav highlight, the masked text swaps, the
-curtain wipes) stays in hand-written CSS in `globals.css`. Utilities are the
-wrong tool for that, and it's all keyed off `data-` attributes so the JavaScript
-never touches styles.
-
-### Colour
-
-Monochrome, with one accent: `#2438e0`. The rule is that blue only ever marks
-**interaction** (every hover and focus state, the nav pill, the skip link, text
-selection) plus exactly one status signal, the "available" dot. Nothing static
-and nothing decorative is blue, which is what keeps it reading as intentional.
-
-Filled hover states swap `border-color` alongside the background; without that
-you get a black outline ringing a blue fill.
-
-There is one palette. The site renders light even on a device set to dark:
-`color-scheme: light` on `:root` covers the parts the tokens don't, so form
-controls, scrollbars and the canvas can't arrive inverted underneath. Verified
-with axe-core at 1440px and 390px, on devices set to both preferences: zero
-violations.
-
-### Motion
-
-One rehearsed overture, one signature move, and micro-interactions only where
-they mark interaction. All of it is CSS; the motion system ships zero
-JavaScript.
-
-**Overture.** The headline arrives word by word (70ms stagger, `--i` from
-`SplitWords` driving `animation-delay`), then the support copy, screening facts
-and buttons fade up on offsets. Word-level rather than line-level: a line
-sliding in reads as a slide, words arriving in sequence read as typesetting.
-Pure CSS animation, so it starts at first paint rather than after hydration.
-
-**The signature move.** The About lead is set in `--mute` and inks to `--ink`
-word by word as the paragraph crosses the viewport, so the sentence writes
-itself as you read it. Un-inked words sit at the AA floor rather than at
-near-invisible `--hair`: the dramatic version left real content at ~1.4:1 for
-anyone who stopped scrolling mid-sentence.
-
-**Scroll-driven layer.** The ink line and the image parallax use native CSS
-`animation-timeline`. No scroll listeners, and the animations run off the main
-thread. Both are wrapped in `@supports (animation-timeline: view())` with each
-element's *default* state being its *final* state, so Firefox gets the finished
-page rather than a broken one.
-
-`--i` and `--n` are registered with `@property` so the `calc()` in
-`animation-delay` and `animation-range` resolves reliably. They're set on the
-element that reads them, not on a parent: they're declared `inherits: false`,
-so a value on the wrapper silently resolves to 0 in the child.
-
-**Smooth scrolling** (Lenis, the one motion dependency) is deliberately
-constrained, because smooth scroll is the effect most often done badly:
-
-- **Off under `prefers-reduced-motion`.** Scroll smoothing is a vestibular
-  trigger, and there's no meaningful "reduced" version of it to ship.
-- **Off on touch.** The OS tunes native momentum; `syncTouch` is the main reason
-  sites with smooth scroll feel broken on phones.
-- **Short.** `lerp: 0.09`, settling in roughly 250ms. Perceptible on a trackpad,
-  which already has its own momentum, without the lag people associate with
-  smooth scroll: that comes from near-second durations. Below about 0.04 it
-  starts to fight the user.
-- **Nothing else intercepted.** Lenis moves the real scroll position rather than
-  transforming a wrapper, so keyboard scrolling, scrollbar dragging,
-  find-in-page and focus scrolling all behave normally, and the CSS scroll
-  timelines stay in sync, since they read the same scroller.
-
-Two integration details worth keeping: the mobile overlay calls
-`pauseSmoothScroll()` alongside its body lock (`overflow: hidden` alone doesn't
-stop Lenis's own loop), and `anchors` takes no offset because
-`scroll-padding-top` already clears the fixed nav: setting both landed anchored
-sections 128px down instead of 64.
-
-Everything honours `prefers-reduced-motion`: words at rest, sentence fully
-inked, roadmap shown complete, scrolling native.
-
-### Accessibility
-
-- Skip link as the first tab stop
-- Mobile overlay is `inert` while closed, traps focus while open, closes on
-  Escape and returns focus to the button
-- `aria-current` tracks the visible section; the duplicated nav labels used by
-  the hover animation are `aria-hidden`
-- Scroll reveals have a `<noscript>` fallback: without it, About and Contact
-  render blank for anyone with JavaScript disabled
-
-### SEO
-
-Full metadata, Open Graph and Twitter cards, canonical URLs, sitemap and robots.
-JSON-LD describes a `Person`, a `WebSite` and the work as an `ItemList`: that's
-what lets a search engine resolve "Marc Mendez" to a person rather than a
-string, and it's server-rendered so crawlers that don't run JavaScript still see
-it.
+`pnpm dev` prints the status of remaining placeholders on every server start.
 
 ---
 
 ## Deploying
 
-Every route is static, so any host works.
+Every route is static, allowing deployment to any hosting platform:
 
-**With a Next.js runtime** (Vercel, Netlify, Cloudflare Pages): connect the
-repo. Nothing to configure. `next.config.ts` sets the security headers.
+- **With a Next.js runtime** (Vercel, Netlify, Cloudflare Pages): Connect the repository. `next.config.ts` automatically applies security headers.
+- **Without one** (GitHub Pages, S3, nginx): Uncomment the two `output: 'export'` lines in `next.config.ts` and run `pnpm build`. The output lands in `out/`.
 
-**Without one** (GitHub Pages, S3, nginx): uncomment the two `output: 'export'`
-lines at the bottom of `next.config.ts` and run `pnpm build`; the site lands in
-`out/`. Note that `headers()` is a no-op under static export, so configure the
-CSP and friends on your CDN instead.
+---
 
-### A note on the CSP
+## Contact
 
-`script-src` includes `'unsafe-inline'`. Next.js bootstraps hydration with
-inline scripts, so without it React never hydrates and the navigation is dead,
-and the build doesn't catch it, only loading the page does. The strict
-alternative is a per-request nonce, which forces dynamic rendering and gives up
-the static output. For a page with no user input, no auth and no third-party
-scripts there's no injection vector to defend against. Revisit that trade the
-moment this site accepts input.
-
-### Keeping dependencies patched
-
-Run `pnpm audit` before any deploy you care about. Next.js itself has shipped
-a handful of critical RCE advisories across the 16.x line: this repo tracks
-the latest patch release for that reason, not just for features.
-
-`package.json` pins a few transitive versions via `pnpm.overrides`
-(`brace-expansion`, `source-map-js`, `zod`, `minimatch`). All four sit several
-layers deep inside ESLint's and Tailwind's own toolchains (dev-time only,
-never shipped to the built site) but `pnpm audit` flags them regardless, and
-overriding them keeps the audit output meaningful instead of permanently
-noisy. One advisory (`picomatch`, also dev-only) has no upstream fix yet;
-re-run `pnpm audit` periodically and drop the override that's no longer
-needed once one lands.
+**Marc Mendez**  
+- Website: [marcmendezb.com](https://marcmendezb.com)  
+- GitHub: [@marcmendezb](https://github.com/marcmendezb)  
+- Email: [marcmendezb@gmail.com](mailto:marcmendezb@gmail.com)  

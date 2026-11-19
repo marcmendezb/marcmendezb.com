@@ -19,12 +19,6 @@ export function reportPlaceholders() {
   const projects = getProjects('en')
   const todo: string[] = []
 
-  if (
-    site.url.includes('marcmendez.com') &&
-    !process.env.NEXT_PUBLIC_SITE_URL
-  ) {
-    todo.push('site.url: still the default domain (set NEXT_PUBLIC_SITE_URL)')
-  }
   if (!site.cvPath) {
     todo.push('site.cvPath: no CV yet; every download button is hidden')
   }

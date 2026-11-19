@@ -256,14 +256,12 @@ export function getSite(locale: Locale) {
     /**
      * Canonical origin, no trailing slash. Drives canonical URLs, OG tags,
      * sitemap and robots.txt.
-     *
-     * TODO: point this at your real domain before launch.
      */
     url:
       process.env.NEXT_PUBLIC_SITE_URL ??
       (process.env.VERCEL_PROJECT_PRODUCTION_URL
         ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-        : 'https://marcmendez.com'),
+        : 'https://marcmendezb.com'),
 
     description: t.description,
 

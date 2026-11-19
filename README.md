@@ -1,4 +1,4 @@
-# marcmendez.com
+# marcmendezb.com
 
 Personal landing page of Marc Mendez, full-stack developer and marketing
 technologist, based in the Zürich area.
@@ -50,8 +50,6 @@ than guessed. `pnpm dev` lists whatever is still outstanding.
 [`src/content/projects.ts`](src/content/projects.ts). No component needs
 touching.**
 
-- [ ] **Domain**: set `NEXT_PUBLIC_SITE_URL`, or edit `site.url`. Drives
-      canonical URLs, OG tags, `sitemap.xml` and `robots.txt`.
 - [ ] **LinkedIn + GitHub**: `site.socials` currently holds guessed profile
       URLs. These also feed the `sameAs` field in the JSON-LD, which is how
       Google links this page to your profiles.

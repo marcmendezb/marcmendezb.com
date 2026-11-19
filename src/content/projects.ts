@@ -398,11 +398,17 @@ export const projects: readonly Project[] = [
 /**
  * The two disciplines, in no particular order.
  *
- * Full-stack on both sides: seven years as a marketing technologist and four
+ * Full-stack on both sides: seven years as a MarTech specialist and four
  * as a developer are different tenures, but neither one is the "real" job
  * with the other bolted on. AI tooling sits inside the developer discipline
  * rather than as a third item of its own: coding agents are a development
  * capability here, not a separate identity.
+ *
+ * "MarTech specialist" rather than the more generic "marketing
+ * technologist": it's the term Swiss job postings actually use (PwC's
+ * Marketing Technology Lead, Salesforce's MarTech-focused Marketing
+ * Architect, Source Group's MarTech Engineer, all Zürich), so it's also
+ * the string a recruiter's own search is more likely to match.
  */
 export type Discipline = {
   name: string
@@ -458,9 +464,9 @@ export const disciplines: readonly Discipline[] = [
     ],
   },
   {
-    name: 'Full-stack marketing technologist',
+    name: 'Full-stack MarTech specialist',
     claim: 'I know why it sells',
-    body: 'Strategy first, then the channels that serve it: SEO, paid acquisition, social media, landing pages, CRO, email and the automation behind it. Seven years of this before I wrote a line of production code, which is why I think about conversion while I’m building, not after.',
+    body: 'Strategy first, then the MarTech stack that serves it: SEO, paid acquisition, social media, landing pages, CRO, email and the automation behind it. Seven years of this before I wrote a line of production code, which is why I think about conversion while I’m building, not after.',
     // 'Lifecycle' became 'Email marketing': the same work, named the way a job
     // ad names it. Automation and workflows sit here rather than under the
     // developer discipline, because the judgement they encode is a marketing

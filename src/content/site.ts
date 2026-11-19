@@ -60,8 +60,14 @@ export const site = {
    * and four building products are different tenures, but neither is the
    * "real" job with the other bolted on, and a recruiter searching either
    * term on its own should still land on this page.
+   *
+   * "MarTech specialist", not "marketing technologist": it's the literal
+   * string Swiss postings use for this (PwC's Marketing Technology Lead,
+   * Salesforce's MarTech-focused Marketing Architect, Source Group's
+   * MarTech Engineer, all Zürich), and it's what the `<title>` tag, the
+   * OG card and the JSON-LD `jobTitle` all inherit from this one field.
    */
-  role: 'Full-stack developer & marketing technologist',
+  role: 'Full-stack developer & MarTech specialist',
 
   /**
    * Canonical origin, no trailing slash. Drives canonical URLs, OG tags,
@@ -77,7 +83,7 @@ export const site = {
 
   /** <150 chars. What Google shows, and what appears when someone pastes the link. */
   description:
-    'Full-stack developer and full-stack marketing technologist. Seven years in marketing, four building products. Based near Zürich, available now.',
+    'Full-stack developer and MarTech specialist. Seven years in marketing, four building products. Based near Zürich, available now.',
 
   // ---------------------------------------------------------------------------
   // Contact

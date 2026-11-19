@@ -81,7 +81,7 @@ export function Hero() {
           {/* Not "most teams hire twice for that": headcount framing prices the
               work by what it replaces and reads as an offer to be bought
               cheaply. The argument is that the decisions hold together. */}
-          Full-stack marketing technologist for seven years, across SEO, paid
+          Full-stack MarTech specialist for seven years, across SEO, paid
           acquisition, social media and CRO. Full-stack developer for four,
           shipping the products that marketing points to. The same person
           designs both, not handed between two teams.

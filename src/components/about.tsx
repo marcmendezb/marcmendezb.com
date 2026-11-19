@@ -78,8 +78,8 @@ export function About() {
             <p>
               Most people who build web products pick up conversion later, as
               something bolted on once the thing works. I came at it from both
-              sides: seven years as a full-stack marketing technologist, four as
-              a full-stack developer, with neither one supporting the other. So
+              sides: seven years as a full-stack MarTech specialist, four as a
+              full-stack developer, with neither one supporting the other. So
               conversion is already in the structure when I build, not
               retrofitted after launch: what the page is for, what it asks of
               you, what happens after you say yes.

@@ -141,7 +141,6 @@ The site runs cleanly as-is, but a few fields are deliberately left empty rather
 
 - [ ] **LinkedIn**: Confirm the live profile URL in `site.socials` (it also feeds `sameAs` in the JSON-LD, which is how Google links this page to the profile).
 - [ ] **CV**: Drop PDF in `public/` and configure `site.cvPath` to reveal download buttons.
-- [ ] **Project screenshots**: four projects (`freelance-practice`, `agency-tracker`, `client-sites`, `ai-tooling`) have no images of their own yet and show the tonal placeholder. Never borrow another project's screenshots: a grey panel reads as unfinished, someone else's picture reads as finished and wrong.
 - [ ] **Project outcomes**: Add concrete quantitative metrics to `projects[].outcome` where available.
 - [ ] **Education institutions**: Complete institution names in `site.education[].institution`.
 

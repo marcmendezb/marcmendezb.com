@@ -385,74 +385,6 @@ export const projects: readonly Project[] = [
     ],
     video: null,
   },
-  {
-    slug: 'freelance-practice',
-    title: 'Freelance practice',
-    kind: 'Freelance practice',
-    description:
-      '**Strategy, design and code from one person.** I work out the positioning first, then build the site that carries it. Clients who’d normally hire two people hire one.',
-    outcome: null,
-    role: 'Strategy, design, build',
-    year: 'Since 2026',
-    tags: ['Marketing strategy', 'Web design', 'CRO', 'Next.js'],
-    links: [],
-    shorthand: 'Freelance practice',
-    image: null, // TODO: '/work/freelance-practice.jpg'
-    imageAlt: 'Freelance practice website',
-    gallery: [], // TODO: this project's own screenshots; empty shows the tonal placeholder
-    video: null,
-  },
-  {
-    slug: 'agency-tracker',
-    title: 'Agency project tracker',
-    kind: 'Web app | Client',
-    description:
-      'Project management for an agency, with live sync between the team and the client. Two roles, proper auth, and permissions set so a client only sees what they’re meant to. It came out of a real workflow problem and it’s **running in production**.',
-    outcome: null,
-    role: 'Full build',
-    year: '2026',
-    tags: ['Vite', 'Supabase', 'Realtime', 'PostgreSQL', 'Netlify'],
-    links: [], // TODO: add the live URL, or leave empty if it's private
-    shorthand: 'Agency project tracker',
-    image: null, // TODO: '/work/agency-tracker.jpg'
-    imageAlt: 'Agency project tracker dashboard',
-    gallery: [], // TODO: this project's own screenshots; empty shows the tonal placeholder
-    video: null,
-  },
-  {
-    slug: 'client-sites',
-    title: 'Client sites & brand systems',
-    kind: 'Client work',
-    description:
-      'Websites and design systems for local businesses, car dealers among them. **No templates.** Each one starts from what the business needs to sell, and gets a design system built around that.',
-    outcome: null,
-    role: 'Strategy, design & build',
-    year: 'Since 2026',
-    tags: ['Design systems', 'CRO', 'Technical SEO', 'Landing pages'],
-    links: [],
-    shorthand: 'Sites and branding',
-    image: null, // TODO: '/work/client-sites.jpg'
-    imageAlt: 'Selection of client websites and brand systems',
-    gallery: [], // TODO: this project's own screenshots; empty shows the tonal placeholder
-    video: null,
-  },
-  {
-    slug: 'ai-tooling',
-    title: 'AI dev-workflow tooling',
-    kind: 'R&D',
-    description:
-      'A VS Code extension that lets me watch and steer **several AI coding agents at once**, instead of losing track of what each one’s doing. Plus experiments running local coding models on ordinary hardware.',
-    outcome: null,
-    role: 'Solo R&D',
-    year: 'Since 2026',
-    tags: ['AI agents', 'VS Code', 'LLM APIs', 'Automation'],
-    links: [],
-    shorthand: 'Multi-agent dev tooling',
-    image: null, // TODO: '/work/ai-tooling.jpg'
-    imageAlt: 'VS Code extension for observing multi-agent coding sessions',
-    gallery: [], // TODO: this project's own screenshots; empty shows the tonal placeholder
-    video: null,
-  },
 ] as const
 
 /**
@@ -674,39 +606,6 @@ const projectTranslations: Record<
         'Die Marqo-Website geöffnet in einem Smartphone-Browser, mit beiden Händen gehalten',
       ],
     },
-    'freelance-practice': {
-      kind: 'Freelance-Praxis',
-      description:
-        '**Strategie, Design und Code aus einer Hand.** Ich arbeite zuerst die Positionierung aus und baue dann die Website, die sie trägt. Kunden, die normalerweise zwei Leute beauftragen würden, beauftragen einen.',
-      role: 'Strategie, Design, Umsetzung',
-      shorthand: 'Freelance-Praxis',
-      imageAlt: 'Website der Freelance-Praxis',
-    },
-    'agency-tracker': {
-      kind: 'Web-App | Kunde',
-      description:
-        'Projektmanagement für eine Agentur, mit Live-Synchronisierung zwischen Team und Kunde. Zwei Rollen, richtige Authentifizierung, und Berechtigungen so gesetzt, dass ein Kunde nur sieht, was er sehen soll. Entstanden aus einem echten Workflow-Problem und **im produktiven Einsatz**.',
-      role: 'Vollständige Umsetzung',
-      shorthand: 'Projekt-Tracker für Agenturen',
-      imageAlt: 'Dashboard des Agentur-Projekt-Trackers',
-    },
-    'client-sites': {
-      kind: 'Kundenprojekt',
-      description:
-        'Websites und Designsysteme für lokale Unternehmen, darunter Autohändler. **Keine Vorlagen.** Jedes Projekt beginnt damit, was das Unternehmen verkaufen muss, und bekommt ein Designsystem, das genau darauf aufgebaut ist.',
-      role: 'Strategie, Design & Umsetzung',
-      shorthand: 'Websites und Branding',
-      imageAlt: 'Auswahl an Kundenwebsites und Markensystemen',
-    },
-    'ai-tooling': {
-      kind: 'F&E',
-      description:
-        'Eine VS-Code-Erweiterung, mit der ich **mehrere KI-Coding-Agenten gleichzeitig** beobachten und steuern kann, statt den Überblick darüber zu verlieren, was jeder einzelne gerade tut. Dazu Experimente mit lokalen Coding-Modellen auf gewöhnlicher Hardware.',
-      role: 'Alleinige Forschung & Entwicklung',
-      shorthand: 'Multi-Agenten-Entwicklungstool',
-      imageAlt:
-        'VS-Code-Erweiterung zur Beobachtung von Multi-Agenten-Coding-Sitzungen',
-    },
   },
   es: {
     tessel: {
@@ -769,39 +668,6 @@ const projectTranslations: Record<
         'El panel de Marqo en una tablet, mostrando coches en stock, dinero inmovilizado y margen medio',
         'El sitio de Marqo abierto en el navegador de un móvil, sujetado con ambas manos',
       ],
-    },
-    'freelance-practice': {
-      kind: 'Práctica freelance',
-      description:
-        '**Estrategia, diseño y código desde una sola persona.** Primero defino el posicionamiento y después construyo el sitio que lo sostiene. Los clientes que normalmente contratarían a dos personas contratan a una.',
-      role: 'Estrategia, diseño, construcción',
-      shorthand: 'Práctica freelance',
-      imageAlt: 'Sitio web de la práctica freelance',
-    },
-    'agency-tracker': {
-      kind: 'Aplicación web | Cliente',
-      description:
-        'Gestión de proyectos para una agencia, con sincronización en tiempo real entre el equipo y el cliente. Dos roles, autenticación real y permisos configurados para que el cliente solo vea lo que debe ver. Surgió de un problema real de flujo de trabajo y **está en producción**.',
-      role: 'Construcción completa',
-      shorthand: 'Gestor de proyectos para agencias',
-      imageAlt: 'Panel del Agency project tracker',
-    },
-    'client-sites': {
-      kind: 'Trabajo para clientes',
-      description:
-        'Sitios web y sistemas de diseño para negocios locales, entre ellos concesionarios de coches. **Sin plantillas.** Cada uno parte de lo que el negocio necesita vender, y recibe un sistema de diseño construido a partir de eso.',
-      role: 'Estrategia, diseño y construcción',
-      shorthand: 'Sitios y branding',
-      imageAlt: 'Selección de sitios web y sistemas de marca para clientes',
-    },
-    'ai-tooling': {
-      kind: 'I+D',
-      description:
-        'Una extensión de VS Code que me permite observar y dirigir **varios agentes de codificación con IA a la vez**, en lugar de perder de vista lo que cada uno está haciendo. Además de experimentos ejecutando modelos de código locales en hardware corriente.',
-      role: 'I+D en solitario',
-      shorthand: 'Herramienta de desarrollo multiagente',
-      imageAlt:
-        'Extensión de VS Code para observar sesiones de codificación con varios agentes',
     },
   },
 }

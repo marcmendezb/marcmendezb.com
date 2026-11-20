@@ -19,8 +19,8 @@
  * carry colour.
  *
  * Deliberately not a Markdown parser. It handles two delimiters and leaves
- * everything else (asterisks in the middle of a word, `brand*`, a stray one)
- * as the literal text it is.
+ * everything else (asterisks in the middle of a word, a title ending in one,
+ * a stray one) as the literal text it is.
  */
 
 export type EmphasisTone = 'plain' | 'strong' | 'accent'

@@ -313,23 +313,23 @@ export const projects: readonly Project[] = [
     shorthand: 'Fictional barbershop brand',
     image: '/work/santo-corte/santo-corte-01.jpg',
     imageAlt:
-      'A pair of engraved barber scissors reading "Santo Corte" in a gothic typeface, suspended against a dim, blurred barbershop interior',
+      'The Santo Corte homepage on a laptop resting on a leather armchair, its engraved scissors suspended over a dim barbershop interior',
     gallery: [
       {
         src: '/work/santo-corte/santo-corte-01.jpg',
-        alt: 'A pair of engraved barber scissors reading "Santo Corte" in a gothic typeface, suspended against a dim, blurred barbershop interior',
+        alt: 'The Santo Corte homepage on a laptop resting on a leather armchair, its engraved scissors suspended over a dim barbershop interior',
       },
       {
         src: '/work/santo-corte/santo-corte-02.jpg',
-        alt: 'A vintage barber chair with folded hot towels and a straight razor laid across it, the "Santo Corte" wordmark on the concrete wall behind',
+        alt: 'The services menu on a phone standing on a block of rough concrete, each cut and shave listed with its duration and price',
       },
       {
         src: '/work/santo-corte/santo-corte-03.jpg',
-        alt: 'A straight razor, a shaving brush, scissors and a comb laid out on a steel tray',
+        alt: 'The studio section on a laptop set on a stool, a grid of numbered photos of the barbershop interior',
       },
       {
         src: '/work/santo-corte/santo-corte-04.jpg',
-        alt: 'The founder in a "Santo Corte, Architects of Style" t-shirt, holding a comb and scissors in the barbershop',
+        alt: 'A phone lying on concrete, open on the "La Experiencia" section of the site',
       },
     ],
     video: null,
@@ -584,12 +584,12 @@ const projectTranslations: Record<
       role: 'Briefing, Marke und Umsetzung',
       shorthand: 'Fiktive Barbershop-Marke',
       imageAlt:
-        'Eine gravierte Friseurschere mit der Gravur „Santo Corte" in gotischer Schrift, vor einem dunklen, unscharfen Barbershop-Interieur',
+        'Die Santo-Corte-Startseite auf einem Laptop in einem Ledersessel, die gravierte Schere schwebt vor einem dunklen Barbershop-Interieur',
       galleryAlt: [
-        'Eine gravierte Friseurschere mit der Gravur „Santo Corte" in gotischer Schrift, vor einem dunklen, unscharfen Barbershop-Interieur',
-        'Ein Vintage-Friseurstuhl mit gefalteten Heisshandtüchern und einem Rasiermesser darauf, dahinter das Wortzeichen „Santo Corte" an der Betonwand',
-        'Ein Rasiermesser, ein Rasierpinsel, eine Schere und ein Kamm, ausgelegt auf einem Stahltablett',
-        'Der Gründer in einem T-Shirt mit der Aufschrift „Santo Corte, Architects of Style", mit Kamm und Schere in der Hand im Barbershop',
+        'Die Santo-Corte-Startseite auf einem Laptop in einem Ledersessel, die gravierte Schere schwebt vor einem dunklen Barbershop-Interieur',
+        'Die Leistungsübersicht auf einem Smartphone, das auf einem rohen Betonblock steht, jeder Schnitt und jede Rasur mit Dauer und Preis',
+        'Der Studio-Bereich auf einem Laptop auf einem Hocker, ein Raster nummerierter Fotos des Barbershop-Interieurs',
+        'Ein Smartphone auf Beton, geöffnet im Bereich „La Experiencia" der Website',
       ],
     },
     marqo: {
@@ -646,12 +646,12 @@ const projectTranslations: Record<
       role: 'Brief, marca y construcción',
       shorthand: 'Marca ficticia de barbería',
       imageAlt:
-        'Unas tijeras de barbero grabadas con "Santo Corte" en tipografía gótica, suspendidas sobre un interior de barbería difuso y en penumbra',
+        'La portada de Santo Corte en un portátil apoyado en un sillón de cuero, con las tijeras grabadas suspendidas sobre un interior de barbería en penumbra',
       galleryAlt: [
-        'Unas tijeras de barbero grabadas con "Santo Corte" en tipografía gótica, suspendidas sobre un interior de barbería difuso y en penumbra',
-        'Un sillón de barbero vintage con toallas calientes dobladas y una navaja de afeitar colocada encima, con el logotipo "Santo Corte" en la pared de hormigón detrás',
-        'Una navaja de afeitar, una brocha, unas tijeras y un peine colocados sobre una bandeja de acero',
-        'El fundador con una camiseta que dice "Santo Corte, Architects of Style", sujetando un peine y unas tijeras en la barbería',
+        'La portada de Santo Corte en un portátil apoyado en un sillón de cuero, con las tijeras grabadas suspendidas sobre un interior de barbería en penumbra',
+        'La carta de servicios en un móvil de pie sobre un bloque de hormigón rugoso, cada corte y afeitado con su duración y su precio',
+        'La sección del estudio en un portátil sobre un taburete, una cuadrícula de fotos numeradas del interior de la barbería',
+        'Un móvil sobre hormigón, abierto en la sección "La Experiencia" del sitio',
       ],
     },
     marqo: {

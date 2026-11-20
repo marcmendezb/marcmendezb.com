@@ -7,6 +7,7 @@ import { Hero } from '@/components/hero'
 import { Nav } from '@/components/nav'
 import { SmoothScroll } from '@/components/smooth-scroll'
 import { Work } from '@/components/work'
+import { getProjects } from '@/content/projects'
 import { isLocale } from '@/i18n/locales'
 
 const skipLinkLabel = {
@@ -30,7 +31,16 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
 
       <SmoothScroll />
 
-      <Nav locale={locale} />
+      {/* Only what the Work dropdown shows, not the projects themselves: the
+          nav is a client component, and handing it the full entries would ship
+          every description to the browser for a list of names. */}
+      <Nav
+        locale={locale}
+        projects={getProjects(locale).map(({ title, shorthand }) => ({
+          title,
+          shorthand,
+        }))}
+      />
 
       {/* The brand marks bleed past the right edge, which adds ~230px of
           horizontal scroll. Clipped here rather than on <html>: the root's

@@ -51,6 +51,21 @@
   --placeholder: #f1f1ef;
   /* Text that sits on top of an --ink coloured fill. */
   --on-ink: #ffffff;
+  /* The rest of the type scale on that fill, for the one panel that is inked
+     edge to edge (the confidential-work passage). --soft and --mute inverted:
+     #c4c4c0 is 11.4:1 on --ink, #8f8f8b is 6.2:1, both clear of AA. */
+  --on-ink-soft: #c4c4c0;
+  --on-ink-mute: #8f8f8b;
+  --on-ink-hair: rgb(255 255 255 / 0.14);
+
+  /* The logo's own colours, sampled from the blob: the cyan of its lit side,
+     the blue of its body, the indigo of its shadow. Kept for the few places
+     that carry the brand itself rather than an interaction (the confidential
+     card's pictograms and redaction bars). Never for text, never for state:
+     the accent above still owns both. */
+  --brand-cyan: #19c6f2;
+  --brand-blue: #1f6bf0;
+  --brand-indigo: #3b2fd6;
 
   /* The one accent. Used only for interactive affordance (focus, link sweep,
      selection) and the one status signal that should catch the eye: the
@@ -97,6 +112,9 @@
   --color-hair: var(--hair);
   --color-placeholder: var(--placeholder);
   --color-on-ink: var(--on-ink);
+  --color-on-ink-soft: var(--on-ink-soft);
+  --color-on-ink-mute: var(--on-ink-mute);
+  --color-on-ink-hair: var(--on-ink-hair);
   --color-accent: var(--accent);
   --color-on-accent: var(--on-accent);
 
@@ -547,6 +565,226 @@
   .curtain[data-visible='true'] img,
   .curtain[data-visible='true'] .placeholder-fill {
     transform: scale(1);
+  }
+
+  /* --- The confidential card ---------------------------------------------- */
+
+  /* The confidential card wears the footer's panel (`.footer-panel`: the
+     brand-tinted charcoal, the inverted tokens, the hairline) so the two dark
+     surfaces on the page are one material. This only adds what the footer
+     panel has no reason to know: the frame is the deck's, so its stacking
+     context is set here.
+
+     The mark behind it is the footer's too, at the footer's whisper of an
+     opacity, measured the same way: --mute stays above 4.5:1 across the
+     mark's whole loop. Placed low on the far side, where the copy is
+     shortest. */
+  .vault {
+    isolation: isolate;
+  }
+
+  .vault .brand-mark--vault {
+    z-index: 0;
+    opacity: 0.15;
+    right: -24%;
+    bottom: -52%;
+    width: min(78%, 560px);
+  }
+
+  /* Where a name would be: a small replica of the mark, laid over the line.
+
+     Colour, not light: nothing here glows or shines. Two layers:
+
+     - `.redaction-fill`, the replica itself: an organic strip (SVG mask, its
+       edge blurred inside the SVG so it fades rather than cuts) holding the
+       mark, translucent, swelling and settling on a slow loop of its own.
+     - Inside the fill, two copies of the mark (`icon-256.png`, the blob)
+       turning against each other at different sizes and speeds, the second
+       laid translucent over the first. Where they overlap the colour swirls
+       (cyan through blue to the indigo shadow) the way it moves inside the
+       mark, rather than one picture rotating in a box.
+
+     Sized in the line's own `ch`, so it is as long as a word, and dropped onto
+     the baseline so it sits in the sentence like the word it replaces. Three
+     strip shapes, chosen by `data-shape`, and `--k` offsets every replica's
+     spin, breath and drift, so no two on the card match or move together. */
+  .redaction {
+    position: relative;
+    display: inline-block;
+    width: var(--w);
+    height: 1.1em;
+    margin-inline: 0.08em;
+    vertical-align: -0.2em;
+    isolation: isolate;
+    --strip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -14 124 52' preserveAspectRatio='none'%3E%3Cfilter id='b' x='-40%25' y='-150%25' width='180%25' height='400%25'%3E%3CfeGaussianBlur stdDeviation='3.6'/%3E%3C/filter%3E%3Cpath filter='url(%23b)' d='M2 13C1 6 7 3 15 4.5S28 7.5 38 4 58 0 70 2.5 90 1 96 6 100 17 92 20.5 74 19 62 22 44 24 32 20.5 12 23 5 20 2 17 2 13z'/%3E%3C/svg%3E");
+
+    /* Arrives out of focus and narrow, and pulls into shape: a drop landing
+       and spreading along the line, not a marker drawn across it. */
+    opacity: 0;
+    transform: scaleX(0.25);
+    transform-origin: left;
+    transition:
+      transform 1.3s var(--ease),
+      opacity 0.9s var(--ease);
+    transition-delay: calc(0.9s + var(--k, 0) * 0.15s);
+  }
+
+  .redaction[data-shape='1'] {
+    --strip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -14 124 52' preserveAspectRatio='none'%3E%3Cfilter id='b' x='-40%25' y='-150%25' width='180%25' height='400%25'%3E%3CfeGaussianBlur stdDeviation='3.6'/%3E%3C/filter%3E%3Cpath filter='url(%23b)' d='M1.5 11.5C2.5 4 11 1 22 2.5S36 6 48 4.5 66 1.5 78 4.5 98 6 98.5 12 95 22 82 21 64 18.5 52 21.5 30 24 18 21.5 1 19 1.5 11.5z'/%3E%3C/svg%3E");
+  }
+
+  .redaction[data-shape='2'] {
+    --strip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -14 124 52' preserveAspectRatio='none'%3E%3Cfilter id='b' x='-40%25' y='-150%25' width='180%25' height='400%25'%3E%3CfeGaussianBlur stdDeviation='3.6'/%3E%3C/filter%3E%3Cpath filter='url(%23b)' d='M3 14C0 8 4 2.5 13 2S27 4 39 2.8 57 5.5 71 3 94 0 98 7.5 99 19 88 21.5 70 20 58 23.5 37 22 24 23.5 6 20 3 14z'/%3E%3C/svg%3E");
+  }
+
+  /* Four masks multiplied together (`intersect`): the strip, now so soft it
+     has no edge left; two fades that dissolve the ends and the top and bottom
+     into the panel, so no edge of the box can ever show; and a
+     band of uneven density, twice the replica's width, drifting back and
+     forth along it. Where the band thins the vapour opens up, where it
+     thickens the colour gathers, so the replica never sits as one even
+     smear. */
+  .redaction-fill {
+    position: absolute;
+    inset: -18% -4%;
+    overflow: hidden;
+    opacity: 0.82;
+    mask-image:
+      var(--strip),
+      linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent),
+      linear-gradient(transparent, #000 16%, #000 84%, transparent),
+      linear-gradient(
+        90deg,
+        rgb(0 0 0 / 0.95) 0%,
+        rgb(0 0 0 / 0.35) 18%,
+        #000 34%,
+        rgb(0 0 0 / 0.5) 52%,
+        rgb(0 0 0 / 0.9) 68%,
+        rgb(0 0 0 / 0.3) 84%,
+        rgb(0 0 0 / 0.95) 100%
+      );
+    mask-size:
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      240% 100%;
+    mask-repeat: no-repeat, no-repeat, no-repeat, repeat-x;
+    mask-position:
+      center,
+      center,
+      center,
+      0% 0;
+    mask-composite: intersect;
+    filter: blur(5px);
+    transition:
+      filter 1.4s var(--ease),
+      opacity 0.6s var(--ease);
+    transition-delay: calc(0.95s + var(--k, 0) * 0.15s), 0s;
+    animation:
+      replica-breathe 6.5s var(--ease-flow) infinite alternate,
+      vapor-drift 9s var(--ease-flow) infinite alternate;
+    animation-delay: calc(var(--k, 0) * -1.7s), calc(var(--k, 0) * -2.9s);
+  }
+
+  /* Both copies are square and wider than the strip, so the middle band of
+     the mark, where its colour moves most, is what crosses the shape. */
+  .redaction-fill::before,
+  .redaction-fill::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    aspect-ratio: 1;
+    /* The mark's core is near white, and at this size on this ground it
+       read as a shine. Multiplied by a soft blue, the white turns into the
+       palest blue of the mark and the blues keep their depth: colour, not
+       light. The mark masks itself, so the blue never shows outside it. */
+    background:
+      url('/brand/icon-256.png') center / 100% 100% no-repeat,
+      #8db8ff;
+    background-blend-mode: multiply;
+    mask: url('/brand/icon-256.png') center / 100% 100% no-repeat;
+  }
+
+  .redaction-fill::before {
+    width: max(160%, 3.4em);
+    margin: calc(max(160%, 3.4em) / -2) 0 0 calc(max(160%, 3.4em) / -2);
+    animation: mark-spin 11s linear infinite;
+    animation-delay: calc(var(--k, 0) * -3.3s);
+  }
+
+  .redaction-fill::after {
+    width: max(120%, 2.6em);
+    margin: calc(max(120%, 2.6em) / -2) 0 0 calc(max(120%, 2.6em) / -2);
+    opacity: 0.45;
+    animation: mark-spin 17s linear infinite reverse;
+    animation-delay: calc(var(--k, 0) * -5.1s);
+  }
+
+  [data-visible='true'] .redaction {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  [data-visible='true'] .redaction-fill {
+    filter: blur(0);
+  }
+
+  @keyframes replica-breathe {
+    0% {
+      scale: 1 1;
+    }
+    100% {
+      scale: 1.035 0.88;
+    }
+  }
+
+  @keyframes vapor-drift {
+    to {
+      mask-position:
+        center,
+        center,
+        center,
+        100% 0;
+    }
+  }
+
+  /* The pictograms: fine line drawings in the panel's own ink (white on the
+     footer's ground), at the weight of its hairlines. No fill behind them, no
+     shadow, no colour: they sit on the surface the way the type does, and the
+     brand's colour on the card is left to the replicas over the names. Each draws its outline once the card is uncovered, one
+     after the next, and the small solid details fade in after. */
+  .picto-glyph {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .picto-glyph .picto-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.2s var(--ease);
+    transition-delay: calc(0.4s + var(--i, 0) * 0.16s);
+  }
+
+  .picto-glyph .picto-fill,
+  .picto-glyph .picto-dot {
+    fill: var(--ink);
+    stroke: none;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease);
+    transition-delay: calc(1s + var(--i, 0) * 0.16s);
+  }
+
+  [data-visible='true'] .picto-glyph .picto-line {
+    stroke-dashoffset: 0;
+  }
+
+  [data-visible='true'] .picto-glyph .picto-fill,
+  [data-visible='true'] .picto-glyph .picto-dot {
+    opacity: 1;
   }
 
   /* --- Hero entrance ------------------------------------------------------ */
@@ -1471,6 +1709,32 @@
     display: none;
   }
 
+  /* A bar that is never drawn in would leave a gap where the name was, which
+     reads as a missing word rather than a withheld one. */
+  .redaction {
+    opacity: 1;
+    transform: none;
+  }
+
+  .redaction-fill {
+    filter: none;
+  }
+
+  .redaction-fill,
+  .redaction-fill::before,
+  .redaction-fill::after {
+    animation: none;
+  }
+
+  .picto-glyph .picto-line {
+    stroke-dashoffset: 0;
+  }
+
+  .picto-glyph .picto-fill,
+  .picto-glyph .picto-dot {
+    opacity: 1;
+  }
+
   .curtain img,
   .curtain .placeholder-fill {
     transform: none;
@@ -2055,7 +2319,10 @@
        did. */
     bottom: calc(100% + 16px);
     left: 0;
-    min-width: 280px;
+    /* Wide enough that the longest name and its note keep a clear channel
+       between them: at 280px "Northbridge Advisory" ran straight into
+       "Fictional Zürich fiduciary". */
+    min-width: 370px;
     padding: 6px;
     border: 1px solid var(--hair);
     border-radius: 18px;
@@ -2088,12 +2355,40 @@
       visibility 0s;
   }
 
+  /* The same list hanging from the header's Work link: downward, because the
+     header is at the top, and left-aligned under the link (the left edge is
+     set from the link's position when it opens). Everything else, the
+     surface, the rows, the hover, the fade, is the deck menu's, so the two
+     lists read as one control. */
+  .nav-work-menu {
+    top: calc(100% + 10px);
+    bottom: auto;
+    transform: translateY(-6px);
+  }
+
+  /* The header's two lists (Work, language) in the header pill's own
+     material: the same translucent surface and the same blur, so a list and
+     the pill it drops from read as one object, white over white and frosted
+     over the hero photograph alike. Measured against the darkest the frost
+     gets over that photograph, --mute fell short of AA on the notes, so
+     they take --soft here. */
+  .header-menu {
+    background: color-mix(in srgb, var(--surface) 72%, transparent);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  .header-menu .deck-menu-note,
+  .header-menu .locale-menu-note {
+    color: var(--soft);
+  }
+
   .deck-menu-item {
     display: flex;
     align-items: baseline;
-    gap: 10px;
+    gap: 32px;
     width: 100%;
-    padding: 8px 12px;
+    padding: 9px 14px;
     border-radius: 12px;
     text-align: left;
     transition: background-color 0.2s var(--ease);

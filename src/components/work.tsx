@@ -1,6 +1,7 @@
 import { Carousel } from '@/components/carousel'
 import { Emphasis } from '@/components/emphasis'
 import { DeckIndex } from '@/components/deck-index'
+import { PrivateWork } from '@/components/private-work'
 import { Media } from '@/components/media'
 import { ProjectVideo } from '@/components/project-video'
 import { Reveal } from '@/components/reveal'
@@ -124,8 +125,26 @@ export function Work({ locale }: { locale: Locale }) {
                   capped below the viewport so there is air above and below.
                   Rounded on the inner corners alone: the two that are not
                   sitting on a screen edge. */}
-              <Reveal
-                /* Off both edges on a phone, off one on a desktop. There is no
+              {project.confidential ? (
+                /* The same frame, on the same side, with the same bleed and
+                   the same two rounded corners, in the footer's panel
+                   instead of filled with a picture: the deck keeps its rhythm
+                   right to the last card. `min-h` rather than `h`, because
+                   what is inside is text that has to be free to wrap; on a
+                   phone it drops the 4:5 ratio for the same reason and takes
+                   its own height. */
+                <Reveal
+                  className={`curtain media-frame footer-panel vault px-edge relative ms-[calc(var(--edge)*-1)] me-[calc(var(--edge)*-1)] overflow-hidden py-[clamp(48px,8vh,72px)] min-[880px]:flex min-[880px]:min-h-[min(72svh,720px)] min-[880px]:flex-col min-[880px]:justify-center min-[880px]:px-[clamp(36px,4.4vw,72px)] min-[880px]:py-[clamp(32px,4.5vh,52px)] ${
+                    mediaSecond
+                      ? 'min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:rounded-l-[clamp(20px,2.4vw,36px)]'
+                      : 'min-[880px]:ms-[calc(var(--edge)*-1)] min-[880px]:me-0 min-[880px]:rounded-r-[clamp(20px,2.4vw,36px)]'
+                  }`}
+                >
+                  <PrivateWork entries={project.confidential} locale={locale} />
+                </Reveal>
+              ) : (
+                <Reveal
+                  /* Off both edges on a phone, off one on a desktop. There is no
                    alternating side to play with in a single column, so the
                    bleed goes the only way it can: the picture spans the screen
                    and the words keep their margin, which is the same
@@ -137,27 +156,28 @@ export function Work({ locale }: { locale: Locale }) {
                    with a single `mx-0`: `mx` and `ms` set overlapping
                    properties and Tailwind orders its own output, so which one
                    won would not be decided here. */
-                className={`curtain media-frame bg-placeholder relative ms-[calc(var(--edge)*-1)] me-[calc(var(--edge)*-1)] aspect-[4/5] overflow-hidden rounded-none min-[880px]:aspect-auto min-[880px]:h-[min(72svh,720px)] min-[880px]:rounded-none ${
-                  mediaSecond
-                    ? 'min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:rounded-l-[clamp(20px,2.4vw,36px)]'
-                    : 'min-[880px]:ms-[calc(var(--edge)*-1)] min-[880px]:me-0 min-[880px]:rounded-r-[clamp(20px,2.4vw,36px)]'
-                }`}
-              >
-                {project.gallery.length > 0 ? (
-                  <Carousel
-                    images={project.gallery}
-                    label={project.title}
-                    sizes="(max-width: 880px) 100vw, 54vw"
-                    locale={locale}
-                  />
-                ) : (
-                  <Media
-                    src={project.image}
-                    alt={project.imageAlt}
-                    sizes="(max-width: 880px) 100vw, 54vw"
-                  />
-                )}
-              </Reveal>
+                  className={`curtain media-frame bg-placeholder relative ms-[calc(var(--edge)*-1)] me-[calc(var(--edge)*-1)] aspect-[4/5] overflow-hidden rounded-none min-[880px]:aspect-auto min-[880px]:h-[min(72svh,720px)] min-[880px]:rounded-none ${
+                    mediaSecond
+                      ? 'min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:rounded-l-[clamp(20px,2.4vw,36px)]'
+                      : 'min-[880px]:ms-[calc(var(--edge)*-1)] min-[880px]:me-0 min-[880px]:rounded-r-[clamp(20px,2.4vw,36px)]'
+                  }`}
+                >
+                  {project.gallery.length > 0 ? (
+                    <Carousel
+                      images={project.gallery}
+                      label={project.title}
+                      sizes="(max-width: 880px) 100vw, 54vw"
+                      locale={locale}
+                    />
+                  ) : (
+                    <Media
+                      src={project.image}
+                      alt={project.imageAlt}
+                      sizes="(max-width: 880px) 100vw, 54vw"
+                    />
+                  )}
+                </Reveal>
+              )}
 
               {/* When the image takes the right-hand column the copy is set
                   ragged-left against it, so both halves meet at the gutter
@@ -228,10 +248,16 @@ export function Work({ locale }: { locale: Locale }) {
                     >
                       |
                     </span>
-                    <span>{project.year}</span>
-                    <span aria-hidden="true" className="text-hair">
-                      |
-                    </span>
+                    {/* A card can go without a year (the confidential one
+                        spans several); the divider goes with it. */}
+                    {project.year ? (
+                      <>
+                        <span>{project.year}</span>
+                        <span aria-hidden="true" className="text-hair">
+                          |
+                        </span>
+                      </>
+                    ) : null}
                     <span>{project.kind}</span>
                   </p>
 
@@ -299,6 +325,24 @@ export function Work({ locale }: { locale: Locale }) {
                               mirrored={mediaSecond}
                               locale={locale}
                             />
+                          ) : link.action === 'contact' ? (
+                            /* Same line and rule as an outbound link, minus
+                               the new tab: it only moves down this page, to
+                               the email and phone number. */
+                            <a
+                              href="#contact"
+                              className={`group/link ease-brand hover:text-accent inline-flex items-center gap-2.5 text-[15px] font-medium transition-colors duration-400 ${
+                                mediaSecond
+                                  ? 'min-[880px]:flex-row-reverse'
+                                  : ''
+                              }`}
+                            >
+                              {link.label}
+                              <span
+                                aria-hidden="true"
+                                className="bg-ink ease-brand group-hover/link:bg-accent block h-px w-[26px] transition-[width,background-color] duration-400 group-hover/link:w-[44px]"
+                              />
+                            </a>
                           ) : link.href === null ? (
                             /* Named, but not offered. The destination does not
                                exist yet, so this is a label: not focusable, not

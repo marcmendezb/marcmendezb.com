@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { Emphasis } from '@/components/emphasis'
 import { Reveal } from '@/components/reveal'
 import { SectionHeading } from '@/components/section-heading'
 import { SplitWords } from '@/components/split-words'
@@ -19,15 +20,44 @@ const lead: Record<Locale, string> = {
 }
 
 const paragraph1: Record<Locale, string> = {
-  en: 'Most people who build web products pick up conversion later, as something bolted on once the thing works. I came at it from both sides: seven years as a full-stack MarTech specialist, three as a full-stack developer, with neither one supporting the other. So conversion is already in the structure when I build, not retrofitted after launch: what the page is for, what it asks of you, what happens after you say yes.',
-  de: 'Die meisten, die Webprodukte bauen, kümmern sich erst später um Konversion, als etwas, das nachträglich angeflanscht wird, sobald die Sache funktioniert. Ich kam von beiden Seiten: sieben Jahre als Full-Stack-MarTech-Spezialist, drei als Full-Stack-Entwickler, wobei keiner dem anderen untergeordnet war. Konversion steckt deshalb schon in der Struktur, wenn ich baue, nicht nachträglich eingebaut nach dem Launch: wofür die Seite da ist, was sie von dir verlangt, was passiert, nachdem du Ja gesagt hast.',
-  es: 'La mayoría de quienes construyen productos web se ocupan de la conversión más tarde, como algo añadido una vez que la cosa ya funciona. Yo llegué desde los dos lados: siete años como especialista full-stack en MarTech, tres como desarrollador full-stack, sin que uno dependiera del otro. Por eso la conversión ya está en la estructura cuando construyo, no añadida después del lanzamiento: para qué sirve la página, qué te pide, qué pasa después de que dices que sí.',
+  en: 'Most people who build web products pick up conversion later, as something bolted on once the thing works. I came at it from both sides: seven years as a full-stack MarTech specialist, three as a full-stack developer, with neither one supporting the other. So **conversion is already in the structure when I build**, not retrofitted after launch: what the page is for, what it asks of you, what happens after you say yes.',
+  de: 'Die meisten, die Webprodukte bauen, kümmern sich erst später um Konversion, als etwas, das nachträglich angeflanscht wird, sobald die Sache funktioniert. Ich kam von beiden Seiten: sieben Jahre als Full-Stack-MarTech-Spezialist, drei als Full-Stack-Entwickler, wobei keiner dem anderen untergeordnet war. **Konversion steckt deshalb schon in der Struktur, wenn ich baue**, nicht nachträglich eingebaut nach dem Launch: wofür die Seite da ist, was sie von dir verlangt, was passiert, nachdem du Ja gesagt hast.',
+  es: 'La mayoría de quienes construyen productos web se ocupan de la conversión más tarde, como algo añadido una vez que la cosa ya funciona. Yo llegué desde los dos lados: siete años como especialista full-stack en MarTech, tres como desarrollador full-stack, sin que uno dependiera del otro. Por eso **la conversión ya está en la estructura cuando construyo**, no añadida después del lanzamiento: para qué sirve la página, qué te pide, qué pasa después de que dices que sí.',
 }
 
 const paragraph2: Record<Locale, string> = {
   en: 'It shows up as coherence. The positioning, the site, the product and the ads all answer to one idea, instead of three people each defending their own piece of it.',
   de: 'Das zeigt sich als Kohärenz. Positionierung, Website, Produkt und Anzeigen folgen alle derselben Idee, statt dass drei Leute jeweils ihr eigenes Stück verteidigen.',
   es: 'Esto se traduce en coherencia. El posicionamiento, el sitio, el producto y los anuncios responden todos a una misma idea, en lugar de tres personas defendiendo cada una su propio trozo.',
+}
+
+/* The freelance years, framed as ownership rather than as a gap between jobs:
+   leading the work and being the person the client deals with is the part a
+   hiring manager can't see from the project cards. Split into the parts the
+   band sets differently: a label, the claim in display type, the detail, and
+   a way to act on it. */
+const freelanceLabel: Record<Locale, string> = {
+  en: 'Freelance & contract',
+  de: 'Freiberuflich & auf Vertragsbasis',
+  es: 'Freelance y por contrato',
+}
+
+const freelanceClaim: Record<Locale, string> = {
+  en: 'I’ve led projects end to end as a freelancer, as the client’s direct point of contact.',
+  de: 'Als Freelancer habe ich Projekte von Anfang bis Ende geleitet, als direkter Ansprechpartner der Kunden.',
+  es: 'He liderado proyectos de principio a fin como freelance, siendo el interlocutor directo del cliente.',
+}
+
+const freelanceDetail: Record<Locale, string> = {
+  en: 'From scoping and priorities through to launch and what comes after. Where it suits a team better than a permanent hire, **I’m open to working on a freelance or contract basis**.',
+  de: 'Vom Scoping und den Prioritäten bis zum Launch und darüber hinaus. Wo es für ein Team besser passt als eine Festanstellung, **arbeite ich auch freiberuflich oder auf Vertragsbasis**.',
+  es: 'Desde definir el alcance y las prioridades hasta el lanzamiento y lo que viene después. Si a un equipo le encaja mejor que una contratación fija, **también estoy abierto a colaborar como freelance o por contrato**.',
+}
+
+const freelanceAction: Record<Locale, string> = {
+  en: 'Discuss a project',
+  de: 'Projekt besprechen',
+  es: 'Hablemos de un proyecto',
 }
 
 const backgroundLabel: Record<Locale, string> = {
@@ -131,28 +161,37 @@ export function About({ locale }: { locale: Locale }) {
           {/* Deliberately does not retell the timeline below it. The dates are
               in the next band; this is the part the dates don't explain. */}
           <div className="text-soft max-w-[52ch] space-y-4">
-            <p>{paragraph1[locale]}</p>
+            <p>
+              <Emphasis text={paragraph1[locale]} />
+            </p>
             <p>{paragraph2[locale]}</p>
             <p>
               {locale === 'de' ? (
                 <>
                   Ursprünglich aus {hiring.origin.split(',')[0]}, wohne ich
                   bereits in der Nähe von {hiring.targetLocation.split(',')[0]},{' '}
-                  {availableLine[locale]}, ohne Bewilligung oder Umzug zu
-                  klären. {site.openTo}
+                  <strong className="text-ink font-medium">
+                    {availableLine[locale]}
+                  </strong>
+                  , ohne Bewilligung oder Umzug zu klären. {site.openTo}
                 </>
               ) : locale === 'es' ? (
                 <>
                   Originario de {hiring.origin.split(',')[0]}, ya vivo cerca de{' '}
-                  {hiring.targetLocation.split(',')[0]}, {availableLine[locale]}
+                  {hiring.targetLocation.split(',')[0]},{' '}
+                  <strong className="text-ink font-medium">
+                    {availableLine[locale]}
+                  </strong>
                   , sin permiso ni traslado que resolver. {site.openTo}
                 </>
               ) : (
                 <>
                   Originally from {hiring.origin.split(',')[0]}, I&rsquo;m based
                   near {hiring.targetLocation.split(',')[0]} already,{' '}
-                  {availableLine[locale]}, with no permit or relocation to sort
-                  out. {site.openTo}
+                  <strong className="text-ink font-medium">
+                    {availableLine[locale]}
+                  </strong>
+                  , with no permit or relocation to sort out. {site.openTo}
                 </>
               )}
             </p>
@@ -160,7 +199,84 @@ export function About({ locale }: { locale: Locale }) {
         </Reveal>
       </div>
 
-      {/* Band 2: the background as a roadmap.
+      {/* Band 2: freelance, as a band of its own.
+
+          It used to sit inside the prose as a boxed paragraph, which broke the
+          argument in two, and then in a corner of the left column, where it
+          was easy to pass. Here it heads the cluster of cards that follows (it
+          wears the roadmap's frame, the capsule hairline over the brand mark),
+          so it reads as one of the facts About is built from, first in line,
+          rather than as an aside.
+
+          In the footer's material, not the cards' pale one: on the same white
+          as its neighbours it dissolved into them. The dark panel is what the
+          page already uses for the pieces it wants found (the footer, the
+          confidential work), so it lifts this one out of the cluster without a
+          colour the page doesn't have. `.footer-panel` brings the inverted
+          tokens with it, so the label, the claim, the bold and the link's rule
+          and hover all follow without being told.
+
+          Two halves. The claim in display type with its label, for the reader
+          who only scans; the detail and a way to act on it, for the one who
+          stops. Bottom-aligned, so the link sits level with the claim's last
+          line and the band closes on a single edge. */}
+      <Reveal
+        className="reveal footer-panel relative isolate mt-[clamp(40px,6vw,72px)] grid grid-cols-1 gap-x-[clamp(24px,5vw,72px)] gap-y-6 overflow-hidden rounded-[clamp(24px,3.5vw,44px)] px-[clamp(24px,4vw,52px)] py-[clamp(28px,4vw,48px)] min-[880px]:grid-cols-[1.05fr_1fr] min-[880px]:items-end"
+        as="div"
+      >
+        {/* The footer's mark, at the footer's whisper. */}
+        <div aria-hidden="true" className="brand-mark brand-mark--footer">
+          <div className="brand-mark-float">
+            <div className="brand-mark-spin">
+              <Image
+                src="/brand/marcmendez-logo.png"
+                alt=""
+                fill
+                sizes="(max-width: 880px) 120vw, 620px"
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10">
+          <h3 className="text-mute flex items-center gap-2.5 text-sm font-medium">
+            <span aria-hidden="true" className="status-mark">
+              <Image
+                src="/brand/logo-96.png"
+                alt=""
+                width={12}
+                height={12}
+                className="status-spin size-3"
+              />
+            </span>
+            {freelanceLabel[locale]}
+          </h3>
+          <p className="text-ink mt-3.5 max-w-[26ch] text-[clamp(1.3rem,2.2vw,1.85rem)] leading-[1.2] font-semibold tracking-[-0.02em] text-balance">
+            {freelanceClaim[locale]}
+          </p>
+        </div>
+
+        <div className="relative z-10">
+          <p className="text-soft max-w-[48ch]">
+            <Emphasis text={freelanceDetail[locale]} />
+          </p>
+          {/* The project cards' link, rule and all: same gesture, same
+              place it leads (the email and the phone number). */}
+          <a
+            href="#contact"
+            className="group/link ease-brand hover:text-accent mt-5 inline-flex items-center gap-2.5 text-[15px] font-medium transition-colors duration-400"
+          >
+            {freelanceAction[locale]}
+            <span
+              aria-hidden="true"
+              className="bg-ink ease-brand group-hover/link:bg-accent block h-px w-[26px] transition-[width,background-color] duration-400 group-hover/link:w-[44px]"
+            />
+          </a>
+        </div>
+      </Reveal>
+
+      {/* Band 3: the background as a roadmap.
 
           A grey track draws in left to right with a node at each date, then
           blue runs along it in sequence and clears, on a loop. The three
@@ -170,7 +286,7 @@ export function About({ locale }: { locale: Locale }) {
           joining into a single continuous line. The text inside them is what
           gets the right padding, not the cell. */}
       <Reveal
-        className="reveal border-hair bg-surface/60 mt-[clamp(40px,6vw,72px)] rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(24px,4vw,52px)] py-[clamp(28px,4vw,52px)] backdrop-blur-2xl"
+        className="reveal border-hair bg-surface/60 mt-[clamp(16px,2vw,28px)] rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(24px,4vw,52px)] py-[clamp(28px,4vw,52px)] backdrop-blur-2xl"
         as="div"
       >
         {/* Surface, not a grey fill. A tinted panel dropped --mute from 4.88:1
@@ -231,7 +347,7 @@ export function About({ locale }: { locale: Locale }) {
         </ol>
       </Reveal>
 
-      {/* Band 3: the checkable facts, three abreast.
+      {/* Band 4: the checkable facts, three abreast.
 
           The gap above this is deliberately larger than the one above the
           roadmap. At equal spacing the two bands read as one block, and the
@@ -244,7 +360,7 @@ export function About({ locale }: { locale: Locale }) {
           that job.
 
           The gap above matches the gap between the cards, so the four panels
-          read as one cluster rather than as a band and a separate afterthought. */}
+          read as one cluster with the freelance band and the roadmap rather than as a separate afterthought. */}
       <Reveal className="reveal mt-[clamp(16px,2vw,28px)] grid grid-cols-1 items-start gap-[clamp(16px,2vw,28px)] min-[720px]:grid-cols-3">
         <div className="border-hair bg-surface/60 rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(20px,2.4vw,32px)] py-[clamp(20px,2.2vw,28px)] backdrop-blur-2xl">
           <h3 className="mb-3 text-sm font-medium">{educationLabel[locale]}</h3>

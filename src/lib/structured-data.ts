@@ -96,7 +96,7 @@ export function buildWorkSchema(locale: Locale) {
         // Stripped: the markers are typography for the page, and this
         // field is published to search engines.
         description: emphasisPlain(project.description),
-        dateCreated: project.year,
+        ...(project.year ? { dateCreated: project.year } : {}),
         keywords: project.tags.join(', '),
         creator: { '@id': `${site.url}/#person` },
         // `url` takes the primary link; the rest ride along in `sameAs`,

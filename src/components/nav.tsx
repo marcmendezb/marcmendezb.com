@@ -5,7 +5,12 @@ import Image from 'next/image'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { getSite } from '@/content/site'
 import type { Locale } from '@/i18n/locales'
-import { pauseSmoothScroll, resumeSmoothScroll } from '@/lib/smooth-scroll'
+import { cardTops } from '@/lib/deck'
+import {
+  pauseSmoothScroll,
+  resumeSmoothScroll,
+  scrollToY,
+} from '@/lib/smooth-scroll'
 
 /** Width in px below which the pill is swapped for the burger menu. */
 const MOBILE_BREAKPOINT = 880
@@ -71,18 +76,47 @@ const directLabel: Record<Locale, string> = {
   es: 'Directo',
 }
 
+const workMenuLabel: Record<Locale, string> = {
+  en: 'Projects',
+  de: 'Projekte',
+  es: 'Proyectos',
+}
+
+/** How long the Work menu waits before closing, so the pointer can cross the
+ *  gap. The deck switcher's figure, so the two lists behave alike. */
+const CLOSE_DELAY_MS = 140
+
+/** Index of the Work link in `site.nav`. */
+const WORK_INDEX = 1
+
+type ProjectEntry = { title: string; shorthand: string }
+
 const available: Record<Locale, string> = {
   en: 'Available',
   de: 'Verfügbar',
   es: 'Disponible',
 }
 
-export function Nav({ locale }: { locale: Locale }) {
+export function Nav({
+  locale,
+  projects,
+}: {
+  locale: Locale
+  /** For the Work dropdown: names and three-word notes, nothing else. */
+  projects: readonly ProjectEntry[]
+}) {
   const site = getSite(locale)
   const [activeIndex, setActiveIndex] = useState(-1)
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [overHero, setOverHero] = useState(true)
+  const [workOpen, setWorkOpen] = useState(false)
+  const workCloseTimer = useRef(0)
+  const workMenuRef = useRef<HTMLDivElement>(null)
+  const controlsRef = useRef<HTMLDivElement>(null)
+  // Set while Escape hands focus back to the Work link, so that focus does not
+  // open the list it has just closed.
+  const workEscaping = useRef(false)
 
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([])
   const highlightRef = useRef<HTMLSpanElement>(null)
@@ -91,7 +125,14 @@ export function Nav({ locale }: { locale: Locale }) {
 
   // Hovering previews a section without committing; falling back to the
   // scroll-spy result when the pointer leaves.
-  const targetIndex = hoverIndex ?? (activeIndex >= 0 ? activeIndex : null)
+  //
+  // While the Work list is open the highlight stays on Work, even with the
+  // pointer down in the list: the link's own mouseleave fires on the way in,
+  // and without this the pill would slide back to the current section under
+  // the menu it had just opened.
+  const targetIndex =
+    hoverIndex ??
+    (workOpen ? WORK_INDEX : activeIndex >= 0 ? activeIndex : null)
 
   // --- Sliding highlight ----------------------------------------------------
 
@@ -181,6 +222,101 @@ export function Nav({ locale }: { locale: Locale }) {
     observer.observe(hero)
     return () => observer.disconnect()
   }, [])
+
+  // --- Work dropdown ---------------------------------------------------------
+
+  /* The deck switcher's behaviour, from the header: hover or focus opens it, a
+     short grace period on the way out lets the pointer cross into the list,
+     Escape closes it and hands focus back to the link. Clicking Work itself
+     still goes to the section; the list is for going straight to a card. */
+  const holdWork = () => {
+    window.clearTimeout(workCloseTimer.current)
+    // Left-aligned under the Work link, measured when it opens rather than
+    // kept in state: the link moves with the font and the viewport. Against
+    // the controls group, which is what the list is positioned in.
+    const link = linkRefs.current[WORK_INDEX]
+    const group = controlsRef.current
+    if (link && group && workMenuRef.current)
+      workMenuRef.current.style.left = `${
+        link.getBoundingClientRect().left - group.getBoundingClientRect().left
+      }px`
+    setWorkOpen(true)
+  }
+  const releaseWork = () => {
+    window.clearTimeout(workCloseTimer.current)
+    workCloseTimer.current = window.setTimeout(
+      () => setWorkOpen(false),
+      CLOSE_DELAY_MS,
+    )
+  }
+
+  useEffect(() => () => window.clearTimeout(workCloseTimer.current), [])
+
+  useEffect(() => {
+    if (!workOpen) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      setWorkOpen(false)
+      workEscaping.current = true
+      linkRefs.current[WORK_INDEX]?.focus()
+      workEscaping.current = false
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [workOpen])
+
+  const goToProject = (index: number) => {
+    const target = cardTops()[index]
+    if (target !== undefined) scrollToY(target)
+    setWorkOpen(false)
+  }
+
+  /* The list sits outside the nav pill in the DOM (see where it is rendered),
+     so the tab order has to be carried across by hand to stay where the eye
+     expects it: Work, then its projects, then About. */
+  const workItems = () =>
+    Array.from(
+      workMenuRef.current?.querySelectorAll<HTMLButtonElement>('button') ?? [],
+    )
+
+  const onWorkLinkKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key !== 'Tab' || event.shiftKey || !workOpen) return
+    const first = workItems()[0]
+    if (!first) return
+    event.preventDefault()
+    first.focus()
+  }
+
+  const onWorkMenuKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key !== 'Tab') return
+    const items = workItems()
+    const index = items.indexOf(document.activeElement as HTMLButtonElement)
+    if (event.shiftKey && index === 0) {
+      event.preventDefault()
+      linkRefs.current[WORK_INDEX]?.focus()
+    } else if (!event.shiftKey && index === items.length - 1) {
+      event.preventDefault()
+      setWorkOpen(false)
+      linkRefs.current[WORK_INDEX + 1]?.focus()
+    }
+  }
+
+  // Shared by the link's wrapper and the list: either one keeps it open.
+  const workHoverProps = {
+    onMouseEnter: holdWork,
+    onMouseLeave: releaseWork,
+    onFocusCapture: () => {
+      if (!workEscaping.current) holdWork()
+    },
+    onBlurCapture: (event: React.FocusEvent) => {
+      const next = event.relatedTarget as Node | null
+      const inside =
+        next &&
+        (workMenuRef.current?.contains(next) ||
+          linkRefs.current[WORK_INDEX]?.contains(next))
+      if (!inside) releaseWork()
+    },
+  }
 
   // --- Mobile overlay: scroll lock, Escape, focus management ----------------
 
@@ -292,7 +428,7 @@ export function Nav({ locale }: { locale: Locale }) {
             nav sat over the middle of the hero photograph with the button
             marooned in the far corner; grouped, the header reads as a name on
             one side and the controls on the other. */}
-        <div className="flex items-center gap-2.5">
+        <div ref={controlsRef} className="relative flex items-center gap-2.5">
           {/* Desktop pill. `relative` because the sliding highlight inside is
             positioned against it: it used to get that for free from the
             absolute centring this replaces. */}
@@ -312,7 +448,7 @@ export function Nav({ locale }: { locale: Locale }) {
               // active section alone, so hovering any other link slid the dark
               // pill under still-dark text and the label became unreadable.
               const isFilled = targetIndex === index
-              return (
+              const link = (
                 <a
                   key={item.section}
                   href={`#${item.section}`}
@@ -323,6 +459,9 @@ export function Nav({ locale }: { locale: Locale }) {
                   onMouseLeave={() => setHoverIndex(null)}
                   onFocus={() => setHoverIndex(index)}
                   onBlur={() => setHoverIndex(null)}
+                  onKeyDown={
+                    index === WORK_INDEX ? onWorkLinkKeyDown : undefined
+                  }
                   // Semantics stay tied to the section you're actually in, not to
                   // wherever the pointer happens to be.
                   aria-current={isActive ? 'true' : undefined}
@@ -338,8 +477,63 @@ export function Nav({ locale }: { locale: Locale }) {
                   </span>
                 </a>
               )
+
+              if (index !== WORK_INDEX || projects.length === 0) return link
+
+              /* Work keeps the list open while the pointer or focus is on it.
+                 The wrapper is deliberately not positioned: the sliding
+                 highlight is placed from each link's `offsetLeft`, measured
+                 against the nearest positioned ancestor, and that has to stay
+                 the nav pill. */
+              return (
+                <div key={item.section} className="flex" {...workHoverProps}>
+                  {link}
+                </div>
+              )
             })}
           </nav>
+
+          {/* The Work list, as a sibling of the nav pill rather than inside it.
+              It wears the pill's own frosted material, and a backdrop blur
+              cannot reach the page through an ancestor that already blurs its
+              own backdrop: inside the pill it rendered see-through with
+              nothing frosted. Out here it frosts the same photograph the pill
+              does, so the two read as one surface.
+
+              Rendered at all times, inert while closed: it has something to
+              fade, and its buttons stay out of the tab order until it is
+              open. */}
+          {projects.length > 0 ? (
+            <div
+              ref={workMenuRef}
+              id="nav-work-menu"
+              role="group"
+              aria-label={workMenuLabel[locale]}
+              data-open={workOpen}
+              inert={!workOpen}
+              className="deck-menu nav-work-menu header-menu"
+              onKeyDown={onWorkMenuKeyDown}
+              {...workHoverProps}
+            >
+              <ul>
+                {projects.map((project, projectIndex) => (
+                  <li key={project.title}>
+                    <button
+                      type="button"
+                      className="deck-menu-item"
+                      aria-label={`${project.title}, ${project.shorthand}`}
+                      onClick={() => goToProject(projectIndex)}
+                    >
+                      <span className="deck-menu-title">{project.title}</span>
+                      <span className="deck-menu-note">
+                        {project.shorthand}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
           {/* Between the section links and the CTA, on request: the one piece
               of chrome every page needs regardless of which section it's
@@ -485,14 +679,30 @@ export function Nav({ locale }: { locale: Locale }) {
             >
               {site.email}
             </a>
-            <a
-              href={`tel:${site.phone.replace(/\s/g, '')}`}
-              onClick={() => setMenuOpen(false)}
+            <p
               style={{ '--i': 5 } as React.CSSProperties}
-              className="menu-in text-mute ease-brand hover:text-accent mt-2 block w-fit text-[15px] transition-colors duration-300"
+              className="menu-in text-mute mt-2 text-[15px]"
             >
-              {site.phone}
-            </a>
+              <a
+                href={site.tel}
+                onClick={() => setMenuOpen(false)}
+                className="ease-brand hover:text-accent transition-colors duration-300"
+              >
+                {site.phone}
+              </a>
+              <span aria-hidden="true" className="text-hair mx-2.5">
+                |
+              </span>
+              <a
+                href={site.whatsapp}
+                target="_blank"
+                rel="noreferrer noopener"
+                onClick={() => setMenuOpen(false)}
+                className="ease-brand hover:text-accent transition-colors duration-300"
+              >
+                WhatsApp
+              </a>
+            </p>
 
             <p
               style={{ '--i': 6 } as React.CSSProperties}

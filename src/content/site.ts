@@ -245,6 +245,11 @@ const localized: Record<Locale, LocalizedSite> = {
 
 export function getSite(locale: Locale) {
   const t = localized[locale]
+  // The Swiss number is the main one: it is what an English- or German-
+  // reading recruiter in Switzerland will call. The Spanish page keeps the
+  // Spanish number for readers calling from Spain.
+  const phone = locale === 'es' ? '+34 669 27 24 83' : '+41 77 284 08 45'
+  const digits = phone.replace(/\D/g, '')
 
   return {
     // ---------------------------------------------------------------------
@@ -270,7 +275,11 @@ export function getSite(locale: Locale) {
     // ---------------------------------------------------------------------
 
     email: 'marcmendezb@gmail.com',
-    phone: '+34 669 27 24 83',
+    phone,
+    /** `tel:` target for `phone`: the same number with the spaces taken out. */
+    tel: `tel:+${digits}`,
+    /** The same number on WhatsApp. wa.me wants digits only, no `+`. */
+    whatsapp: `https://wa.me/${digits}`,
 
     socials: [
       {

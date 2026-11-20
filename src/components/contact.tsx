@@ -1,3 +1,4 @@
+import { Emphasis } from '@/components/emphasis'
 import { Reveal } from '@/components/reveal'
 import { SplitWords } from '@/components/split-words'
 import { getSite } from '@/content/site'
@@ -21,15 +22,22 @@ const intro = (
 ): string => {
   switch (locale) {
     case 'de':
-      return `EU-Bürger, keine Bewilligung zu klären, verfügbar ab ${availableFrom}. E-Mail ist der schnellste Weg, mich zu erreichen. Ich antworte ${responseTime}.`
+      return `**EU-Bürger, keine Bewilligung zu klären, verfügbar ab ${availableFrom}**. E-Mail ist der schnellste Weg, mich zu erreichen. Ich antworte ${responseTime}.`
     case 'es':
-      return `Ciudadano de la UE, sin permiso que resolver, disponible desde ${availableFrom}. El correo es la forma más rápida de contactarme. Respondo ${responseTime}.`
+      return `**Ciudadano de la UE, sin permiso que resolver, disponible desde ${availableFrom}**. El correo es la forma más rápida de contactarme. Respondo ${responseTime}.`
     default:
-      return `EU citizen, no permit to sort out, available ${availableFrom}. Email is the fastest way to reach me. I reply ${responseTime}.`
+      return `**EU citizen, no permit to sort out, available ${availableFrom}**. Email is the fastest way to reach me. I reply ${responseTime}.`
   }
 }
 
 const or: Record<Locale, string> = { en: 'or', de: 'oder', es: 'o' }
+
+/** Leading space included: a bare {' '} gets collapsed out of the name. */
+const whatsappHint: Record<Locale, string> = {
+  en: ' (message me, opens in a new tab)',
+  de: ' (Nachricht schreiben, öffnet in einem neuen Tab)',
+  es: ' (escríbeme, se abre en una pestaña nueva)',
+}
 
 const downloadCV: Record<Locale, string> = {
   en: 'Download CV',
@@ -69,7 +77,9 @@ export function Contact({ locale }: { locale: Locale }) {
         </h2>
 
         <p className="text-soft mt-6 max-w-[48ch]">
-          {intro(hiring.availableFrom, hiring.responseTime, locale)}
+          <Emphasis
+            text={intro(hiring.availableFrom, hiring.responseTime, locale)}
+          />
         </p>
 
         <a
@@ -79,13 +89,29 @@ export function Contact({ locale }: { locale: Locale }) {
           {site.email}
         </a>
 
+        {/* The number once, two ways to use it: a call, or a message on
+            WhatsApp, which is how a lot of recruiters reach candidates
+            abroad first. Same sweep, same size, so neither reads as the
+            fallback. */}
         <p className="text-mute mt-4 text-[15px]">
           {or[locale]}{' '}
           <a
-            href={`tel:${site.phone.replace(/\s/g, '')}`}
+            href={site.tel}
             className="underline-sweep ease-brand hover:text-accent transition-colors duration-300"
           >
             {site.phone}
+          </a>
+          <span aria-hidden="true" className="text-hair mx-2.5">
+            |
+          </span>
+          <a
+            href={site.whatsapp}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="underline-sweep ease-brand hover:text-accent transition-colors duration-300"
+          >
+            WhatsApp
+            <span className="sr-only">{whatsappHint[locale]}</span>
           </a>
         </p>
 

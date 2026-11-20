@@ -1,3 +1,4 @@
+import { Emphasis } from '@/components/emphasis'
 import { Reveal } from '@/components/reveal'
 import { SectionHeading } from '@/components/section-heading'
 import { SplitWords } from '@/components/split-words'
@@ -94,7 +95,9 @@ export function Disciplines({ locale }: { locale: Locale }) {
             </div>
 
             <div>
-              <p className="text-soft max-w-[46ch]">{discipline.body}</p>
+              <p className="text-soft max-w-[46ch]">
+                <Emphasis text={discipline.body} />
+              </p>
               <ToolPills
                 tools={discipline.tools}
                 label={toolkitLabel(discipline.name, locale)}

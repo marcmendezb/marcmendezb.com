@@ -109,7 +109,7 @@ export function LocaleSwitcher({
         aria-label={switcherLabel[locale]}
         data-open={open}
         inert={!open}
-        className="locale-menu"
+        className="locale-menu header-menu"
       >
         <ul>
           {locales.map((loc) => (

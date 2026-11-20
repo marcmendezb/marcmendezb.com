@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { Emphasis } from '@/components/emphasis'
 import { Media } from '@/components/media'
 import { SplitWords } from '@/components/split-words'
 import { getSite } from '@/content/site'
@@ -26,9 +27,9 @@ const lede: Record<Locale, string> = {
 }
 
 const subLede: Record<Locale, string> = {
-  en: 'Full-stack MarTech specialist for seven years, across SEO, paid acquisition, social media and CRO. Full-stack developer for three, shipping the products that marketing points to. The same person designs both, not handed between two teams.',
-  de: 'Sieben Jahre Full-Stack-MarTech-Spezialist, über SEO, Paid Acquisition, Social Media und CRO. Drei Jahre Full-Stack-Entwickler, der die Produkte liefert, auf die das Marketing zeigt. Dieselbe Person entwirft beides, nicht aufgeteilt auf zwei Teams.',
-  es: 'Especialista full-stack en MarTech durante siete años, en SEO, adquisición de pago, redes sociales y CRO. Desarrollador full-stack durante tres, entregando los productos a los que apunta el marketing. La misma persona diseña ambos, no repartidos entre dos equipos.',
+  en: '**Full-stack MarTech specialist for seven years**, across SEO, paid acquisition, social media and CRO. **Full-stack developer for three**, shipping the products that marketing points to. The same person designs both, not handed between two teams.',
+  de: '**Sieben Jahre Full-Stack-MarTech-Spezialist**, über SEO, Paid Acquisition, Social Media und CRO. **Drei Jahre Full-Stack-Entwickler**, der die Produkte liefert, auf die das Marketing zeigt. Dieselbe Person entwirft beides, nicht aufgeteilt auf zwei Teams.',
+  es: '**Especialista full-stack en MarTech durante siete años**, en SEO, adquisición de pago, redes sociales y CRO. **Desarrollador full-stack durante tres**, entregando los productos a los que apunta el marketing. La misma persona diseña ambos, no repartidos entre dos equipos.',
 }
 
 const available: Record<Locale, string> = {
@@ -131,7 +132,7 @@ export function Hero({ locale }: { locale: Locale }) {
           {/* Not "most teams hire twice for that": headcount framing prices the
               work by what it replaces and reads as an offer to be bought
               cheaply. The argument is that the decisions hold together. */}
-          {subLede[locale]}
+          <Emphasis text={subLede[locale]} />
         </p>
 
         {/* The three facts a Swiss recruiter screens on, above the fold and in

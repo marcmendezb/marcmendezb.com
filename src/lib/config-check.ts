@@ -40,10 +40,14 @@ export function reportPlaceholders() {
       `projects: ${outcomeless.length} with no outcome; one real number each is the biggest win available`,
     )
   }
-  /* A link with no destination does not count as having one, or Tessel would
-     drop off this list by virtue of two buttons that go nowhere. */
+  /* A link with no destination does not count as having one. A project that
+     offers a call instead (Tessel, in development and not public) has no URL
+     by design, so it is not a gap to fill. */
   const linkless = projects.filter(
-    (project) => !project.links.some((link) => link.href !== null),
+    (project) =>
+      !project.links.some(
+        (link) => link.href !== null || link.action === 'contact',
+      ),
   )
   if (linkless.length > 0) {
     todo.push(
@@ -72,7 +76,8 @@ export function reportPlaceholders() {
      is not on a placeholder panel. Counting on `image` alone had Marqo, the one
      project with four real screenshots, listed as still unillustrated. */
   const imageless = projects.filter(
-    (project) => !project.image && project.gallery.length === 0,
+    (project) =>
+      !project.image && project.gallery.length === 0 && !project.confidential,
   )
   if (imageless.length > 0) {
     todo.push(

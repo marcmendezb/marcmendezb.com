@@ -78,10 +78,15 @@ export type ProjectLink = {
    */
   href: string | null
   /**
-   * Set when following this opens the project's film in a dialog rather than
-   * navigating. The entry needs no `href` and never gets one.
+   * Set when following this does something on this page rather than
+   * navigating away. The entry needs no `href` and never gets one, which also
+   * keeps it out of the structured data: neither is a place the project lives.
+   *
+   * - 'video' opens the project's film in a dialog.
+   * - 'contact' scrolls to the contact section, for a project that is shown
+   *   on a call rather than at a public URL.
    */
-  action?: 'video'
+  action?: 'video' | 'contact'
 }
 
 export type Project = {
@@ -140,6 +145,26 @@ export type Project = {
   imageAlt: string
   /** The film a `action: 'video'` link opens. Null when there is none. */
   video: ProjectVideo | null
+  /**
+   * Work that cannot be shown. When set, the media slot renders these pieces
+   * of work instead of `gallery` or `image`, both of which stay empty. See
+   * `PrivateWork`.
+   */
+  confidential?: readonly ConfidentialWork[]
+}
+
+/**
+ * One piece of work under NDA, as the confidential card lists it.
+ *
+ * `title` may carry `[n]`, an n-character redaction bar standing exactly where
+ * a name would be. It says "there is a name here and I can't give it" faster
+ * than any sentence can, which matters to a recruiter reading in a glance.
+ */
+export type ConfidentialWork = {
+  /** Which pictogram leads the entry. Base data only; not translated. */
+  icon: 'platform' | 'assistant' | 'sites'
+  title: string
+  detail: string
 }
 
 /**
@@ -220,12 +245,12 @@ export const projects: readonly Project[] = [
       'Playwright',
       'VPS',
     ],
+    // Still in development and not going public yet, so there is no site to
+    // send anyone to. The film shows it working; the call is where I show the
+    // rest of it live.
     links: [
-      // Both are authored now and neither points anywhere yet, so the card
-      // sets them as labels rather than as links. Fill in an `href` and each
-      // one becomes clickable on its own.
-      { label: 'Waitlist', href: null }, // TODO: the waitlist URL
-      { label: 'View the project', href: null, action: 'video' },
+      { label: 'Watch the teaser', href: null, action: 'video' },
+      { label: 'Book a call for a live demo', href: null, action: 'contact' },
     ],
     shorthand: 'Multi-tenant agency CRM',
     image: null, // TODO: '/work/tessel.jpg'
@@ -285,18 +310,48 @@ export const projects: readonly Project[] = [
       'Drizzle ORM',
       'Playwright',
     ],
-    // The repository is public on purpose: for this one the code is the
-    // work sample. The site itself is not deployed yet.
+    // Both front doors: the repository is public on purpose, because for this
+    // one the code is as much the work sample as the site. The root redirects
+    // to /en, /es or /de by the visitor's country, so it is linked bare.
     links: [
+      {
+        label: 'Visit site',
+        href: 'https://paddock-web.marcmendezb.workers.dev/',
+      },
       {
         label: 'Source code',
         href: 'https://github.com/marcmendezb/paddock-notes',
       },
     ],
     shorthand: 'F1 data analysis',
-    image: null,
-    imageAlt: 'Paddock Notes, Formula 1 explained with data',
-    gallery: previewGallery, // TODO: Paddock Notes' own images
+    image: '/work/paddock-notes/paddock-notes-01.jpg',
+    imageAlt:
+      'The Paddock Notes homepage on a laptop: the next Grand Prix, Las Vegas, with a live countdown to the start and the circuit, coordinates and race format below',
+    gallery: [
+      {
+        src: '/work/paddock-notes/paddock-notes-01.jpg',
+        position: '50% 45%',
+        alt: 'The Paddock Notes homepage on a laptop: the next Grand Prix, Las Vegas, with a live countdown to the start and the circuit, coordinates and race format below',
+      },
+      {
+        src: '/work/paddock-notes/paddock-notes-02.jpg',
+        // Phone sits below the middle (32-76% of the height).
+        position: '50% 60%',
+        alt: 'The championship standings on a phone lying on a black stool, after round 20 of 23: Andrea Kimi Antonelli on 390 points, 111 ahead of Max Verstappen',
+      },
+      {
+        src: '/work/paddock-notes/paddock-notes-03.jpg',
+        // Tilted laptop sits above the middle (17-69% of the height).
+        position: '50% 30%',
+        alt: 'The Interlagos circuit page on a tilted laptop: lap record, length and most wins beside the track map, with the fastest lap animated at 317 km/h',
+      },
+      {
+        src: '/work/paddock-notes/paddock-notes-04.jpg',
+        // Phone sits below the middle (32-77% of the height).
+        position: '50% 60%',
+        alt: 'The mobile homepage on a phone leaning against a curtain, counting down to the start of the Las Vegas Grand Prix',
+      },
+    ],
     video: null,
   },
   {
@@ -316,7 +371,13 @@ export const projects: readonly Project[] = [
       'GSAP',
       'Cloudflare Pages',
     ],
-    links: [{ label: 'Visit site', href: 'https://northbridge-124.pages.dev' }],
+    links: [
+      { label: 'Visit site', href: 'https://northbridge-124.pages.dev' },
+      {
+        label: 'Source code',
+        href: 'https://github.com/marcmendezb/northbridge',
+      },
+    ],
     shorthand: 'Fictional Zürich fiduciary',
     image: '/work/northbridge/northbridge-01.jpg',
     imageAlt:
@@ -445,6 +506,53 @@ export const projects: readonly Project[] = [
     ],
     video: null,
   },
+  {
+    // Last on purpose: everything above can be opened and clicked through, and
+    // this is the one card that asks to be taken on trust until a call. No
+    // client, product or company is named or described anywhere in it, in any
+    // language: not the name, not the sector. The redaction bars stand where
+    // the names would be, and what is left is only what I built.
+    slug: 'private-work',
+    title: 'Private work',
+    kind: 'Under NDA',
+    description:
+      'Most of what I build for clients sits behind a login or a confidentiality agreement, so it can’t be named or shown here. What I can say is what I built; **the rest I’m glad to walk through on a call**.',
+    outcome: null,
+    role: 'Design and build',
+    // No year: the work spans several, and a date on a card that shows
+    // nothing reads as filler.
+    year: '',
+    tags: ['React', 'TypeScript', 'RAG', 'FastAPI', 'pgvector', 'OpenAI'],
+    links: [
+      { label: 'Ask me about it on a call', href: null, action: 'contact' },
+    ],
+    shorthand: 'Work under NDA',
+    image: null,
+    imageAlt:
+      'Work under confidentiality agreements, described rather than shown',
+    gallery: [],
+    video: null,
+    confidential: [
+      {
+        icon: 'platform',
+        title: 'The whole front end of [10]',
+        detail:
+          '**The internal platform an entire company runs on.** Every one of its departments works in it, every day: project workflow and planning, sales and purchasing KPIs, transport, fleet, hours, tasks and incidents. Thirteen modules, four languages, real-time updates and permissions down to each action.',
+      },
+      {
+        icon: 'assistant',
+        title: '[4], a RAG assistant',
+        detail:
+          'Retrieval over a company’s own documents with pgvector. **Every answer cites its sources**, and when it doesn’t know, it hands the question to a person instead of guessing.',
+      },
+      {
+        icon: 'sites',
+        title: 'Websites for [7], [6] and many more',
+        detail:
+          'Sites and landing pages for real clients, **live and in use**, with lead capture wired straight into each client’s CRM.',
+      },
+    ],
+  },
 ] as const
 
 /**
@@ -474,13 +582,14 @@ export const disciplines: readonly Discipline[] = [
   {
     name: 'Full-stack developer',
     claim: 'I build it myself',
-    body: 'Real products, not mockups: corporate sites, landing pages, marketing automation, SaaS, web apps, internal software. I take them from the frontend through to deploy, with coding agents doing real work alongside me rather than just autocompleting in the editor. There’s no handoff, because there’s nobody to hand off to.',
-    /* Drawn from what is actually in the repos, not from memory: 43 projects
-       across personal and client work were read for their dependencies.
-       Cloudflare Workers with D1 appear in four of them and Hono in three.
-       Vite is in eleven. The AI API entries are evidenced too: one of them
-       ships @anthropic-ai/sdk with Trigger.dev for background jobs, and
-       nutribot runs @google/generative-ai.
+    body: 'Real products, not mockups: corporate sites, landing pages, marketing automation, SaaS, web apps, internal software. I take them **from the frontend through to deploy**, with coding agents doing real work alongside me rather than just autocompleting in the editor. There’s no handoff, because there’s nobody to hand off to.',
+    /* Drawn from what is actually in the repos, not from memory: 43 projects,
+       personal and client work, were read for their dependencies. Cloudflare
+       Workers with D1 appear in four of them and Hono in three; Vite is in
+       eleven. The AI API entries are evidenced too: one ships
+       @anthropic-ai/sdk with Trigger.dev for background jobs, another runs
+       @google/generative-ai. Client projects stay unnamed here, as they do
+       everywhere else in this public repository.
 
        MySQL, Framer and Figma are here on Marc's say-so rather than on
        evidence: they're skills he supplied, but nothing in these repos uses
@@ -518,7 +627,7 @@ export const disciplines: readonly Discipline[] = [
   {
     name: 'Full-stack MarTech specialist',
     claim: 'I know why it sells',
-    body: 'Strategy first, then the MarTech stack that serves it: SEO, paid acquisition, social media, landing pages, CRO, email and the automation behind it. Seven years of this before I wrote a line of production code, which is why I think about conversion while I’m building, not after.',
+    body: 'Strategy first, then the MarTech stack that serves it: SEO, paid acquisition, social media, landing pages, CRO, email and the automation behind it. **Seven years of this before I wrote a line of production code**, which is why I think about conversion while I’m building, not after.',
     // 'Lifecycle' became 'Email marketing': the same work, named the way a job
     // ad names it. Automation and workflows sit here rather than under the
     // developer discipline, because the judgement they encode is a marketing
@@ -588,6 +697,9 @@ export const learning: readonly string[] = [
 // ---------------------------------------------------------------------------
 
 type ProjectTranslation = {
+  /** Only where the title is a description rather than a name: "Private
+   *  work" translates, "Tessel" does not. */
+  title?: string
   kind: string
   description: string
   role: string
@@ -599,6 +711,16 @@ type ProjectTranslation = {
   galleryAlt?: readonly string[]
   /** Only tessel has a video today. */
   videoPosterAlt?: string
+  /**
+   * Positional, parallel to the base project's own `links`. Omitted where the
+   * labels stay English in every locale, as "Visit site" and "Source code" do;
+   * a call to action that reads as a sentence has to be in the reader's
+   * language.
+   */
+  linkLabels?: readonly string[]
+  /** Parallel to the base project's `confidential`, redaction markers
+   *  included. The icons come from the base entries. */
+  confidential?: readonly Omit<ConfidentialWork, 'icon'>[]
 }
 
 const projectTranslations: Record<
@@ -621,6 +743,35 @@ const projectTranslations: Record<
       ],
       videoPosterAlt:
         'Das Tessel-Logo mit dem Slogan „Deine ganze Agentur, in einem Tool."',
+      linkLabels: ['Teaser ansehen', 'Gespräch mit Live-Demo vereinbaren'],
+    },
+    'private-work': {
+      title: 'Vertrauliche Projekte',
+      kind: 'Unter NDA',
+      description:
+        'Das meiste, was ich für Kunden baue, liegt hinter einem Login oder unter einer Vertraulichkeitsvereinbarung, also kann ich es hier weder nennen noch zeigen. Sagen kann ich, was ich gebaut habe; **den Rest zeige ich gern in einem Gespräch**.',
+      role: 'Design und Umsetzung',
+      shorthand: 'Projekte unter NDA',
+      imageAlt:
+        'Projekte unter Vertraulichkeitsvereinbarung, beschrieben statt gezeigt',
+      linkLabels: ['Im Gespräch mehr erfahren'],
+      confidential: [
+        {
+          title: 'Das gesamte Frontend von [10]',
+          detail:
+            '**Die interne Plattform, auf der ein ganzes Unternehmen läuft.** Jede seiner Abteilungen arbeitet täglich darin: Projekt-Workflow und Planung, Verkaufs- und Einkaufs-KPIs, Transport, Fuhrpark, Arbeitszeiten, Aufgaben und Störungen. Dreizehn Module, vier Sprachen, Echtzeit-Updates und Berechtigungen bis auf jede einzelne Aktion.',
+        },
+        {
+          title: '[4], ein RAG-Assistent',
+          detail:
+            'Retrieval über die eigenen Dokumente eines Unternehmens mit pgvector. **Jede Antwort nennt ihre Quellen**, und wenn er etwas nicht weiss, gibt er die Frage an einen Menschen weiter, statt zu raten.',
+        },
+        {
+          title: 'Websites für [7], [6] und viele mehr',
+          detail:
+            'Websites und Landingpages für echte Kunden, **live und im Einsatz**, mit Lead-Erfassung direkt im CRM des jeweiligen Kunden.',
+        },
+      ],
     },
     'paddock-notes': {
       kind: 'Open Source',
@@ -628,7 +779,14 @@ const projectTranslations: Record<
         'Eine inoffizielle Website, die die Formel 1 mit Daten erklärt: die laufende Saison Rennen für Rennen, Strategie-, Pace- und Telemetrieanalysen für jedes Rennen seit 2023 und ein Was-wäre-wenn-Meisterschaftssimulator. Web-App, API und Datenimport laufen als drei getrennte Cloudflare Workers, und nach jedem Rennen berechnet ein Workflow die Analysen vor, sodass **keine Seite je auf eine externe API wartet**. Auf Englisch, Spanisch und Deutsch geschrieben, nach WCAG 2.2 AA gebaut, und der Kern der Website funktioniert auch ohne JavaScript. Alle 36 Architekturentscheidungen sind im Repository dokumentiert.',
       role: 'Produkt, Design und Umsetzung',
       shorthand: 'F1-Datenanalyse',
-      imageAlt: 'Paddock Notes, die Formel 1 mit Daten erklärt',
+      imageAlt:
+        'Die Paddock-Notes-Startseite auf einem Laptop: der nächste Grand Prix, Las Vegas, mit einem laufenden Countdown bis zum Start, darunter Strecke, Koordinaten und Rennformat',
+      galleryAlt: [
+        'Die Paddock-Notes-Startseite auf einem Laptop: der nächste Grand Prix, Las Vegas, mit einem laufenden Countdown bis zum Start, darunter Strecke, Koordinaten und Rennformat',
+        'Die WM-Wertung auf einem Smartphone auf einem schwarzen Hocker, nach Runde 20 von 23: Andrea Kimi Antonelli mit 390 Punkten, 111 vor Max Verstappen',
+        'Die Streckenseite von Interlagos auf einem schräg gestellten Laptop: Rundenrekord, Länge und meiste Siege neben der Streckenkarte, die schnellste Runde animiert bei 317 km/h',
+        'Die mobile Startseite auf einem Smartphone, an einen Vorhang gelehnt, mit dem Countdown bis zum Start des Grossen Preises von Las Vegas',
+      ],
     },
     northbridge: {
       kind: 'Fiktive Marke',
@@ -691,6 +849,35 @@ const projectTranslations: Record<
       ],
       videoPosterAlt:
         'El logotipo de Tessel, con el eslogan "Toda tu agencia, en una sola herramienta."',
+      linkLabels: ['Ver el teaser', 'Agenda una llamada con demo en directo'],
+    },
+    'private-work': {
+      title: 'Trabajo confidencial',
+      kind: 'Bajo NDA',
+      description:
+        'Casi todo lo que construyo para clientes está detrás de un login o de un acuerdo de confidencialidad, así que aquí no puedo nombrarlo ni enseñarlo. Lo que sí puedo contar es lo que construí yo; **el resto te lo enseño encantado en una llamada**.',
+      role: 'Diseño y construcción',
+      shorthand: 'Trabajo bajo NDA',
+      imageAlt:
+        'Trabajo bajo acuerdos de confidencialidad, descrito en lugar de mostrado',
+      linkLabels: ['Te lo cuento en una llamada'],
+      confidential: [
+        {
+          title: 'Todo el frontend de [10]',
+          detail:
+            '**La plataforma interna sobre la que funciona toda una empresa.** Todos sus departamentos trabajan en ella a diario: workflow de proyectos y planificación, KPI de ventas y compras, transporte, flota, horas, tareas e incidencias. Trece módulos, cuatro idiomas, actualizaciones en tiempo real y permisos hasta cada acción.',
+        },
+        {
+          title: '[4], un asistente RAG',
+          detail:
+            'Recuperación sobre los documentos propios de una empresa con pgvector. **Cada respuesta cita sus fuentes** y, cuando no sabe algo, pasa la pregunta a una persona en lugar de inventar.',
+        },
+        {
+          title: 'Webs para [7], [6] y muchas más',
+          detail:
+            'Webs y landing pages para clientes reales, **en producción y en uso**, con la captación de leads conectada directamente al CRM de cada cliente.',
+        },
+      ],
     },
     'paddock-notes': {
       kind: 'Código abierto',
@@ -698,7 +885,14 @@ const projectTranslations: Record<
         'Un sitio no oficial que explica la Fórmula 1 con datos: la temporada en curso carrera a carrera, análisis de estrategia, ritmo y telemetría de cada carrera desde 2023, y un simulador del campeonato para jugar con el "¿y si...?". La web, la API y la ingesta de datos funcionan como tres Cloudflare Workers separados, y después de cada carrera un workflow precalcula los análisis, así que **ninguna página espera nunca a una API externa**. Escrito en inglés, español y alemán, construido según WCAG 2.2 AA, y el núcleo del sitio funciona con JavaScript desactivado. Las 36 decisiones de arquitectura están documentadas en el repositorio.',
       role: 'Producto, diseño y construcción',
       shorthand: 'Análisis de datos de F1',
-      imageAlt: 'Paddock Notes, la Fórmula 1 explicada con datos',
+      imageAlt:
+        'La portada de Paddock Notes en un portátil: el próximo Gran Premio, Las Vegas, con una cuenta atrás en directo hasta la salida y, debajo, el circuito, las coordenadas y el formato de carrera',
+      galleryAlt: [
+        'La portada de Paddock Notes en un portátil: el próximo Gran Premio, Las Vegas, con una cuenta atrás en directo hasta la salida y, debajo, el circuito, las coordenadas y el formato de carrera',
+        'La clasificación del campeonato en un móvil sobre un taburete negro, tras la ronda 20 de 23: Andrea Kimi Antonelli con 390 puntos, 111 por delante de Max Verstappen',
+        'La página del circuito de Interlagos en un portátil inclinado: récord de vuelta, longitud y más victorias junto al mapa del trazado, con la vuelta rápida animada a 317 km/h',
+        'La portada móvil en un teléfono apoyado contra una cortina, con la cuenta atrás hasta la salida del Gran Premio de Las Vegas',
+      ],
     },
     northbridge: {
       kind: 'Marca ficticia',
@@ -758,6 +952,7 @@ export function getProjects(locale: Locale): readonly Project[] {
 
     return {
       ...project,
+      title: tr.title ?? project.title,
       kind: tr.kind,
       description: tr.description,
       role: tr.role,
@@ -769,6 +964,16 @@ export function getProjects(locale: Locale): readonly Project[] {
             alt: tr.galleryAlt?.[i] ?? image.alt,
           }))
         : project.gallery,
+      links: tr.linkLabels
+        ? project.links.map((link, i) => ({
+            ...link,
+            label: tr.linkLabels?.[i] ?? link.label,
+          }))
+        : project.links,
+      confidential: project.confidential?.map((entry, i) => ({
+        ...entry,
+        ...tr.confidential?.[i],
+      })),
       video:
         project.video && tr.videoPosterAlt
           ? { ...project.video, posterAlt: tr.videoPosterAlt }
@@ -787,24 +992,24 @@ const disciplineTranslations: Record<
     {
       name: 'Full-Stack-Entwickler',
       claim: 'Ich baue es selbst',
-      body: 'Echte Produkte, keine Mockups: Firmenwebsites, Landingpages, Marketing-Automation, SaaS, Web-Apps, interne Software. Ich bringe sie vom Frontend bis zum Deployment, wobei Coding-Agenten echte Arbeit neben mir leisten statt nur im Editor zu autovervollständigen. Es gibt keine Übergabe, weil es niemanden gibt, an den übergeben werden könnte.',
+      body: 'Echte Produkte, keine Mockups: Firmenwebsites, Landingpages, Marketing-Automation, SaaS, Web-Apps, interne Software. Ich bringe sie **vom Frontend bis zum Deployment**, wobei Coding-Agenten echte Arbeit neben mir leisten statt nur im Editor zu autovervollständigen. Es gibt keine Übergabe, weil es niemanden gibt, an den übergeben werden könnte.',
     },
     {
       name: 'Full-Stack-MarTech-Spezialist',
       claim: 'Ich weiss, warum es verkauft',
-      body: 'Zuerst die Strategie, dann der MarTech-Stack, der ihr dient: SEO, Paid Acquisition, Social Media, Landingpages, CRO, E-Mail und die Automation dahinter. Sieben Jahre davon, bevor ich eine einzige Zeile Produktionscode geschrieben habe, weshalb ich schon beim Bauen an Konversion denke, nicht erst danach.',
+      body: 'Zuerst die Strategie, dann der MarTech-Stack, der ihr dient: SEO, Paid Acquisition, Social Media, Landingpages, CRO, E-Mail und die Automation dahinter. **Sieben Jahre davon, bevor ich eine einzige Zeile Produktionscode geschrieben habe**, weshalb ich schon beim Bauen an Konversion denke, nicht erst danach.',
     },
   ],
   es: [
     {
       name: 'Desarrollador full-stack',
       claim: 'Lo construyo yo mismo',
-      body: 'Productos reales, no maquetas: sitios corporativos, landing pages, automatización de marketing, SaaS, aplicaciones web, software interno. Los llevo desde el frontend hasta el despliegue, con agentes de codificación haciendo trabajo real a mi lado en lugar de solo autocompletar en el editor. No hay traspaso, porque no hay nadie a quien traspasar.',
+      body: 'Productos reales, no maquetas: sitios corporativos, landing pages, automatización de marketing, SaaS, aplicaciones web, software interno. Los llevo **desde el frontend hasta el despliegue**, con agentes de codificación haciendo trabajo real a mi lado en lugar de solo autocompletar en el editor. No hay traspaso, porque no hay nadie a quien traspasar.',
     },
     {
       name: 'Especialista full-stack en MarTech',
       claim: 'Sé por qué vende',
-      body: 'Primero la estrategia, después el stack de MarTech que la sirve: SEO, adquisición de pago, redes sociales, landing pages, CRO, email y la automatización detrás de todo ello. Siete años haciendo esto antes de escribir una sola línea de código en producción, por eso ya pienso en conversión mientras construyo, no después.',
+      body: 'Primero la estrategia, después el stack de MarTech que la sirve: SEO, adquisición de pago, redes sociales, landing pages, CRO, email y la automatización detrás de todo ello. **Siete años haciendo esto antes de escribir una sola línea de código en producción**, por eso ya pienso en conversión mientras construyo, no después.',
     },
   ],
 }

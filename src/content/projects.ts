@@ -329,12 +329,10 @@ export const projects: readonly Project[] = [
         alt: 'The Northbridge homepage on a laptop, headlined "Your numbers, under control." beside sunlight falling through an arched window',
       },
       {
-        src: '/work/northbridge/northbridge-02.mp4',
-        kind: 'video',
-        durationMs: 8000,
-        // Phone sits a little above the middle (23-67% of the height).
-        position: '50% 35%',
-        alt: 'A phone held on a knee, open on the free consultation section: no commitment, a fixed price afterwards and one dedicated contact person, above the four advisers in arched frames',
+        src: '/work/northbridge/northbridge-02.jpg',
+        // Phone sits above the middle (23-64% of the height).
+        position: '50% 30%',
+        alt: 'A phone held in both hands, open on the free consultation section: no commitment, a fixed price afterwards and one dedicated contact person, above the four advisers in arched frames',
       },
       {
         src: '/work/northbridge/northbridge-03.jpg',
@@ -642,7 +640,7 @@ const projectTranslations: Record<
         'Die Northbridge-Startseite auf einem Laptop, mit der Überschrift „Your numbers, under control." neben Sonnenlicht, das durch ein Bogenfenster fällt',
       galleryAlt: [
         'Die Northbridge-Startseite auf einem Laptop, mit der Überschrift „Your numbers, under control." neben Sonnenlicht, das durch ein Bogenfenster fällt',
-        'Ein Smartphone, auf dem Knie gehalten, geöffnet beim kostenlosen Erstgespräch: unverbindlich, danach ein Festpreis und eine feste Ansprechperson, darunter die vier Berater in Bogenrahmen',
+        'Ein Smartphone, mit beiden Händen gehalten, geöffnet beim kostenlosen Erstgespräch: unverbindlich, danach ein Festpreis und eine feste Ansprechperson, darunter die vier Berater in Bogenrahmen',
         'Der Steuerkalender auf einem Laptop, mit der Überschrift „Your tax year, at a glance.", allen Fristen des Jahres und der nächsten, 30. November für die MWST Q3, separat hervorgehoben',
         'Derselbe Steuerkalender auf einem Smartphone, bis November gescrollt, die nächste Frist neben dem heutigen Tag markiert',
       ],
@@ -712,7 +710,7 @@ const projectTranslations: Record<
         'La portada de Northbridge en un portátil, con el titular "Your numbers, under control." junto a la luz del sol que entra por una ventana en arco',
       galleryAlt: [
         'La portada de Northbridge en un portátil, con el titular "Your numbers, under control." junto a la luz del sol que entra por una ventana en arco',
-        'Un móvil sujeto sobre la rodilla, abierto en la sección de primera consulta gratuita: sin compromiso, precio cerrado después y una única persona de contacto, sobre los cuatro asesores en marcos con forma de arco',
+        'Un móvil sujeto con las dos manos, abierto en la sección de primera consulta gratuita: sin compromiso, precio cerrado después y una única persona de contacto, sobre los cuatro asesores en marcos con forma de arco',
         'El calendario fiscal en un portátil, con el titular "Your tax year, at a glance.", todos los plazos del año y el siguiente, el 30 de noviembre para el IVA del tercer trimestre, destacado aparte',
         'El mismo calendario fiscal en un móvil, desplazado hasta noviembre, con el siguiente plazo marcado junto al día de hoy',
       ],

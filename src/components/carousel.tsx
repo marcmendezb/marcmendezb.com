@@ -408,6 +408,7 @@ export function Carousel({ images, label, sizes, locale }: Props) {
               playsInline
               preload="auto"
               className="h-full w-full object-cover"
+              style={{ objectPosition: image.position }}
             />
           ) : (
             <Image
@@ -416,6 +417,7 @@ export function Carousel({ images, label, sizes, locale }: Props) {
               fill
               sizes={sizes}
               className="object-cover"
+              style={{ objectPosition: image.position }}
               priority={i === 0}
             />
           )}

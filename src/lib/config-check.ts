@@ -63,7 +63,7 @@ export function reportPlaceholders() {
   )
   if (borrowed.length > 0) {
     todo.push(
-      `projects: ${borrowed.length} are showing MARQO'S screenshots as stand-ins ` +
+      `projects: ${borrowed.length} are showing another project's images as stand-ins ` +
         `(${borrowed.map((project) => project.slug).join(', ')}); these must not go live`,
     )
   }

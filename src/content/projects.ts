@@ -43,6 +43,16 @@ export type GalleryImage = {
    * catches up.
    */
   durationMs?: number
+  /**
+   * CSS `object-position` for the crop, e.g. '50% 75%'. Defaults to centred.
+   *
+   * On a phone the frame is 4:5, the same as the images, so nothing is cut.
+   * From 880px the frame turns landscape and a portrait image loses roughly a
+   * third of its height to `object-cover`; when the subject sits off the
+   * vertical middle (a laptop low in the shot, a phone near the top) the
+   * centred crop slices it. Set this to the subject's centre instead.
+   */
+  position?: string
 }
 
 export type ProjectVideo = {
@@ -133,41 +143,45 @@ export type Project = {
 }
 
 /**
- * SCAFFOLDING: the Marqo screenshots, borrowed so the other projects can be
- * judged with pictures in them instead of grey panels.
+ * SCAFFOLDING: the Santo Corte mockups, borrowed so a project without its own
+ * images yet can be judged with pictures in it instead of a grey panel.
  *
  * These are not the projects they are attached to. The alt text is deliberately
- * left describing Marqo, because that is what the pixels actually show and alt
- * text that lies is worse than a placeholder you can see.
+ * left describing Santo Corte, because that is what the pixels actually show
+ * and alt text that lies is worse than a placeholder you can see.
+ *
+ * A separate array from Santo Corte's own `gallery`, not a reference to it:
+ * `reportPlaceholders()` spots borrowers by identity, so sharing the array
+ * would flag Santo Corte as borrowing its own pictures.
  *
  * `reportPlaceholders()` counts every project still pointing here and says so
- * on each `pnpm dev`, so this cannot go live quietly. Anyone using a screen
- * reader on one of these cards today is told it is a Marqo screenshot, which
- * is true and confusing: the fix is real images, not better wording. Replace
- * per project by swapping `gallery: previewGallery` for that project's own
- * images.
+ * on each `pnpm dev`, so this cannot go live quietly. Replace per project by
+ * swapping `gallery: previewGallery` for that project's own images.
  */
 export const previewGallery: readonly GalleryImage[] = [
   {
-    src: '/work/marqo/marqo-01.jpg',
-    alt: 'The Marqo landing page on a laptop, headline asking how much you really made on this car',
+    src: '/work/santo-corte/santo-corte-01.jpg',
+    position: '50% 75%',
+    alt: 'The Santo Corte homepage on a laptop resting on a leather armchair, its engraved scissors suspended over a dim barbershop interior',
   },
   {
-    src: '/work/marqo/marqo-02.jpg',
-    alt: 'Three phone screens side by side: stock, the purchase calculator and alerts',
+    src: '/work/santo-corte/santo-corte-02.jpg',
+    position: '50% 15%',
+    alt: 'The Santo Corte services menu on a phone standing on a block of rough concrete, each cut and shave listed with its duration and price',
   },
   {
-    src: '/work/marqo/marqo-03.jpg',
-    alt: 'The Marqo dashboard on a tablet, showing cars in stock, money tied up and average margin',
+    src: '/work/santo-corte/santo-corte-03.jpg',
+    alt: 'The Santo Corte studio section on a laptop set on a stool, a grid of numbered photos of the barbershop interior',
   },
   {
-    src: '/work/marqo/marqo-04.jpg',
-    alt: 'The Marqo site open in a phone browser, held in both hands',
+    src: '/work/santo-corte/santo-corte-04.jpg',
+    position: '50% 60%',
+    alt: 'A phone lying on concrete, open on the "La Experiencia" section of the Santo Corte site',
   },
 ]
 
 /**
- * A stand-in poster, borrowed from Marqo like `previewGallery` above.
+ * A stand-in poster, borrowed from Marqo.
  *
  * Exported so `config-check` can spot it by identity and keep shouting about
  * it. A still from another product sitting inside a dialog is easier to forget
@@ -255,6 +269,37 @@ export const projects: readonly Project[] = [
     },
   },
   {
+    slug: 'paddock-notes',
+    title: 'Paddock Notes',
+    kind: 'Open source',
+    description:
+      'An unofficial site that explains Formula 1 with data: the current season race by race, strategy, pace and telemetry analysis for every race since 2023, and a what-if championship simulator. Web app, API and data ingestion run as three separate Cloudflare Workers, and after each race a workflow precomputes the analysis, so **no page ever waits on an external API**. Written in English, Spanish and German, built to WCAG 2.2 AA, and the core of the site works with JavaScript turned off. All 36 architectural decisions are documented in the repository.',
+    outcome: null,
+    role: 'Product, design and build',
+    year: '2026',
+    tags: [
+      'Next.js',
+      'TypeScript',
+      'Cloudflare Workers',
+      'Hono',
+      'Drizzle ORM',
+      'Playwright',
+    ],
+    // The repository is public on purpose: for this one the code is the
+    // work sample. The site itself is not deployed yet.
+    links: [
+      {
+        label: 'Source code',
+        href: 'https://github.com/marcmendezb/paddock-notes',
+      },
+    ],
+    shorthand: 'F1 data analysis',
+    image: null,
+    imageAlt: 'Paddock Notes, Formula 1 explained with data',
+    gallery: previewGallery, // TODO: Paddock Notes' own images
+    video: null,
+  },
+  {
     slug: 'northbridge',
     title: 'Northbridge Advisory',
     kind: 'Fictional brand',
@@ -275,23 +320,34 @@ export const projects: readonly Project[] = [
     shorthand: 'Fictional Zürich fiduciary',
     image: '/work/northbridge/northbridge-01.jpg',
     imageAlt:
-      'Sunlight through an arched window falling across a plaster wall, a eucalyptus branch in the foreground, from the homepage of a fictional Zürich fiduciary',
+      'The Northbridge homepage on a laptop, headlined "Your numbers, under control." beside sunlight falling through an arched window',
     gallery: [
       {
         src: '/work/northbridge/northbridge-01.jpg',
-        alt: 'Sunlight through an arched window falling across a plaster wall, a eucalyptus branch in the foreground, from the homepage of a fictional Zürich fiduciary',
+        // Laptop sits low in the shot (44-87% of the height).
+        position: '50% 85%',
+        alt: 'The Northbridge homepage on a laptop, headlined "Your numbers, under control." beside sunlight falling through an arched window',
       },
       {
-        src: '/work/northbridge/northbridge-02.jpg',
-        alt: 'A tax calendar showing VAT, income tax, payroll and contribution deadlines across the year, with the next deadline, 30 November for Q3 VAT, called out separately',
+        src: '/work/northbridge/northbridge-02.mp4',
+        kind: 'video',
+        durationMs: 8000,
+        // Phone sits a little above the middle (23-67% of the height).
+        position: '50% 35%',
+        alt: 'A phone held on a knee, open on the free consultation section: no commitment, a fixed price afterwards and one dedicated contact person, above the four advisers in arched frames',
       },
       {
         src: '/work/northbridge/northbridge-03.jpg',
-        alt: 'The German-language contact page, headlined "Reden wir über deine Zahlen," promising a reply by noon the next working day',
+        // Taller than the landscape crop can hold; favour the screen over the
+        // trackpad.
+        position: '50% 40%',
+        alt: 'The tax calendar on a laptop, headlined "Your tax year, at a glance.", with every deadline across the year and the next one, 30 November for Q3 VAT, called out separately',
       },
       {
         src: '/work/northbridge/northbridge-04.jpg',
-        alt: "A form confirmation page with a live countdown to reply, under an arch echoing the homepage's window",
+        // Phone sits a little above the middle (27-66% of the height).
+        position: '50% 40%',
+        alt: 'The same tax calendar on a phone, scrolled to November, with the next deadline marked beside today',
       },
     ],
     video: null,
@@ -317,10 +373,14 @@ export const projects: readonly Project[] = [
     gallery: [
       {
         src: '/work/santo-corte/santo-corte-01.jpg',
+        // Laptop sits low in the shot (38-81% of the height).
+        position: '50% 75%',
         alt: 'The Santo Corte homepage on a laptop resting on a leather armchair, its engraved scissors suspended over a dim barbershop interior',
       },
       {
         src: '/work/santo-corte/santo-corte-02.jpg',
+        // Phone sits high in the shot (17-56% of the height).
+        position: '50% 15%',
         alt: 'The services menu on a phone standing on a block of rough concrete, each cut and shave listed with its duration and price',
       },
       {
@@ -329,6 +389,8 @@ export const projects: readonly Project[] = [
       },
       {
         src: '/work/santo-corte/santo-corte-04.jpg',
+        // Phone sits just below the middle (36-73% of the height).
+        position: '50% 60%',
         alt: 'A phone lying on concrete, open on the "La Experiencia" section of the site',
       },
     ],
@@ -562,6 +624,14 @@ const projectTranslations: Record<
       videoPosterAlt:
         'Das Tessel-Logo mit dem Slogan „Deine ganze Agentur, in einem Tool."',
     },
+    'paddock-notes': {
+      kind: 'Open Source',
+      description:
+        'Eine inoffizielle Website, die die Formel 1 mit Daten erklärt: die laufende Saison Rennen für Rennen, Strategie-, Pace- und Telemetrieanalysen für jedes Rennen seit 2023 und ein Was-wäre-wenn-Meisterschaftssimulator. Web-App, API und Datenimport laufen als drei getrennte Cloudflare Workers, und nach jedem Rennen berechnet ein Workflow die Analysen vor, sodass **keine Seite je auf eine externe API wartet**. Auf Englisch, Spanisch und Deutsch geschrieben, nach WCAG 2.2 AA gebaut, und der Kern der Website funktioniert auch ohne JavaScript. Alle 36 Architekturentscheidungen sind im Repository dokumentiert.',
+      role: 'Produkt, Design und Umsetzung',
+      shorthand: 'F1-Datenanalyse',
+      imageAlt: 'Paddock Notes, die Formel 1 mit Daten erklärt',
+    },
     northbridge: {
       kind: 'Fiktive Marke',
       description:
@@ -569,12 +639,12 @@ const projectTranslations: Record<
       role: 'Briefing, Marke und Umsetzung',
       shorthand: 'Fiktive Zürcher Treuhandfirma',
       imageAlt:
-        'Sonnenlicht, das durch ein Bogenfenster auf eine Gipswand fällt, ein Eukalyptuszweig im Vordergrund, von der Startseite einer fiktiven Zürcher Treuhandfirma',
+        'Die Northbridge-Startseite auf einem Laptop, mit der Überschrift „Your numbers, under control." neben Sonnenlicht, das durch ein Bogenfenster fällt',
       galleryAlt: [
-        'Sonnenlicht, das durch ein Bogenfenster auf eine Gipswand fällt, ein Eukalyptuszweig im Vordergrund, von der Startseite einer fiktiven Zürcher Treuhandfirma',
-        'Ein Steuerkalender mit MWST-, Einkommenssteuer-, Lohn- und Beitragsfristen über das ganze Jahr, mit der nächsten Frist, 30. November für die MWST Q3, separat hervorgehoben',
-        'Die deutschsprachige Kontaktseite mit der Überschrift „Reden wir über deine Zahlen", die eine Antwort bis Mittag des nächsten Werktags verspricht',
-        'Eine Formularbestätigungsseite mit einem laufenden Countdown bis zur Antwort, unter einem Bogen, der das Fenster der Startseite aufgreift',
+        'Die Northbridge-Startseite auf einem Laptop, mit der Überschrift „Your numbers, under control." neben Sonnenlicht, das durch ein Bogenfenster fällt',
+        'Ein Smartphone, auf dem Knie gehalten, geöffnet beim kostenlosen Erstgespräch: unverbindlich, danach ein Festpreis und eine feste Ansprechperson, darunter die vier Berater in Bogenrahmen',
+        'Der Steuerkalender auf einem Laptop, mit der Überschrift „Your tax year, at a glance.", allen Fristen des Jahres und der nächsten, 30. November für die MWST Q3, separat hervorgehoben',
+        'Derselbe Steuerkalender auf einem Smartphone, bis November gescrollt, die nächste Frist neben dem heutigen Tag markiert',
       ],
     },
     'santo-corte': {
@@ -624,6 +694,14 @@ const projectTranslations: Record<
       videoPosterAlt:
         'El logotipo de Tessel, con el eslogan "Toda tu agencia, en una sola herramienta."',
     },
+    'paddock-notes': {
+      kind: 'Código abierto',
+      description:
+        'Un sitio no oficial que explica la Fórmula 1 con datos: la temporada en curso carrera a carrera, análisis de estrategia, ritmo y telemetría de cada carrera desde 2023, y un simulador del campeonato para jugar con el "¿y si...?". La web, la API y la ingesta de datos funcionan como tres Cloudflare Workers separados, y después de cada carrera un workflow precalcula los análisis, así que **ninguna página espera nunca a una API externa**. Escrito en inglés, español y alemán, construido según WCAG 2.2 AA, y el núcleo del sitio funciona con JavaScript desactivado. Las 36 decisiones de arquitectura están documentadas en el repositorio.',
+      role: 'Producto, diseño y construcción',
+      shorthand: 'Análisis de datos de F1',
+      imageAlt: 'Paddock Notes, la Fórmula 1 explicada con datos',
+    },
     northbridge: {
       kind: 'Marca ficticia',
       description:
@@ -631,12 +709,12 @@ const projectTranslations: Record<
       role: 'Brief, marca y construcción',
       shorthand: 'Fiduciaria ficticia de Zúrich',
       imageAlt:
-        'Luz solar atravesando una ventana en arco sobre una pared de yeso, una rama de eucalipto en primer plano, en la página de inicio de una fiduciaria ficticia de Zúrich',
+        'La portada de Northbridge en un portátil, con el titular "Your numbers, under control." junto a la luz del sol que entra por una ventana en arco',
       galleryAlt: [
-        'Luz solar atravesando una ventana en arco sobre una pared de yeso, una rama de eucalipto en primer plano, en la página de inicio de una fiduciaria ficticia de Zúrich',
-        'Un calendario fiscal con los plazos de IVA, impuesto sobre la renta, nóminas y cotizaciones a lo largo del año, destacando por separado el siguiente plazo, el 30 de noviembre para el IVA del tercer trimestre',
-        'La página de contacto en alemán, con el titular "Reden wir über deine Zahlen" (hablemos de tus números), que promete respuesta antes del mediodía del siguiente día laborable',
-        'Una página de confirmación de formulario con una cuenta atrás en directo hasta la respuesta, bajo un arco que recuerda a la ventana de la portada',
+        'La portada de Northbridge en un portátil, con el titular "Your numbers, under control." junto a la luz del sol que entra por una ventana en arco',
+        'Un móvil sujeto sobre la rodilla, abierto en la sección de primera consulta gratuita: sin compromiso, precio cerrado después y una única persona de contacto, sobre los cuatro asesores en marcos con forma de arco',
+        'El calendario fiscal en un portátil, con el titular "Your tax year, at a glance.", todos los plazos del año y el siguiente, el 30 de noviembre para el IVA del tercer trimestre, destacado aparte',
+        'El mismo calendario fiscal en un móvil, desplazado hasta noviembre, con el siguiente plazo marcado junto al día de hoy',
       ],
     },
     'santo-corte': {

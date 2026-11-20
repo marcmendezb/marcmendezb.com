@@ -399,7 +399,7 @@ export const projects: readonly Project[] = [
     shorthand: 'Freelance practice',
     image: null, // TODO: '/work/freelance-practice.jpg'
     imageAlt: 'Freelance practice website',
-    gallery: previewGallery, // SCAFFOLDING, see previewGallery above
+    gallery: [], // TODO: this project's own screenshots; empty shows the tonal placeholder
     video: null,
   },
   {
@@ -416,7 +416,7 @@ export const projects: readonly Project[] = [
     shorthand: 'Agency project tracker',
     image: null, // TODO: '/work/agency-tracker.jpg'
     imageAlt: 'Agency project tracker dashboard',
-    gallery: previewGallery, // SCAFFOLDING, see previewGallery above
+    gallery: [], // TODO: this project's own screenshots; empty shows the tonal placeholder
     video: null,
   },
   {
@@ -433,7 +433,7 @@ export const projects: readonly Project[] = [
     shorthand: 'Sites and branding',
     image: null, // TODO: '/work/client-sites.jpg'
     imageAlt: 'Selection of client websites and brand systems',
-    gallery: previewGallery, // SCAFFOLDING, see previewGallery above
+    gallery: [], // TODO: this project's own screenshots; empty shows the tonal placeholder
     video: null,
   },
   {
@@ -450,7 +450,7 @@ export const projects: readonly Project[] = [
     shorthand: 'Multi-agent dev tooling',
     image: null, // TODO: '/work/ai-tooling.jpg'
     imageAlt: 'VS Code extension for observing multi-agent coding sessions',
-    gallery: previewGallery, // SCAFFOLDING, see previewGallery above
+    gallery: [], // TODO: this project's own screenshots; empty shows the tonal placeholder
     video: null,
   },
 ] as const

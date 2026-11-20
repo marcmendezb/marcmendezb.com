@@ -93,9 +93,11 @@ const nextConfig: NextConfig = {
   // ---------------------------------------------------------------------------
   // Static export
   // ---------------------------------------------------------------------------
-  // This site is fully static. To deploy to a host without a Next.js runtime
-  // (GitHub Pages, plain S3/nginx), uncomment the two lines below and run
-  // `pnpm build`: the site is emitted to `out/`.
+  // Static export is not supported as the repo stands: the locale proxy in
+  // `src/proxy.ts` needs a runtime, and `/sitemap.xml` fails to build under
+  // `output: 'export'`. To get there, replace the proxy with a static root page
+  // that picks the language on the client, mark the metadata routes
+  // `force-static`, then uncomment the two lines below.
   //
   // Note: `headers()` above is a no-op under static export; configure the same
   // headers on your CDN/web server instead.

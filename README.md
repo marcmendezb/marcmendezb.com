@@ -6,10 +6,10 @@
 [![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue.svg)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8.svg)](https://tailwindcss.com/)
-[![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA_Compliant-green.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
+[![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-green.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 [![Languages](https://img.shields.io/badge/Locales-EN_|_DE_|_ES-f59e0b.svg)](#localization--seo)
 
-Static Next.js site. No database, no API, no third-party tracking scripts. Every route is prerendered at build time with full internationalization across English, German, and Spanish.
+Static Next.js site. No database, no API, no third-party tracking scripts. Every page is prerendered at build time in English, German and Spanish; the only code that runs per request is the small proxy that sends `/` to the visitor's language.
 
 **This repo is public on purpose.** If you are a recruiter or hiring manager reading this, treat it as a production work sample rather than just the code behind a portfolio: it applies the exact same software and marketing practices described in the client work it showcases.
 
@@ -31,7 +31,7 @@ Static Next.js site. No database, no API, no third-party tracking scripts. Every
 
 Rather than taking claims on faith, here are the concrete implementation choices worth inspecting:
 
-- [`.github/workflows/ci.yml`](.github/workflows/ci.yml): Automated CI pipeline running route type generation, typecheck, lint, Prettier format verification, and production build on every push.
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml): Route type generation, typecheck, lint, Prettier, production build and `pnpm audit` on every push. The [Actions tab](https://github.com/marcmendezb/marcmendezb/actions) has the history.
 - [`src/proxy.ts`](src/proxy.ts): Next.js 16 Proxy layer negotiating root visits to `/en`, `/de`, or `/es` via `Accept-Language` headers with English fallback.
 - [`next.config.ts`](next.config.ts): Content Security Policy (CSP) and HTTP security headers, documented with the exact trade-offs made for static generation.
 - [`tsconfig.json`](tsconfig.json): Strict TypeScript configuration with `noUncheckedIndexedAccess`, `noUnusedLocals`, and `noUnusedParameters`, not just `strict: true`.
@@ -70,7 +70,7 @@ src/
 
 ### Localization & SEO
 
-- **Locale-driven routing:** Every page resolves under `/[locale]` (`/en`, `/de`, `/es`). A proxy (Next.js 16 renamed middleware) negotiates the root `/` to the visitor browser language, defaulting to English.
+- **Locale-driven routing:** Every page resolves under `/[locale]` (`/en`, `/de`, `/es`). A proxy (Next.js 16 renamed middleware) negotiates the root `/` to the visitor's browser language, defaulting to English.
 - **Hreflang alternates:** `<link rel="alternate" hreflang="...">` tags for all three locales, dynamic Open Graph social images generated per locale, and a fully localized `sitemap.xml`.
 - **Semantic JSON-LD:** Structured data describes a `Person`, a `WebSite`, and projects as an `ItemList`. Search engines resolve "Marc Mendez" to a semantic entity rather than an unstructured string.
 
@@ -110,7 +110,7 @@ The strict alternative is a per-request nonce, which requires dynamic server ren
 
 ### Keeping dependencies patched
 
-`pnpm audit` runs before deployments. Next.js has shipped security advisories across the 16.x line, so this repository tracks the latest patch releases proactively.
+`pnpm audit` runs in CI on every push. Next.js has shipped security advisories across the 16.x line, so this repository tracks the latest patch releases proactively.
 
 `package.json` pins transitive versions via `pnpm.overrides` (`brace-expansion`, `source-map-js`, `zod`, `minimatch`). These sit deep inside ESLint and Tailwind dev-time toolchains and never ship to the built site, but overriding them keeps audit output clean and actionable.
 
@@ -118,7 +118,7 @@ The strict alternative is a per-request nonce, which requires dynamic server ren
 
 ## Local development
 
-Requirements: Node.js 22 or higher and pnpm 10.
+Requirements: Node.js 20.9 or higher and pnpm 10.
 
 ```bash
 pnpm install
@@ -137,10 +137,11 @@ pnpm dev          # Dev server at http://localhost:3000
 
 ## Launch checklist
 
-The site runs cleanly as-is, but specific placeholder fields in `src/content/site.ts` and `src/content/projects.ts` can be populated:
+The site runs cleanly as-is, but a few fields are deliberately left empty rather than guessed. Everything lives in `src/content/site.ts` and `src/content/projects.ts`; no component needs touching.
 
-- [ ] **LinkedIn & GitHub**: Confirm live profile URLs in `site.socials` (also populates `sameAs` in JSON-LD).
+- [ ] **LinkedIn**: Confirm the live profile URL in `site.socials` (it also feeds `sameAs` in the JSON-LD, which is how Google links this page to the profile).
 - [ ] **CV**: Drop PDF in `public/` and configure `site.cvPath` to reveal download buttons.
+- [ ] **Project screenshots**: four projects (`freelance-practice`, `agency-tracker`, `client-sites`, `ai-tooling`) have no images of their own yet and show the tonal placeholder. Never borrow another project's screenshots: a grey panel reads as unfinished, someone else's picture reads as finished and wrong.
 - [ ] **Project outcomes**: Add concrete quantitative metrics to `projects[].outcome` where available.
 - [ ] **Education institutions**: Complete institution names in `site.education[].institution`.
 
@@ -150,10 +151,9 @@ The site runs cleanly as-is, but specific placeholder fields in `src/content/sit
 
 ## Deploying
 
-Every route is static, allowing deployment to any hosting platform:
+The pages are static, but the locale proxy (`src/proxy.ts`) needs a runtime, so deploy to a host that runs Next.js: Vercel, Netlify, or Cloudflare Workers through OpenNext. `next.config.ts` applies the security headers there.
 
-- **With a Next.js runtime** (Vercel, Netlify, Cloudflare Pages): Connect the repository. `next.config.ts` automatically applies security headers.
-- **Without one** (GitHub Pages, S3, nginx): Uncomment the two `output: 'export'` lines in `next.config.ts` and run `pnpm build`. The output lands in `out/`.
+A plain static export (`output: 'export'` for GitHub Pages, S3 or nginx) does not work as the repo stands: the proxy is dropped, so `/` has nothing to redirect it, and the metadata routes would need `force-static`. Supporting it means replacing the proxy with a static root page that picks the language on the client.
 
 ---
 

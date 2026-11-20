@@ -281,8 +281,7 @@ export function getSite(locale: Locale) {
       },
       {
         label: 'GitHub',
-        // TODO: confirm (built from your handle, not verified).
-        href: 'https://github.com/marcmendez',
+        href: 'https://github.com/marcmendezb',
         description: t.socials[1],
       },
     ] satisfies readonly SocialLink[],

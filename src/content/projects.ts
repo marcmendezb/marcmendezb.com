@@ -686,9 +686,17 @@ export const timeline: readonly Milestone[] = [
   },
 ] as const
 
-/** Currently learning. Honest about being in progress. */
+/**
+ * Currently learning. Honest about being in progress, and specific: "servers
+ * and infrastructure" said less than naming the stack. The VPS work leads
+ * because it is the main thing in progress.
+ */
 export const learning: readonly string[] = [
-  'Servers & infrastructure',
+  'VPS: Linux, Docker and CI/CD',
+  'Data science and machine learning (Python)',
+  'Swiss data protection (nFADP) and server-side tracking',
+  'SQL and analytics engineering',
+  'Accessibility (WCAG 2.2)',
   'German',
 ] as const
 
@@ -1080,8 +1088,22 @@ export function getTimeline(locale: Locale): readonly Milestone[] {
 }
 
 const learningTranslations: Record<'de' | 'es', readonly string[]> = {
-  de: ['Server & Infrastruktur', 'Deutsch'],
-  es: ['Servidores e infraestructura', 'Alemán'],
+  de: [
+    'VPS: Linux, Docker und CI/CD',
+    'Data Science und Machine Learning (Python)',
+    'Schweizer Datenschutz (revDSG) und serverseitiges Tracking',
+    'SQL und Analytics Engineering',
+    'Barrierefreiheit (WCAG 2.2)',
+    'Deutsch',
+  ],
+  es: [
+    'VPS: Linux, Docker y CI/CD',
+    'Ciencia de datos y machine learning (Python)',
+    'Protección de datos suiza (nLPD) y tracking server-side',
+    'SQL y analytics engineering',
+    'Accesibilidad (WCAG 2.2)',
+    'Alemán',
+  ],
 }
 
 export function getLearning(locale: Locale): readonly string[] {

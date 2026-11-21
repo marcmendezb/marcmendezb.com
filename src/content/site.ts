@@ -39,10 +39,9 @@ export type EducationEntry = {
   field: string
   country: string
   /**
-   * The awarding school or university. `null` while unconfirmed: see the
-   * module comment on `| null` fields. Not rendered on the page even once
-   * set; kept here so `reportPlaceholders()` can still flag it and so the
-   * data is complete if a fuller CV page ever wants it.
+   * The awarding school or university. Never rendered on the page, by
+   * decision: the names belong on the CV, which goes to each company
+   * directly. Kept here only so the data is complete in one place.
    */
   institution: string | null
   /**
@@ -100,10 +99,10 @@ type LocalizedSite = {
  */
 const educationInstitutions: readonly (string | null)[] = [
   'Universidad Internacional de Valencia (VIU)',
-  null, // TODO: the centre's name
-  null, // TODO: the centre's name
-  null, // TODO: the centre's name
-  null, // TODO: the university's name
+  null,
+  null,
+  null,
+  null,
 ]
 
 const localized: Record<Locale, LocalizedSite> = {
@@ -303,8 +302,7 @@ export function getSite(locale: Locale) {
     socials: [
       {
         label: 'LinkedIn',
-        // TODO: confirm (built from your handle, not verified).
-        href: 'https://www.linkedin.com/in/marcmendez',
+        href: 'https://www.linkedin.com/in/marc-m%C3%A9ndez-barnils-53b5a4183/',
         description: t.socials[0],
       },
       {
@@ -342,11 +340,11 @@ export function getSite(locale: Locale) {
     openTo: t.openTo,
 
     /**
-     * Path to your CV, served from `public/`. `null` hides every download
-     * button. One PDF regardless of locale: a CV is a single, dated
-     * document, not a page that re-renders per visitor.
-     *
-     * TODO: drop the PDF at `public/marc-mendez-cv.pdf` and set this.
+     * Path to a public CV, served from `public/`. `null` hides every download
+     * button, and `null` is the decision, not a gap: the CV goes by email to
+     * each company that asks for it, so whoever needs it has it, and a PDF
+     * with a phone number and a full history is not left public for anyone
+     * to scrape. The page's contact lines are the way to ask for it.
      */
     cvPath: null as string | null,
 

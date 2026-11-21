@@ -680,6 +680,28 @@
     background: var(--surface);
   }
 
+  /* Two columns from 720px: education spans the height of the other two
+     panels together, and with six things being learned that is taller than
+     its five entries. The spare height is shared between the entries rather
+     than left as a gap under the last one, so the rail runs the full panel
+     at an even step. */
+  @media (min-width: 720px) {
+    .facts-panel:has(.edu-rail) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .edu-rail {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .edu-rail > li {
+      flex: 1;
+    }
+  }
+
   .facts-tag {
     display: inline-block;
     margin-top: 8px;

@@ -141,10 +141,9 @@ pnpm dev          # Dev server at http://localhost:3000
 
 The site runs cleanly as-is, but a few fields are deliberately left empty rather than guessed. Everything lives in `src/content/site.ts` and `src/content/projects.ts`; no component needs touching.
 
-- [ ] **LinkedIn**: Confirm the live profile URL in `site.socials` (it also feeds `sameAs` in the JSON-LD, which is how Google links this page to the profile).
-- [ ] **CV**: Drop PDF in `public/` and configure `site.cvPath` to reveal download buttons.
 - [ ] **Project outcomes**: Add concrete quantitative metrics to `projects[].outcome` where available.
-- [ ] **Education institutions**: Complete institution names in `site.education[].institution`.
+
+Two things are left off the page on purpose rather than pending: the CV, which goes by email to each company instead of being public (`site.cvPath` stays `null`), and the names of the schools, which belong on the CV.
 
 `pnpm dev` prints the status of remaining placeholders on every server start.
 

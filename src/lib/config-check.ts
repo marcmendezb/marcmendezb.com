@@ -19,20 +19,10 @@ export function reportPlaceholders() {
   const projects = getProjects('en')
   const todo: string[] = []
 
-  if (!site.cvPath) {
-    todo.push('site.cvPath: no CV yet; every download button is hidden')
-  }
   if (!site.hiring.workEligibility) {
     todo.push(
       'site.hiring.workEligibility: unset; Swiss recruiters screen on this first',
     )
-  }
-  for (const social of site.socials) {
-    if (social.href.endsWith('/marcmendez')) {
-      todo.push(
-        `site.socials: ${social.label} URL built from your handle, unverified`,
-      )
-    }
   }
   const outcomeless = projects.filter((project) => !project.outcome)
   if (outcomeless.length > 0) {
@@ -82,15 +72,6 @@ export function reportPlaceholders() {
   if (imageless.length > 0) {
     todo.push(
       `projects: ${imageless.length} still showing the placeholder panel`,
-    )
-  }
-
-  const uninstituted = site.education.filter(
-    (entry) => entry.institution === null,
-  )
-  if (uninstituted.length > 0) {
-    todo.push(
-      `site.education: ${uninstituted.length} of ${site.education.length} entries have no institution name yet`,
     )
   }
 

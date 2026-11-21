@@ -46,7 +46,7 @@ export type EducationEntry = {
   institution: string | null
   /**
    * A short note shown as a tag on the entry, e.g. "not completed" or
-   * "starts February 2026". Omit for a plain finished qualification.
+   * "starts February 2027". Omit for a plain finished qualification.
    */
   status?: string
   /**
@@ -123,7 +123,7 @@ const localized: Record<Locale, LocalizedSite> = {
         level: 'Bachelor’s degree (BSc)',
         field: 'Data Science and Artificial Intelligence',
         country: 'Spain',
-        status: 'starts February 2026',
+        status: 'starts February 2027',
         state: 'upcoming',
       },
       {
@@ -175,7 +175,7 @@ const localized: Record<Locale, LocalizedSite> = {
         level: 'Bachelor (BSc)',
         field: 'Data Science und künstliche Intelligenz',
         country: 'Spanien',
-        status: 'Start Februar 2026',
+        status: 'Start Februar 2027',
         state: 'upcoming',
       },
       {
@@ -227,7 +227,7 @@ const localized: Record<Locale, LocalizedSite> = {
         level: 'Grado universitario',
         field: 'Ciencia de Datos e Inteligencia Artificial',
         country: 'España',
-        status: 'empieza en febrero de 2026',
+        status: 'empieza en febrero de 2027',
         state: 'upcoming',
       },
       {

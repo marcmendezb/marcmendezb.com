@@ -411,25 +411,39 @@
   /* --- Work, phone: the deck as cards ---------------------------------------
 
      The desktop deck shows one project per screen and moves one card per
-     gesture. A phone gets the same at its own scale: a rounded card inside
-     the page gutter that fills the screen under the header, with the top of
-     the next one showing below it, a step narrower, as the card still to
-     come. The scroll stops on every card and one swipe moves one card: CSS
-     scroll snapping, switched on by DeckSnap only while the deck covers the
-     screen.
+     gesture. A phone gets the same at its own scale, dealt as a pile:
+
+     - each card pins under the header 10px lower than the one before, so the
+       cards already dealt stay stacked at the top, each a step smaller;
+     - the current card fills the rest of the screen, and the top of the next
+       one shows below it, narrower, as the card still to come;
+     - the scroll stops on every card and one swipe moves one card: CSS scroll
+       snapping onto zero-height marks in the flow (`.deck-mark`), switched on
+       by DeckSnap only while the deck covers the screen.
 
      The gallery inside each card still swipes sideways. That is why the deck
      runs vertically rather than as a horizontal carousel of cards: two
      horizontal swipes nested inside each other fight over every gesture. */
   @media (max-width: 879.98px) {
+    /* No gap: the marks between the cards are items too and a gap would land
+       either side of them. The space between cards is the card's margin. */
     .deck-list {
-      gap: 16px;
+      gap: 0;
       padding-inline: var(--edge);
+      /* How much of the next card shows below the current one, gap included. */
+      --deck-peek: 56px;
     }
 
-    /* How much of the next card shows below the current one, gap included. */
-    .deck-list {
-      --deck-peek: 56px;
+    /* A card's place in the flow, and the snap target for it. `scroll-margin`
+       lands it where its card pins (10px lower per card), so a snapped card
+       is exactly at rest rather than a few pixels short of it. */
+    .deck-mark {
+      display: block;
+      height: 0;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      scroll-margin-top: calc(var(--i, 0) * 10px);
+      view-timeline-name: var(--tl);
     }
 
     /* A grid of two rows: the copy takes its natural height and the gallery
@@ -441,13 +455,18 @@
        `height: 100%` needs to resolve. */
     .deck-card {
       grid-template-rows: minmax(150px, 1fr) auto;
-      min-height: calc(100svh - var(--nav-h) - var(--deck-peek));
+      min-height: calc(
+        100svh - var(--nav-h) - var(--deck-peek) - var(--i, 0) * 10px
+      );
+      /* Positioned for the snap point at its foot; pinned further down where
+         the screen is tall enough. Set here rather than with a utility,
+         which would outrank the sticky rule. */
+      position: relative;
+      margin-bottom: 16px;
       border: 1px solid var(--hair);
       border-radius: clamp(24px, 7vw, 32px);
       overflow: hidden;
       transform-origin: 50% 0;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
     }
 
     /* The confidential card is all text and runs past a screen; it takes its
@@ -518,6 +537,28 @@
 
     .deck-card[data-tall] > .deck-end-snap {
       scroll-snap-align: end;
+    }
+  }
+
+  /* Pinned, 10px lower per card, so the dealt cards pile up under the
+     header. Only where a card fits the screen: on a very short phone a pinned
+     card would hold its own foot out of reach. An open description unpins
+     its card for the same reason. */
+  @media (max-width: 879.98px) and (min-height: 640px) {
+    .deck-card {
+      position: sticky;
+      top: calc(var(--nav-h) + var(--i, 0) * 10px);
+    }
+
+    .deck-card:has([data-expanded='true']) {
+      position: relative;
+      top: auto;
+    }
+  }
+
+  @media (min-width: 880px) {
+    .deck-mark {
+      display: none;
     }
   }
 
@@ -713,12 +754,117 @@
     );
   }
 
+  /* Work's projects in the phone menu. The button is the site's pill object
+     at its smallest, a round 44px target, and its chevron turns the way the
+     header's switchers do. The list unfolds by `grid-template-rows`, never
+     by height. */
+  .menu-disclose {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--hair);
+    border-radius: 100px;
+    color: var(--ink);
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+
+  .menu-disclose svg {
+    transition: transform 0.45s var(--ease);
+  }
+
+  .menu-disclose[aria-expanded='true'] {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .menu-disclose[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+  }
+
+  .menu-sub {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s var(--ease);
+  }
+
+  .menu-sub[data-open='true'] {
+    grid-template-rows: 1fr;
+  }
+
+  .menu-sub > ul {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Each project on a hairline, name in ink and its three words in grey, the
+     same pairing the header's lists use. The rows fade in after the fold has
+     started, so they arrive with it rather than being uncovered by it. */
+  .menu-sub-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 11px 0;
+    border-top: 1px solid var(--hair);
+    opacity: 0;
+    transition:
+      opacity 0.35s var(--ease),
+      color 0.3s var(--ease);
+  }
+
+  .menu-sub[data-open='true'] .menu-sub-item {
+    opacity: 1;
+    transition-delay: 0.12s, 0s;
+  }
+
+  .menu-sub li:first-child .menu-sub-item {
+    margin-top: 4px;
+  }
+
+  .menu-sub-item:active {
+    color: var(--accent);
+  }
+
+  .menu-sub-title {
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .menu-sub-note {
+    font-size: 13px;
+    color: var(--mute);
+    text-align: right;
+  }
+
+  /* With the projects open the three section rows give up some air, so the
+     unfolded menu still fits a phone screen instead of starting to scroll. */
+  .overlay:has(.menu-sub[data-open='true']) .menu-row {
+    padding-block: clamp(8px, 1.6vh, 14px);
+  }
+
+  /* And the language control and the contact lines step aside while the
+     list is open: with the projects unfolded the menu is being used to
+     navigate, and keeping them made it scroll. They come back with the fold. */
+  .overlay:has(.menu-sub[data-open='true']) .menu-aside {
+    display: none;
+  }
+
   /* A short phone (an iPhone SE is 667px) ran the panel 28px past the screen,
      which is all it takes to make a fixed menu scroll. The rows give up some
      of their air there and only there; taller phones keep the full rhythm. */
   @media (max-height: 720px) {
     .menu-row {
       padding-block: clamp(10px, 2.6vh, 20px);
+    }
+
+    .menu-sub-item {
+      padding-block: 8px;
     }
   }
 
@@ -1767,16 +1913,46 @@
         calc(16% + (var(--i) / var(--n)) * 34%);
   }
 
-  /* The card still to come. While it peeks from below the current one it is
-     a step narrower, and it grows to full width as it rises into place, so
-     the strip at the foot of the screen reads as the next card waiting
-     rather than as the current one running long. Its own view timeline,
-     scaled from the top edge; transform only. */
-  @media (max-width: 879.98px) {
+  /* Two movements per card, both driven by the zero-height marks (their view
+     timelines lifted to the list by `timeline-scope`):
+
+     - rise, on its own mark: while it peeks from below the current card it
+       is a step narrower, and it grows to full width as it climbs to its
+       pin, so the strip at the foot of the screen reads as the card to come;
+     - settle, on the next card's mark: as the next card climbs over it, it
+       shrinks a step toward its top edge, so the pile under the header is
+       cards dealt one on another rather than panels sliding past.
+
+     Each range ends where the card in question pins: a mark at the foot of
+     the screen is `cover 0%`, one at the top edge is `cover 100%`, and a
+     card pins `--nav-h` plus 10px per card below that edge. `scale` for the
+     rise and `transform` for the settle, so the two compose instead of one
+     overriding the other. */
+  @media (max-width: 879.98px) and (min-height: 640px) {
     .deck-card {
+      animation:
+        deck-rise linear both,
+        deck-settle linear both;
+      animation-timeline: var(--tl-own), var(--tl-next);
+      animation-range:
+        cover 0% cover calc(100% - var(--nav-h) - var(--i, 0) * 10px),
+        cover 0% cover calc(100% - var(--nav-h) - (var(--i, 0) + 1) * 10px);
+    }
+
+    /* Nothing is dealt over the last card, and an animation pointed at a
+       timeline nobody publishes is not inert: Chrome treats it as finished
+       and parks the card at the end of the settle, a step smaller than the
+       cards beneath it, which then show below its edge. So it keeps only
+       its rise. An open description takes both off. */
+    .deck-card:last-child {
       animation: deck-rise linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 100%;
+      animation-timeline: var(--tl-own);
+      animation-range: cover 0% cover
+        calc(100% - var(--nav-h) - var(--i, 0) * 10px);
+    }
+
+    .deck-card:has([data-expanded='true']) {
+      animation: none;
     }
   }
 
@@ -1845,7 +2021,13 @@
 
 @keyframes deck-rise {
   from {
-    transform: scale(0.93);
+    scale: 0.93;
+  }
+}
+
+@keyframes deck-settle {
+  to {
+    transform: scale(0.92);
   }
 }
 

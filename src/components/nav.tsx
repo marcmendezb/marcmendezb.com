@@ -76,6 +76,18 @@ const directLabel: Record<Locale, string> = {
   es: 'Directo',
 }
 
+const showProjects: Record<Locale, string> = {
+  en: 'Show projects',
+  de: 'Projekte anzeigen',
+  es: 'Ver proyectos',
+}
+
+const hideProjects: Record<Locale, string> = {
+  en: 'Hide projects',
+  de: 'Projekte ausblenden',
+  es: 'Ocultar proyectos',
+}
+
 const workMenuLabel: Record<Locale, string> = {
   en: 'Projects',
   de: 'Projekte',
@@ -111,6 +123,10 @@ export function Nav({
   const [menuOpen, setMenuOpen] = useState(false)
   const [overHero, setOverHero] = useState(true)
   const [workOpen, setWorkOpen] = useState(false)
+  // The projects under Work in the phone menu. Folded again whenever the menu
+  // closes, so it always opens on the three sections.
+  const [menuProjectsOpen, setMenuProjectsOpen] = useState(false)
+  if (!menuOpen && menuProjectsOpen) setMenuProjectsOpen(false)
   const workCloseTimer = useRef(0)
   const workMenuRef = useRef<HTMLDivElement>(null)
   const controlsRef = useRef<HTMLDivElement>(null)
@@ -264,6 +280,30 @@ export function Nav({
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [workOpen])
+
+  /* The phone version of goToProject. The deck there pins each card 10px
+     lower than the one before and spaces them with margins, which cardTops
+     does not model, so the target comes from the card's zero-height mark in
+     the flow instead: the mark never moves, and it is the very point the
+     deck snaps to. The jump is instant and happens behind the closing menu,
+     so the panel lifts on the card already in place. */
+  const goToProjectFromMenu = (event: React.MouseEvent, index: number) => {
+    event.preventDefault()
+    const mark =
+      document.querySelectorAll<HTMLElement>('#work .deck-mark')[index]
+    if (mark) {
+      const nav =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            '--nav-h',
+          ),
+        ) || 80
+      const top =
+        mark.getBoundingClientRect().top + window.scrollY - nav - index * 10
+      window.scrollTo({ top, behavior: 'instant' })
+    }
+    setMenuOpen(false)
+  }
 
   const goToProject = (index: number) => {
     const target = cardTops()[index]
@@ -653,26 +693,101 @@ export function Nav({
             aria-label={mobileLabel[locale]}
             className="my-auto flex flex-col py-[4vh]"
           >
-            {site.nav.map((item, index) => (
-              <a
-                key={item.section}
-                href={`#${item.section}`}
-                onClick={() => setMenuOpen(false)}
-                aria-current={activeIndex === index ? 'true' : undefined}
-                // `--i` is registered with `inherits: false`, so it has to be
-                // set on the element whose own rule reads it. Setting it on the
-                // <nav> and reading it here gives every row a delay of 0s.
-                style={{ '--i': index } as React.CSSProperties}
-                className="menu-in menu-row"
-              >
-                {item.label}
-              </a>
-            ))}
+            {site.nav.map((item, index) =>
+              index === WORK_INDEX && projects.length > 0 ? (
+                /* Work opens onto its projects, the way the header's Work
+                   opens its list on a desktop. The row itself still goes to
+                   the section; the round button beside it unfolds the
+                   projects, and each one lands on its own card. */
+                <div
+                  key={item.section}
+                  style={{ '--i': index } as React.CSSProperties}
+                  className="menu-in"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <a
+                      href={`#${item.section}`}
+                      onClick={() => setMenuOpen(false)}
+                      aria-current={activeIndex === index ? 'true' : undefined}
+                      className="menu-row"
+                    >
+                      {item.label}
+                    </a>
+                    <button
+                      type="button"
+                      aria-expanded={menuProjectsOpen}
+                      aria-controls="menu-projects"
+                      aria-label={
+                        menuProjectsOpen
+                          ? hideProjects[locale]
+                          : showProjects[locale]
+                      }
+                      onClick={() => setMenuProjectsOpen((was) => !was)}
+                      className="menu-disclose"
+                    >
+                      <svg
+                        viewBox="0 0 16 16"
+                        width="16"
+                        height="16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        aria-hidden="true"
+                      >
+                        <path d="M3.5 6 8 10.5 12.5 6" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div
+                    id="menu-projects"
+                    data-open={menuProjectsOpen}
+                    inert={!menuProjectsOpen}
+                    className="menu-sub"
+                  >
+                    <ul>
+                      {projects.map((project, projectIndex) => (
+                        <li key={project.title}>
+                          <a
+                            href="#work"
+                            onClick={(event) =>
+                              goToProjectFromMenu(event, projectIndex)
+                            }
+                            className="menu-sub-item"
+                          >
+                            <span className="menu-sub-title">
+                              {project.title}
+                            </span>
+                            <span className="menu-sub-note">
+                              {project.shorthand}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <a
+                  key={item.section}
+                  href={`#${item.section}`}
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={activeIndex === index ? 'true' : undefined}
+                  // `--i` is registered with `inherits: false`, so it has to
+                  // be set on the element whose own rule reads it. Setting it
+                  // on the <nav> and reading it here gives every row a delay
+                  // of 0s.
+                  style={{ '--i': index } as React.CSSProperties}
+                  className="menu-in menu-row"
+                >
+                  {item.label}
+                </a>
+              ),
+            )}
           </nav>
 
           <div
             style={{ '--i': 2.5 } as React.CSSProperties}
-            className="menu-in"
+            className="menu-in menu-aside"
           >
             <LocaleSegmented locale={locale} />
           </div>
@@ -680,7 +795,7 @@ export function Nav({
           {/* mt-auto pins this to the bottom on a tall phone and lets it sit
               directly under the links on a short one, instead of the fixed
               three-row grid that left a third of the screen empty. */}
-          <div className="mt-auto pt-[clamp(30px,7vh,68px)]">
+          <div className="menu-aside mt-auto pt-[clamp(30px,7vh,68px)]">
             <p
               style={{ '--i': 3 } as React.CSSProperties}
               className="menu-in text-mute text-[11px] tracking-[0.14em] uppercase"

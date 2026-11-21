@@ -1,5 +1,6 @@
 import { Carousel } from '@/components/carousel'
 import { DeckIndex } from '@/components/deck-index'
+import { DeckSnap } from '@/components/deck-snap'
 import { ExpandableText } from '@/components/expandable-text'
 import { PrivateWork } from '@/components/private-work'
 import { Media } from '@/components/media'
@@ -73,7 +74,9 @@ export function Work({ locale }: { locale: Locale }) {
       {/* The section no longer owns the side padding. Each slide has to paint
           edge to edge to hide the one pinned underneath it, so the padding
           moved onto the slides themselves and the heading keeps its own. */}
-      <div className="px-edge">
+      {/* `deck-snap-point`: on a phone, where a swipe up out of the first card
+          lands while the deck is snapping (see DeckSnap). */}
+      <div className="deck-snap-point px-edge">
         <SectionHeading
           id="work-heading"
           title={title[locale]}
@@ -89,18 +92,9 @@ export function Work({ locale }: { locale: Locale }) {
           breathing room, and a gap on top of that just pushed the next slide
           out of alignment with the screen. */}
       <DeckIndex projects={projects} locale={locale} />
+      <DeckSnap />
 
-      {/* `timeline-scope` lifts each card's view timeline up to the list, so
-          the card underneath can read the entry of the one riding over it.
-          That is what drives the stacked deck on a phone (see `.deck-card`). */}
-      <div
-        className="deck-list grid"
-        style={
-          {
-            timelineScope: projects.map((_, i) => `--card-${i}`).join(', '),
-          } as React.CSSProperties
-        }
-      >
+      <div className="deck-list grid">
         {projects.map((project, index) => {
           // Alternate which side the image sits on, but only once there are two
           // columns to alternate between.
@@ -120,25 +114,16 @@ export function Work({ locale }: { locale: Locale }) {
                boundary shows on its own, and over the white half of the layout
                there is nothing behind it worth separating from.
 
-               On a phone the same deck, dealt as cards: each one is a rounded
-               card that pins a little lower than the one before, so the stack
-               shows its edges, and the card underneath settles back as the
-               next one covers it. The card is sized to fit the screen (square
-               gallery, clamped description) because a pinned card taller than
-               the screen holds its bottom out of reach; opening the
-               description unpins it. All of it lives in `.deck-card`. */
+               On a phone the same deck, dealt as cards: each one fills the
+               screen under the header, the next one peeks from below, and the
+               scroll stops on every card (DeckSnap). The gallery takes
+               whatever height the copy leaves, and the description is
+               clamped with a Read more. All of it lives in `.deck-card`. */
             <article
               key={project.slug}
               data-snap
               data-index={index}
-              style={
-                {
-                  '--i': index,
-                  '--tl-self': `--card-${index}`,
-                  '--tl-next': `--card-${index + 1}`,
-                } as React.CSSProperties
-              }
-              className="deck-card group bg-surface min-[880px]:px-edge grid grid-cols-1 items-center min-[880px]:sticky min-[880px]:top-0 min-[880px]:min-h-svh min-[880px]:grid-cols-2 min-[880px]:gap-[clamp(20px,4vw,56px)] min-[880px]:py-0"
+              className="deck-card group bg-surface min-[880px]:px-edge relative grid grid-cols-1 min-[880px]:sticky min-[880px]:top-0 min-[880px]:min-h-svh min-[880px]:grid-cols-2 min-[880px]:items-center min-[880px]:gap-[clamp(20px,4vw,56px)] min-[880px]:py-0"
             >
               {/* Runs off its own side of the screen and stops short of the
                   other three edges: the negative margin cancels the section's
@@ -177,7 +162,7 @@ export function Work({ locale }: { locale: Locale }) {
                    with a single `mx-0`: `mx` and `ms` set overlapping
                    properties and Tailwind orders its own output, so which one
                    won would not be decided here. */
-                  className={`curtain media-frame bg-placeholder relative aspect-square overflow-hidden rounded-none min-[880px]:aspect-auto min-[880px]:h-[min(72svh,720px)] min-[880px]:rounded-none ${
+                  className={`curtain media-frame bg-placeholder relative overflow-hidden rounded-none min-[880px]:aspect-auto min-[880px]:h-[min(72svh,720px)] min-[880px]:rounded-none ${
                     mediaSecond
                       ? 'min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:rounded-l-[clamp(20px,2.4vw,36px)]'
                       : 'min-[880px]:ms-[calc(var(--edge)*-1)] min-[880px]:me-0 min-[880px]:rounded-r-[clamp(20px,2.4vw,36px)]'
@@ -424,6 +409,10 @@ export function Work({ locale }: { locale: Locale }) {
                   ) : null}
                 </div>
               </div>
+              {/* The foot of a card taller than the screen (DeckSnap arms it
+                  only then), so the snapping deck stops on its last lines
+                  rather than jumping past them. */}
+              <span aria-hidden="true" className="deck-end-snap" />
             </article>
           )
         })}

@@ -410,12 +410,13 @@
 
   /* --- Work, phone: the deck as cards ---------------------------------------
 
-     The desktop deck pins each project full-screen and deals the next one
-     over it. A phone gets the same gesture at its own scale: rounded cards
-     inside the page gutter, each pinning 10px lower than the one before so
-     the stack keeps its edges in view, and the card underneath settling back
-     as the next one rides over it (the scroll-driven part is further down,
-     under @supports).
+     The desktop deck shows one project per screen and moves one card per
+     gesture. A phone gets the same at its own scale: a rounded card inside
+     the page gutter that fills the screen under the header, with the top of
+     the next one showing below it, a step narrower, as the card still to
+     come. The scroll stops on every card and one swipe moves one card: CSS
+     scroll snapping, switched on by DeckSnap only while the deck covers the
+     screen.
 
      The gallery inside each card still swipes sideways. That is why the deck
      runs vertically rather than as a horizontal carousel of cards: two
@@ -426,11 +427,33 @@
       padding-inline: var(--edge);
     }
 
+    /* How much of the next card shows below the current one, gap included. */
+    .deck-list {
+      --deck-peek: 56px;
+    }
+
+    /* A grid of two rows: the copy takes its natural height and the gallery
+       takes everything else, so every card fills the same screen whatever
+       its text. `min-height`, not `height`: on a very short phone the copy
+       alone can outgrow the screen, and then the card grows rather than
+       clipping it. The gallery has a floor so it never collapses to a strip.
+       A grid row is a definite height, which is what the carousel's
+       `height: 100%` needs to resolve. */
     .deck-card {
+      grid-template-rows: minmax(150px, 1fr) auto;
+      min-height: calc(100svh - var(--nav-h) - var(--deck-peek));
       border: 1px solid var(--hair);
       border-radius: clamp(24px, 7vw, 32px);
       overflow: hidden;
       transform-origin: 50% 0;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    /* The confidential card is all text and runs past a screen; it takes its
+       own height, and its foot becomes a snap point of its own (below). */
+    .deck-card:last-child {
+      grid-template-rows: auto auto;
     }
 
     /* Clamped on a phone; `ExpandableText` offers the rest in place. */
@@ -477,19 +500,37 @@
     }
   }
 
-  /* Pinned only where a card fits under the header. On a short phone a
-     pinned card would hold its own bottom out of reach, so there the cards
-     simply scroll. An open description unpins its card for the same reason. */
-  @media (max-width: 879.98px) and (min-height: 700px) {
-    .deck-card {
-      position: sticky;
-      top: calc(var(--nav-h) + var(--i, 0) * 10px);
+  /* The snapping itself. Mandatory only while DeckSnap has set the attribute,
+     which it does only while the deck covers the screen; the heading above
+     and the About section below are snap points too, so a swipe out of the
+     first or the last card has somewhere to land, and the attribute drops as
+     soon as it does. `scroll-padding-top` on <html> already reserves the
+     header, so `start` lands each card just under it. */
+  html[data-deck-snap] {
+    scroll-snap-type: y mandatory;
+  }
+
+  @media (max-width: 879.98px) {
+    .deck-snap-point,
+    #about {
+      scroll-snap-align: start;
     }
 
-    .deck-card:has([data-expanded='true']) {
-      position: relative;
-      top: auto;
+    .deck-card[data-tall] > .deck-end-snap {
+      scroll-snap-align: end;
     }
+  }
+
+  /* A point at the foot of a card, for the one card that runs taller than
+     the screen. Absolutely placed so it never takes a cell in the desktop
+     grid. */
+  .deck-end-snap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
   }
 
   /* --- Locale control, mobile menu -----------------------------------------
@@ -1726,27 +1767,16 @@
         calc(16% + (var(--i) / var(--n)) * 34%);
   }
 
-  /* The phone deck settling back. Each card publishes its own view timeline
-     (`--tl-self`, lifted to the list by `timeline-scope`) and animates on the
-     next card's (`--tl-next`): as the next one rises into the screen, this one
-     shrinks a step toward its top edge, so the stack reads as cards dealt
-     onto a pile rather than panels sliding past. Transform only. */
-  @media (max-width: 879.98px) and (min-height: 700px) {
+  /* The card still to come. While it peeks from below the current one it is
+     a step narrower, and it grows to full width as it rises into place, so
+     the strip at the foot of the screen reads as the next card waiting
+     rather than as the current one running long. Its own view timeline,
+     scaled from the top edge; transform only. */
+  @media (max-width: 879.98px) {
     .deck-card {
-      view-timeline-name: var(--tl-self);
-      animation: deck-settle linear both;
-      animation-timeline: var(--tl-next);
+      animation: deck-rise linear both;
+      animation-timeline: view();
       animation-range: entry 0% entry 100%;
-    }
-
-    /* Nothing rides over the last card, so it gets no animation at all.
-       Pointing it at a timeline that does not exist is not the same thing:
-       Chrome treats a timeline-less animation as finished, fills forward,
-       and parks the card a step smaller than the ones beneath it, which
-       then show below its edge. */
-    .deck-card:last-child,
-    .deck-card:has([data-expanded='true']) {
-      animation: none;
     }
   }
 
@@ -1813,9 +1843,9 @@
   }
 }
 
-@keyframes deck-settle {
-  to {
-    transform: scale(0.92);
+@keyframes deck-rise {
+  from {
+    transform: scale(0.93);
   }
 }
 

@@ -173,6 +173,12 @@ export function Work({ locale }: { locale: Locale }) {
                    phone it drops the 4:5 ratio for the same reason and takes
                    its own height. */
                   <Reveal
+                    /* Uncovered as soon as the card is about to peek: on a phone
+                     the next card shows only its top edge under the current
+                     one, and the default trigger left that strip covered in
+                     white until the card arrived. */
+                    threshold={0}
+                    rootMargin="0px 0px 15% 0px"
                     className={`curtain media-frame footer-panel vault relative overflow-hidden px-[clamp(20px,5.5vw,28px)] py-[clamp(36px,6vh,56px)] min-[880px]:flex min-[880px]:min-h-[min(72svh,720px)] min-[880px]:flex-col min-[880px]:justify-center min-[880px]:px-[clamp(36px,4.4vw,72px)] min-[880px]:py-[clamp(32px,4.5vh,52px)] ${
                       mediaSecond
                         ? 'min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:rounded-l-[clamp(20px,2.4vw,36px)]'
@@ -186,6 +192,12 @@ export function Work({ locale }: { locale: Locale }) {
                   </Reveal>
                 ) : (
                   <Reveal
+                    /* Uncovered as soon as the card is about to peek: on a phone
+                     the next card shows only its top edge under the current
+                     one, and the default trigger left that strip covered in
+                     white until the card arrived. */
+                    threshold={0}
+                    rootMargin="0px 0px 15% 0px"
                     /* Off both edges on a phone, off one on a desktop. There is no
                    alternating side to play with in a single column, so the
                    bleed goes the only way it can: the picture spans the screen

@@ -432,12 +432,25 @@
        barely-there grey, 4% ink, lets each card cut its own shape and shows
        the gap where the next one starts. No shadow: depth comes from tone,
        as everywhere else on the page. Only the list is tinted, so the
-       section heading keeps the page ground its grey text was tuned on. */
+       section heading keeps the page ground its grey text was tuned on.
+
+       The ground fades in and out rather than starting on an edge: a band
+       with a hard top read as a rule drawn across the page. Over 180px it
+       goes from the page's white to the grey, so by the time the first card
+       arrives the grey is simply there, and it returns to white the same way
+       below the last card. */
     .deck-list {
+      --deck-ground: color-mix(in srgb, var(--ink) 4%, var(--surface));
       gap: 0;
       padding-inline: var(--edge);
-      padding-block: 16px 0;
-      background: color-mix(in srgb, var(--ink) 4%, var(--surface));
+      padding-block: 48px 64px;
+      background: linear-gradient(
+        to bottom,
+        var(--surface) 0,
+        var(--deck-ground) 180px,
+        var(--deck-ground) calc(100% - 140px),
+        var(--surface) 100%
+      );
       /* How much of the next card shows below the current one, gap included. */
       --deck-peek: 56px;
     }

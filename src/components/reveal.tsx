@@ -12,6 +12,14 @@ type Props = {
   className?: string
   /** Tag to render. Defaults to a div. */
   as?: 'div' | 'figure' | 'article' | 'section' | 'p'
+  /**
+   * Overrides for when it counts as in view. The defaults wait until the
+   * element is well inside the screen, which suits a heading arriving on
+   * its own; the work deck needs its media uncovered the moment a card
+   * starts to peek from below the current one.
+   */
+  threshold?: number
+  rootMargin?: string
 }
 
 /**
@@ -20,8 +28,17 @@ type Props = {
  * The animation itself lives in CSS, so this component stays presentation-free
  * and the whole thing degrades to "always visible" when motion is reduced.
  */
-export function Reveal({ children, className = '', as: Tag = 'div' }: Props) {
-  const { ref, inView } = useInView<HTMLElement>()
+export function Reveal({
+  children,
+  className = '',
+  as: Tag = 'div',
+  threshold,
+  rootMargin,
+}: Props) {
+  const { ref, inView } = useInView<HTMLElement>({
+    ...(threshold !== undefined && { threshold }),
+    ...(rootMargin !== undefined && { rootMargin }),
+  })
 
   return (
     // @ts-expect-error: a single ref type can't satisfy every tag in the union,

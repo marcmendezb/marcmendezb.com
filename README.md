@@ -155,6 +155,7 @@ The site runs cleanly as-is, but a few fields are deliberately left empty rather
 The site runs on **Cloudflare Workers** through [OpenNext](https://opennext.js.org/cloudflare), Cloudflare's own Next.js integration. Nothing to provision: no KV, no R2, no database.
 
 - [`wrangler.jsonc`](wrangler.jsonc): the Worker. Static assets plus the Cloudflare Images binding that backs `next/image` (resizing and AVIF/WebP).
+- [`cloudflare-worker.mjs`](cloudflare-worker.mjs): the Worker's entry point. On `marcmendezb.com` it sends http and `www` to `https://marcmendezb.com` in one 301 before Next.js sees the request; every other host passes through.
 - [`open-next.config.ts`](open-next.config.ts): every page is prerendered and never revalidates, so the incremental cache is the read-only one served from the Worker's static assets.
 - [`public/_headers`](public/_headers): headers for files Cloudflare serves straight from static assets. Pages get the full set, CSP included, from `next.config.ts`.
 

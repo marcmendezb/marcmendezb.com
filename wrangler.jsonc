@@ -3,7 +3,9 @@
   // Must match the Worker's name in the Cloudflare dashboard when the
   // repository is connected through Workers Builds.
   "name": "marcmendezb",
-  "main": ".open-next/worker.js",
+  // A thin wrapper around OpenNext's generated `.open-next/worker.js` that
+  // settles http and www onto https://marcmendezb.com first.
+  "main": "cloudflare-worker.mjs",
   "compatibility_date": "2026-10-15",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   // Live on workers.dev until a custom domain is attached in the dashboard.

@@ -361,52 +361,97 @@ export function About({ locale }: { locale: Locale }) {
 
           The gap above matches the gap between the cards, so the four panels
           read as one cluster with the freelance band and the roadmap rather than as a separate afterthought. */}
-      <Reveal className="reveal mt-[clamp(16px,2vw,28px)] grid grid-cols-1 items-start gap-[clamp(16px,2vw,28px)] min-[720px]:grid-cols-3">
-        <div className="border-hair bg-surface/60 rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(20px,2.4vw,32px)] py-[clamp(20px,2.2vw,28px)] backdrop-blur-2xl">
-          <h3 className="mb-3 text-sm font-medium">{educationLabel[locale]}</h3>
-          <dl>
+      {/* Education to the left at double height, languages and learning
+          stacked beside it: the three panels used to sit abreast at five,
+          four and two rows, and the row ended in a staircase with the last
+          panel half empty. The right-hand pair stretches to the left one's
+          foot, so the cluster closes on one line. */}
+      <Reveal className="reveal facts mt-[clamp(16px,2vw,28px)] grid grid-cols-1 gap-[clamp(16px,2vw,28px)] min-[720px]:grid-cols-[1.15fr_1fr] min-[720px]:grid-rows-[auto_1fr]">
+        <div className="facts-panel min-[720px]:row-span-2">
+          <FactsHeading glyph="education" meta={education[0]?.country}>
+            {educationLabel[locale]}
+          </FactsHeading>
+          {/* A rail, in the roadmap's own language: a hairline with a node
+              per entry. Filled for a finished qualification, a ring for one
+              still to start, a faint ring for one left unfinished. The kind
+              of qualification is the small line, the subject the large one,
+              which is the order a recruiter scans them in. */}
+          <ol className="edu-rail">
             {education.map((entry) => (
-              <div
-                key={entry.qualification}
-                className="border-hair gap-4 border-t py-2.5"
+              <li
+                key={`${entry.level}-${entry.field}`}
+                data-state={entry.state ?? 'done'}
               >
-                <dt className="text-sm">{entry.qualification}</dt>
-                <dd className="text-mute mt-0.5 text-sm">
-                  {entry.country}
-                  {entry.status ? `, ${entry.status}` : ''}
-                </dd>
-              </div>
+                <p className="text-mute text-[13px]">{entry.level}</p>
+                <p className="mt-0.5 text-[15px] leading-snug font-medium">
+                  {entry.field}
+                </p>
+                {entry.status ? (
+                  <p className="facts-tag" data-state={entry.state}>
+                    {entry.status}
+                  </p>
+                ) : null}
+              </li>
             ))}
-          </dl>
+          </ol>
         </div>
 
-        <div className="border-hair bg-surface/60 rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(20px,2.4vw,32px)] py-[clamp(20px,2.2vw,28px)] backdrop-blur-2xl">
-          <h3 className="mb-3 text-sm font-medium">{languagesLabel[locale]}</h3>
+        <div className="facts-panel">
+          <FactsHeading glyph="languages">
+            {languagesLabel[locale]}
+          </FactsHeading>
           <dl>
-            {languages.map((language) => (
-              <div
-                key={language.name}
-                className="border-hair flex items-baseline justify-between gap-4 border-t py-2.5"
-              >
-                <dt className="text-sm">{language.name}</dt>
-                <dd className="text-mute text-sm">{language.level}</dd>
-              </div>
-            ))}
+            {languages.map((language) => {
+              const steps = cefrSteps(language.level)
+              return (
+                <div
+                  key={language.name}
+                  className="border-hair flex items-center gap-4 border-t py-3"
+                >
+                  <dt className="text-[15px] font-medium">{language.name}</dt>
+                  <dd className="text-mute ms-auto text-right text-[13px]">
+                    {language.level}
+                  </dd>
+                  {/* The level drawn on the CEFR's own six steps, A1 to C2;
+                      a native language fills all six. Decorative: the level
+                      is already in words beside it. */}
+                  <span aria-hidden="true" className="cefr">
+                    {Array.from({ length: 6 }, (_, step) => (
+                      <span
+                        key={step}
+                        data-on={step < steps}
+                        style={{ '--i': step } as React.CSSProperties}
+                      />
+                    ))}
+                  </span>
+                </div>
+              )
+            })}
           </dl>
         </div>
 
-        <div className="border-hair bg-surface/60 rounded-[clamp(24px,3.5vw,44px)] border px-[clamp(20px,2.4vw,32px)] py-[clamp(20px,2.2vw,28px)] backdrop-blur-2xl">
+        <div className="facts-panel">
           {/* Saying what you're mid-way through reads as more credible than a
-              list where everything is already mastered. */}
-          <h3 className="mb-3 text-sm font-medium">
+              list where everything is already mastered. The turning mark is
+              the one the hero's "Available" carries: in motion, in progress. */}
+          <FactsHeading glyph="learning">
             {currentlyLearningLabel[locale]}
-          </h3>
+          </FactsHeading>
           <ul>
             {learning.map((item) => (
               <li
                 key={item}
-                className="border-hair text-mute border-t py-2.5 text-sm"
+                className="border-hair flex items-center gap-3 border-t py-3 text-[15px] font-medium"
               >
+                <span aria-hidden="true" className="status-mark">
+                  <Image
+                    src="/brand/logo-96.png"
+                    alt=""
+                    width={12}
+                    height={12}
+                    className="status-spin size-3"
+                  />
+                </span>
                 {item}
               </li>
             ))}
@@ -414,5 +459,88 @@ export function About({ locale }: { locale: Locale }) {
         </div>
       </Reveal>
     </section>
+  )
+}
+
+/**
+ * How many of the CEFR's six steps (A1 A2 B1 B2 C1 C2) a level fills. Read
+ * from the level text, which names the step in every locale ("Professional
+ * (B2)", "Fliessend (B2)"); a level that names none is a native one and
+ * fills the scale.
+ */
+function cefrSteps(level: string): number {
+  const match = level.match(/\b([ABC])([12])\b/)
+  if (!match) return 6
+  const band = { A: 0, B: 2, C: 4 }[match[1] as 'A' | 'B' | 'C']
+  return band + Number(match[2])
+}
+
+/**
+ * A panel's heading: a fine line pictogram in the same hand as the ones on
+ * the confidential work card, the label, and an optional quiet note on the
+ * right (the country, said once for the whole list instead of per entry).
+ */
+function FactsHeading({
+  glyph,
+  meta,
+  children,
+}: {
+  glyph: 'education' | 'languages' | 'learning'
+  meta?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="mb-4 flex items-center gap-3">
+      <svg
+        viewBox="0 0 24 24"
+        width="22"
+        height="22"
+        aria-hidden="true"
+        className="picto-glyph facts-glyph"
+      >
+        {glyph === 'education' ? (
+          <>
+            <path
+              pathLength={1}
+              className="picto-line"
+              d="M2.5 9.5 12 5l9.5 4.5L12 14 2.5 9.5Z"
+            />
+            <path
+              pathLength={1}
+              className="picto-line"
+              d="M6.5 11.6v4.2c0 1.5 2.5 2.7 5.5 2.7s5.5-1.2 5.5-2.7v-4.2"
+            />
+            <path pathLength={1} className="picto-line" d="M21.5 9.5v5" />
+          </>
+        ) : glyph === 'languages' ? (
+          <>
+            <path
+              pathLength={1}
+              className="picto-line"
+              d="M3.5 5.5h10a1.5 1.5 0 0 1 1.5 1.5v5.5a1.5 1.5 0 0 1-1.5 1.5H8l-3 2.5V14H3.5A1.5 1.5 0 0 1 2 12.5V7a1.5 1.5 0 0 1 1.5-1.5Z"
+            />
+            <path
+              pathLength={1}
+              className="picto-line"
+              d="M17.5 9.5h3A1.5 1.5 0 0 1 22 11v5.5a1.5 1.5 0 0 1-1.5 1.5H19v2.5L16 18h-4.5A1.5 1.5 0 0 1 10 16.5V16"
+            />
+          </>
+        ) : (
+          <>
+            <path
+              pathLength={1}
+              className="picto-line"
+              d="M20 12a8 8 0 1 1-2.35-5.65"
+            />
+            <path pathLength={1} className="picto-line" d="M20 4.5v4h-4" />
+            <circle className="picto-dot" cx="12" cy="12" r="1.4" />
+          </>
+        )}
+      </svg>
+      <h3 className="text-sm font-medium">{children}</h3>
+      {meta ? (
+        <span className="text-mute ms-auto text-[13px]">{meta}</span>
+      ) : null}
+    </div>
   )
 }

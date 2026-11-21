@@ -574,6 +574,125 @@
     pointer-events: none;
   }
 
+  /* --- About: the three fact panels ---------------------------------------
+
+     The roadmap's clothing (hairline, translucent surface over the brand
+     mark, blur) at a smaller radius. Inside, each panel gets a heading with a
+     fine pictogram, and its content is drawn rather than only listed: a rail
+     for education, the CEFR scale for languages, the turning mark for what
+     is in progress. Ink and hairlines throughout; the accent stays out. */
+  .facts-panel {
+    border: 1px solid var(--hair);
+    border-radius: clamp(24px, 3.5vw, 44px);
+    background: color-mix(in srgb, var(--surface) 60%, transparent);
+    padding: clamp(20px, 2.4vw, 32px);
+    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
+  }
+
+  .facts-glyph {
+    flex: none;
+  }
+
+  /* Education: one hairline down the left, a node per entry on it. The rail
+     stops at the last node rather than running out under it. */
+  .edu-rail {
+    position: relative;
+  }
+
+  .edu-rail > li {
+    position: relative;
+    padding: 12px 0 12px 26px;
+    border-top: 1px solid var(--hair);
+  }
+
+  .edu-rail > li::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 4.5px;
+    width: 1px;
+    background: var(--hair);
+  }
+
+  .edu-rail > li:first-child::before {
+    top: 19px;
+  }
+
+  .edu-rail > li:last-child::before {
+    bottom: calc(100% - 19px);
+  }
+
+  /* Filled: done. A ring: still to come. A faint ring: left unfinished. */
+  .edu-rail > li::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border: 1px solid var(--ink);
+    border-radius: 100px;
+    background: var(--ink);
+  }
+
+  .edu-rail > li[data-state='upcoming']::after {
+    background: var(--surface);
+  }
+
+  .edu-rail > li[data-state='incomplete']::after {
+    border-color: var(--mute);
+    background: var(--surface);
+  }
+
+  .facts-tag {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 10px;
+    border: 1px solid var(--hair);
+    border-radius: 100px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .facts-tag[data-state='incomplete'] {
+    color: var(--mute);
+  }
+
+  /* Languages: the CEFR's six steps as six short bars, filled up to the
+     level. They fill one after another when the panel comes into view. */
+  .cefr {
+    display: flex;
+    flex: none;
+    gap: 3px;
+  }
+
+  .cefr > span {
+    width: clamp(10px, 1.1vw, 14px);
+    height: 4px;
+    border-radius: 100px;
+    background: var(--hair);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .cefr > span[data-on='true']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform 0.5s var(--ease);
+    transition-delay: calc(0.3s + var(--i, 0) * 0.07s);
+  }
+
+  [data-visible='true'] .cefr > span[data-on='true']::after {
+    transform: none;
+  }
+
   /* --- Locale control, mobile menu -----------------------------------------
 
      The header's nav pill, holding the three languages: the same hairline
@@ -2122,6 +2241,10 @@
   .parallax,
   .menu-in {
     opacity: 1;
+    transform: none;
+  }
+
+  .cefr > span[data-on='true']::after {
     transform: none;
   }
 

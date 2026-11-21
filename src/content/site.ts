@@ -33,8 +33,10 @@ export type Language = {
 }
 
 export type EducationEntry = {
-  /** The qualification and subject, e.g. "Higher Vocational Diploma, Web Application Development". */
-  qualification: string
+  /** The kind of qualification, e.g. "Higher Vocational Diploma". */
+  level: string
+  /** The subject, e.g. "Web Application Development". */
+  field: string
   country: string
   /**
    * The awarding school or university. `null` while unconfirmed: see the
@@ -44,10 +46,16 @@ export type EducationEntry = {
    */
   institution: string | null
   /**
-   * A short note shown beside the country, e.g. "not completed" or "starts
-   * February 2026". Omit for a plain finished qualification.
+   * A short note shown as a tag on the entry, e.g. "not completed" or
+   * "starts February 2026". Omit for a plain finished qualification.
    */
   status?: string
+  /**
+   * What the status means, for the node on the education rail: a hollow ring
+   * for one still to start, a faint one for one left unfinished, a filled dot
+   * for everything completed. Locale-independent, unlike `status`.
+   */
+  state?: 'upcoming' | 'incomplete'
 }
 
 /** Everything that reads differently per language. */
@@ -79,11 +87,7 @@ type LocalizedSite = {
     workEligibility: string
     responseTime: string
   }
-  education: readonly {
-    qualification: string
-    country: string
-    status?: string
-  }[]
+  education: readonly Omit<EducationEntry, 'institution'>[]
   languages: readonly { name: string; level: string }[]
   openTo: string
   nav: readonly [whatIDo: string, work: string, about: string]
@@ -117,27 +121,33 @@ const localized: Record<Locale, LocalizedSite> = {
     },
     education: [
       {
-        qualification: 'Data Science and Artificial Intelligence (BSc)',
+        level: 'Bachelor’s degree (BSc)',
+        field: 'Data Science and Artificial Intelligence',
         country: 'Spain',
         status: 'starts February 2026',
+        state: 'upcoming',
       },
       {
-        qualification: 'Higher Vocational Diploma, Web Application Development',
+        level: 'Higher Vocational Diploma',
+        field: 'Web Application Development',
         country: 'Spain',
       },
       {
-        qualification: 'Higher Vocational Diploma, Marketing and Advertising',
+        level: 'Higher Vocational Diploma',
+        field: 'Marketing and Advertising',
         country: 'Spain',
       },
       {
-        qualification:
-          'Intermediate Vocational Diploma, Administrative Assistance',
+        level: 'Intermediate Vocational Diploma',
+        field: 'Administrative Assistance',
         country: 'Spain',
       },
       {
-        qualification: 'Public Relations, Marketing and Advertising (BA)',
+        level: 'Bachelor’s degree (BA)',
+        field: 'Public Relations, Marketing and Advertising',
         country: 'Spain',
         status: 'not completed',
+        state: 'incomplete',
       },
     ],
     languages: [
@@ -163,26 +173,33 @@ const localized: Record<Locale, LocalizedSite> = {
     },
     education: [
       {
-        qualification: 'Data Science und künstliche Intelligenz (BSc)',
+        level: 'Bachelor (BSc)',
+        field: 'Data Science und künstliche Intelligenz',
         country: 'Spanien',
         status: 'Start Februar 2026',
+        state: 'upcoming',
       },
       {
-        qualification: 'Höhere Fachausbildung, Webentwicklung',
+        level: 'Höhere Fachausbildung',
+        field: 'Webentwicklung',
         country: 'Spanien',
       },
       {
-        qualification: 'Höhere Fachausbildung, Marketing und Werbung',
+        level: 'Höhere Fachausbildung',
+        field: 'Marketing und Werbung',
         country: 'Spanien',
       },
       {
-        qualification: 'Mittlere Fachausbildung, Büroassistenz',
+        level: 'Mittlere Fachausbildung',
+        field: 'Büroassistenz',
         country: 'Spanien',
       },
       {
-        qualification: 'Public Relations, Marketing und Werbung (BA)',
+        level: 'Bachelor (BA)',
+        field: 'Public Relations, Marketing und Werbung',
         country: 'Spanien',
         status: 'nicht abgeschlossen',
+        state: 'incomplete',
       },
     ],
     languages: [
@@ -208,28 +225,33 @@ const localized: Record<Locale, LocalizedSite> = {
     },
     education: [
       {
-        qualification: 'Grado en Ciencia de Datos e Inteligencia Artificial',
+        level: 'Grado universitario',
+        field: 'Ciencia de Datos e Inteligencia Artificial',
         country: 'España',
         status: 'empieza en febrero de 2026',
+        state: 'upcoming',
       },
       {
-        qualification:
-          'Ciclo Formativo de Grado Superior, Desarrollo de Aplicaciones Web',
+        level: 'Ciclo Formativo de Grado Superior',
+        field: 'Desarrollo de Aplicaciones Web',
         country: 'España',
       },
       {
-        qualification:
-          'Ciclo Formativo de Grado Superior, Marketing y Publicidad',
+        level: 'Ciclo Formativo de Grado Superior',
+        field: 'Marketing y Publicidad',
         country: 'España',
       },
       {
-        qualification: 'Ciclo Formativo de Grado Medio, Gestión Administrativa',
+        level: 'Ciclo Formativo de Grado Medio',
+        field: 'Gestión Administrativa',
         country: 'España',
       },
       {
-        qualification: 'Relaciones Públicas, Marketing y Publicidad (grado)',
+        level: 'Grado universitario',
+        field: 'Relaciones Públicas, Marketing y Publicidad',
         country: 'España',
         status: 'sin terminar',
+        state: 'incomplete',
       },
     ],
     languages: [

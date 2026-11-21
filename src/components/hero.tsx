@@ -278,7 +278,7 @@ export function Hero({ locale }: { locale: Locale }) {
           template. Running it off both edges and down to the section's own
           bottom makes it the end of the hero rather than an attachment to it,
           which is the same argument the desktop bleed is making. */}
-      <figure className="fade-up ms-[calc(var(--edge)*-1)] me-[calc(var(--edge)*-1)] mt-0 w-auto max-[879.98px]:col-start-1 max-[879.98px]:row-start-1 max-[879.98px]:h-[min(72svh,740px)] min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:mt-[calc(var(--nav-h)*-1)] min-[880px]:self-stretch">
+      <figure className="fade-up ms-[calc(var(--edge)*-1)] me-[calc(var(--edge)*-1)] mt-0 w-auto max-[879.98px]:col-start-1 max-[879.98px]:row-start-1 max-[879.98px]:h-[min(80svh,820px)] min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:mt-[calc(var(--nav-h)*-1)] min-[880px]:self-stretch">
         {/* One rounded corner, the only one that is not sitting on a viewport
             edge. Rounding the other three would carve notches out of the screen
             corners; leaving this one square would make the bleed look like an

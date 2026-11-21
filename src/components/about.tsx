@@ -526,14 +526,27 @@ function FactsHeading({
             />
           </>
         ) : (
+          /* An open book with a ribbon marking the page: something being
+             read and not yet finished, which is what "currently learning"
+             says. The pages curve like the mortarboard's brim and the
+             bubbles' corners, so the three marks share one hand. */
           <>
             <path
               pathLength={1}
               className="picto-line"
-              d="M20 12a8 8 0 1 1-2.35-5.65"
+              d="M12 7.2C10 5.8 7 5.3 3.5 5.6v11.6c3.5-.3 6.5.2 8.5 1.6"
             />
-            <path pathLength={1} className="picto-line" d="M20 4.5v4h-4" />
-            <circle className="picto-dot" cx="12" cy="12" r="1.4" />
+            <path
+              pathLength={1}
+              className="picto-line"
+              d="M12 7.2c2-1.4 5-1.9 8.5-1.6v11.6c-3.5-.3-6.5.2-8.5 1.6"
+            />
+            <path pathLength={1} className="picto-line" d="M12 7.2v11.6" />
+            <path
+              pathLength={1}
+              className="picto-line"
+              d="M15.5 6.1v5.6l1.5-1.2 1.5 1.2V5.7"
+            />
           </>
         )}
       </svg>

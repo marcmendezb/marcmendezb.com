@@ -779,6 +779,7 @@ const projectTranslations: Record<
         'Eine inoffizielle Website, die die Formel 1 mit Daten erklärt: die laufende Saison Rennen für Rennen, Strategie-, Pace- und Telemetrieanalysen für jedes Rennen seit 2023 und ein Was-wäre-wenn-Meisterschaftssimulator. Web-App, API und Datenimport laufen als drei getrennte Cloudflare Workers, und nach jedem Rennen berechnet ein Workflow die Analysen vor, sodass **keine Seite je auf eine externe API wartet**. Auf Englisch, Spanisch und Deutsch geschrieben, nach WCAG 2.2 AA gebaut, und der Kern der Website funktioniert auch ohne JavaScript. Alle 36 Architekturentscheidungen sind im Repository dokumentiert.',
       role: 'Produkt, Design und Umsetzung',
       shorthand: 'F1-Datenanalyse',
+      linkLabels: ['Website ansehen', 'Quellcode'],
       imageAlt:
         'Die Paddock-Notes-Startseite auf einem Laptop: der nächste Grand Prix, Las Vegas, mit einem laufenden Countdown bis zum Start, darunter Strecke, Koordinaten und Rennformat',
       galleryAlt: [
@@ -794,6 +795,7 @@ const projectTranslations: Record<
         'Eine fiktive Treuhand- und Buchhaltungsfirma in Zürich, Briefing, Markenbildung und Fotografie (KI-generiert), von mir komplett von Grund auf entwickelt. Fünf Sprachen, fünf Länder, und **eine Steuerfristen-Engine, die für jedes Land die echten, belegten Einreichungsfristen berechnet** statt sie fest zu hinterlegen, sodass der Kalender für nächstes Jahr bereits korrekt ist.',
       role: 'Briefing, Marke und Umsetzung',
       shorthand: 'Fiktive Zürcher Treuhandfirma',
+      linkLabels: ['Website ansehen', 'Quellcode'],
       imageAlt:
         'Die Northbridge-Startseite auf einem Laptop, mit der Überschrift „Your numbers, under control." neben Sonnenlicht, das durch ein Bogenfenster fällt',
       galleryAlt: [
@@ -809,6 +811,7 @@ const projectTranslations: Record<
         'Eine fiktive Barbershop-Marke, Briefing und Branding inklusive, von mir komplett erfunden und umgesetzt. Das Briefing verlangte eine einfache Broschürenseite, die später zu einem Buchungssystem ausgebaut werden könnte; umgesetzt wurde mehr als das: ein Vollbild-Hero, der beim Scrollen durch **eine 300-Bilder-Canvas-Sequenz mit echter Alpha-Transparenz** blättert statt durch ein Video, mit GSAP und Lenis, die alles darunter animieren, durchgehend mit einem Fallback für reduzierte Bewegung.',
       role: 'Briefing, Marke und Umsetzung',
       shorthand: 'Fiktive Barbershop-Marke',
+      linkLabels: ['Website ansehen'],
       imageAlt:
         'Die Santo-Corte-Startseite auf einem Laptop in einem Ledersessel, die gravierte Schere schwebt vor einem dunklen Barbershop-Interieur',
       galleryAlt: [
@@ -824,6 +827,7 @@ const projectTranslations: Record<
         'Mein erstes SaaS: ein Rechner für den Autohandel, der Käufern und Händlern sagt, was wirklich Sinn ergibt zu kaufen. Produktstrategie, Marke, Marketing-Website und **die gesamte Umsetzung** habe ich selbst gemacht.',
       role: 'Produkt, Marke, Umsetzung und Wachstum',
       shorthand: 'SaaS für den Autohandel',
+      linkLabels: ['Landingpage', 'App'],
       imageAlt: 'Marqo-Kaufentscheidungsrechner für den Autohandel',
       galleryAlt: [
         'Die Marqo-Landingpage auf einem Laptop, Headline fragt, wie viel an diesem Auto wirklich verdient wurde',
@@ -885,6 +889,7 @@ const projectTranslations: Record<
         'Un sitio no oficial que explica la Fórmula 1 con datos: la temporada en curso carrera a carrera, análisis de estrategia, ritmo y telemetría de cada carrera desde 2023, y un simulador del campeonato para jugar con el "¿y si...?". La web, la API y la ingesta de datos funcionan como tres Cloudflare Workers separados, y después de cada carrera un workflow precalcula los análisis, así que **ninguna página espera nunca a una API externa**. Escrito en inglés, español y alemán, construido según WCAG 2.2 AA, y el núcleo del sitio funciona con JavaScript desactivado. Las 36 decisiones de arquitectura están documentadas en el repositorio.',
       role: 'Producto, diseño y construcción',
       shorthand: 'Análisis de datos de F1',
+      linkLabels: ['Ver sitio', 'Código fuente'],
       imageAlt:
         'La portada de Paddock Notes en un portátil: el próximo Gran Premio, Las Vegas, con una cuenta atrás en directo hasta la salida y, debajo, el circuito, las coordenadas y el formato de carrera',
       galleryAlt: [
@@ -900,6 +905,7 @@ const projectTranslations: Record<
         'Una fiduciaria y firma contable ficticia en Zúrich, con brief, branding y fotografía (generada por IA) construidos desde cero por mí. Cinco idiomas, cinco países, y **un motor de plazos fiscales que calcula las fechas reales y verificadas de cada país** en lugar de fijarlas a mano, de modo que el calendario del año siguiente ya es correcto.',
       role: 'Brief, marca y construcción',
       shorthand: 'Fiduciaria ficticia de Zúrich',
+      linkLabels: ['Ver sitio', 'Código fuente'],
       imageAlt:
         'La portada de Northbridge en un portátil, con el titular "Your numbers, under control." junto a la luz del sol que entra por una ventana en arco',
       galleryAlt: [
@@ -915,6 +921,7 @@ const projectTranslations: Record<
         'Una marca de barbería ficticia, con brief y branding incluidos, inventada y construida desde cero por mí. El brief pedía un sitio folleto básico que más adelante pudiera crecer hacia un sistema de reservas; lo que se construyó va más allá: un hero a pantalla completa que, al hacer scroll, recorre **una secuencia de canvas de 300 fotogramas con transparencia alfa real** en lugar de un vídeo, con GSAP y Lenis animando todo lo que hay debajo, con alternativa de movimiento reducido en todo el sitio.',
       role: 'Brief, marca y construcción',
       shorthand: 'Marca ficticia de barbería',
+      linkLabels: ['Ver sitio'],
       imageAlt:
         'La portada de Santo Corte en un portátil apoyado en un sillón de cuero, con las tijeras grabadas suspendidas sobre un interior de barbería en penumbra',
       galleryAlt: [
@@ -930,6 +937,7 @@ const projectTranslations: Record<
         'Mi primer SaaS: una calculadora para el sector del motor que dice a compradores y concesionarios qué compra tiene realmente sentido. La estrategia de producto, la marca, el sitio de marketing y **toda la construcción** los hice yo.',
       role: 'Producto, marca, construcción y crecimiento',
       shorthand: 'SaaS de venta de coches',
+      linkLabels: ['Landing page', 'App'],
       imageAlt:
         'Calculadora de decisión de compra Marqo para el sector del motor',
       galleryAlt: [

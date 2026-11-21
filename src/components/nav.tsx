@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { LocaleSwitcher } from '@/components/locale-switcher'
+import { LocaleSegmented, LocaleSwitcher } from '@/components/locale-switcher'
 import { getSite } from '@/content/site'
 import type { Locale } from '@/i18n/locales'
 import { cardTops } from '@/lib/deck'
@@ -658,7 +658,7 @@ export function Nav({
             style={{ '--i': 2.5 } as React.CSSProperties}
             className="menu-in"
           >
-            <LocaleSwitcher locale={locale} />
+            <LocaleSegmented locale={locale} />
           </div>
 
           {/* mt-auto pins this to the bottom on a tall phone and lets it sit

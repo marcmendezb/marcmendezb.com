@@ -408,6 +408,71 @@
     color: var(--accent);
   }
 
+  /* --- Locale control, mobile menu -----------------------------------------
+
+     The header's nav pill, holding the three languages: the same hairline
+     stroke and fully-round shape, and the same accent fill marking the
+     current one (`.pill-highlight` above). Three equal columns, so the fill
+     is one fixed width and moving it is a transform alone, never a width.
+
+     48px tall: the pill height the header uses would leave each option short
+     of a comfortable thumb target, and here there is room to give it one. */
+  .locale-seg {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: repeat(3, 1fr);
+    height: 48px;
+    padding: 4px;
+    border: 1px solid var(--hair);
+    border-radius: 100px;
+    background: var(--surface);
+  }
+
+  .locale-seg-thumb {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc((100% - 8px) / 3);
+    border-radius: 100px;
+    background: var(--accent);
+    transform: translateX(calc(var(--seg, 0) * 100%));
+    transition: transform 0.5s var(--ease);
+  }
+
+  .locale-seg-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    /* Fluid so the three names still fit on a 320px phone inside the page
+       gutter, and reach the full 18px from about 430px up. */
+    padding: 0 clamp(10px, 4.2vw, 18px);
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--soft);
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.35s var(--ease);
+  }
+
+  .locale-seg-item:active {
+    color: var(--ink);
+  }
+
+  /* After the active rule: the selected label sits on the accent fill and has
+     to stay white on it even while it is being pressed. */
+  .locale-seg-item[data-selected='true'] {
+    color: var(--on-accent);
+  }
+
+  .locale-seg-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   /* --- Nav pill ----------------------------------------------------------- */
 
   .pill-highlight {

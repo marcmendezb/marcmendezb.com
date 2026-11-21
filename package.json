@@ -1,5 +1,5 @@
 {
-  "name": "marcmendez-landing",
+  "name": "marcmendezb",
   "version": "1.0.0",
   "private": true,
   "description": "Personal landing page of Marc Mendez, full-stack developer and marketing technologist.",
@@ -7,6 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "build:worker": "opennextjs-cloudflare build",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
@@ -20,6 +23,7 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "1.20.13",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "24.13.3",
     "@types/react": "19.2.18",
@@ -29,13 +33,18 @@
     "prettier": "3.9.6",
     "prettier-plugin-tailwindcss": "0.8.1",
     "tailwindcss": "4.3.3",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wrangler": "4.152.0"
   },
   "packageManager": "pnpm@10.30.3",
   "engines": {
     "node": ">=20.9.0"
   },
   "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd"
+    ],
     "overrides": {
       "brace-expansion@1": "^1.1.20",
       "brace-expansion@5": "^5.0.11",

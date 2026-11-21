@@ -1,0 +1,12 @@
+# Headers for files Cloudflare serves straight from static assets, which never
+# reach the Worker and so never get the ones set in next.config.ts. Pages are
+# not affected: their full policy, CSP included, comes from next.config.ts.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+# Hashed bundles: the file name changes whenever the content does.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable

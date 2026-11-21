@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Must match the Worker's name in the Cloudflare dashboard when the
+  // repository is connected through Workers Builds.
+  "name": "marcmendezb",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-15",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // Live on workers.dev until a custom domain is attached in the dashboard.
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  // The build output: `public/`, the hashed `/_next/static` bundles and the
+  // prerendered pages the incremental cache reads.
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  // next/image: resizing and AVIF/WebP conversion through Cloudflare Images.
+  // Without this binding every image would ship as the original JPEG.
+  "images": { "binding": "IMAGES" },
+}

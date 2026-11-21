@@ -78,32 +78,22 @@ const nextConfig: NextConfig = {
   // Don't leak the framework version in response headers.
   poweredByHeader: false,
 
-  // Emit `/about/` style URLs so the site behaves identically on Vercel,
-  // Cloudflare Pages, Netlify and a plain static host.
+  // Emit `/about/` style URLs: one canonical form per page, so the Worker never
+  // serves the same document under two addresses.
   trailingSlash: true,
 
+  // On Cloudflare the resizing and AVIF/WebP conversion run through the
+  // Images binding declared in `wrangler.jsonc`.
   images: {
     formats: ['image/avif', 'image/webp'],
   },
 
+  // Applied to everything the Worker answers: pages, redirects, metadata
+  // routes. Files Cloudflare serves straight from static assets never reach
+  // the Worker, so they take theirs from `public/_headers` instead.
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
   },
-
-  // ---------------------------------------------------------------------------
-  // Static export
-  // ---------------------------------------------------------------------------
-  // Static export is not supported as the repo stands: the locale proxy in
-  // `src/proxy.ts` needs a runtime, and `/sitemap.xml` fails to build under
-  // `output: 'export'`. To get there, replace the proxy with a static root page
-  // that picks the language on the client, mark the metadata routes
-  // `force-static`, then uncomment the two lines below.
-  //
-  // Note: `headers()` above is a no-op under static export; configure the same
-  // headers on your CDN/web server instead.
-  //
-  // output: 'export',
-  // images: { unoptimized: true, formats: ['image/avif', 'image/webp'] },
 }
 
 export default nextConfig

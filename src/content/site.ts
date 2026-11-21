@@ -260,13 +260,10 @@ export function getSite(locale: Locale) {
 
     /**
      * Canonical origin, no trailing slash. Drives canonical URLs, OG tags,
-     * sitemap and robots.txt.
+     * sitemap and robots.txt. Read at build time: set `NEXT_PUBLIC_SITE_URL`
+     * in the build environment to point a preview at another origin.
      */
-    url:
-      process.env.NEXT_PUBLIC_SITE_URL ??
-      (process.env.VERCEL_PROJECT_PRODUCTION_URL
-        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-        : 'https://marcmendezb.com'),
+    url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://marcmendezb.com',
 
     description: t.description,
 

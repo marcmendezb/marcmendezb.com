@@ -4,7 +4,14 @@ import nextTypescript from 'eslint-config-next/typescript'
 /** @type {import('eslint').Linter.Config[]} */
 const eslintConfig = [
   {
-    ignores: ['.next/**', 'out/**', 'node_modules/**', 'next-env.d.ts'],
+    ignores: [
+      '.next/**',
+      '.open-next/**',
+      '.wrangler/**',
+      'out/**',
+      'node_modules/**',
+      'next-env.d.ts',
+    ],
   },
   ...coreWebVitals,
   ...nextTypescript,

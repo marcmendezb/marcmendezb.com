@@ -9,7 +9,7 @@
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-green.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 [![Languages](https://img.shields.io/badge/Locales-EN_|_DE_|_ES-f59e0b.svg)](#localization--seo)
 
-Static Next.js site. No database, no API, no third-party tracking scripts. Every page is prerendered at build time in English, German and Spanish; the only code that runs per request is the small proxy that sends `/` to the visitor's language.
+Static Next.js site. No database, no API, no third-party tracking scripts. Every page is prerendered at build time in English, German and Spanish; the only code that runs per request is the small route that sends `/` to the visitor's language. It runs as a Cloudflare Worker.
 
 **This repo is public on purpose.** If you are a recruiter or hiring manager reading this, treat it as a production work sample rather than just the code behind a portfolio: it applies the exact same software and marketing practices described in the client work it showcases.
 
@@ -32,7 +32,7 @@ Static Next.js site. No database, no API, no third-party tracking scripts. Every
 Rather than taking claims on faith, here are the concrete implementation choices worth inspecting:
 
 - [`.github/workflows/ci.yml`](.github/workflows/ci.yml): Route type generation, typecheck, lint, Prettier, production build and `pnpm audit` on every push. The [Actions tab](https://github.com/marcmendezb/marcmendezb/actions) has the history.
-- [`src/proxy.ts`](src/proxy.ts): Next.js 16 Proxy layer negotiating root visits to `/en`, `/de`, or `/es` via `Accept-Language` headers with English fallback.
+- [`src/app/route.ts`](src/app/route.ts): Route handler negotiating root visits to `/en`, `/de`, or `/es` via the `Accept-Language` header, with English fallback.
 - [`next.config.ts`](next.config.ts): Content Security Policy (CSP) and HTTP security headers, documented with the exact trade-offs made for static generation.
 - [`tsconfig.json`](tsconfig.json): Strict TypeScript configuration with `noUncheckedIndexedAccess`, `noUnusedLocals`, and `noUnusedParameters`, not just `strict: true`.
 - [`src/content/`](src/content/): Complete separation of content and presentation. Components never hard-code copy, URLs, or dates; copy is typed and localized across three languages.
@@ -54,12 +54,12 @@ src/
 │   ├── globals.css            Tailwind v4 tokens, CSS Houdini properties, and animations
 │   ├── icon.png · apple-icon.png Favicons
 │   ├── manifest.ts · robots.ts · sitemap.ts
+│   ├── route.ts               `/` → browser-language redirect
 │   └── not-found.tsx          Root 404 fallback
 ├── components/                Individual section views and UI primitives
 ├── content/                   Typed single source of truth for site and project copy
 ├── i18n/                      Locale definitions and routing configuration
-├── lib/                       Structured data generators, smooth scroll, and config check
-└── proxy.ts                   Next.js 16 proxy for browser language negotiation
+└── lib/                       Structured data generators, smooth scroll, and config check
 ```
 
 **Content is separated from presentation.** Components read from `content/`; they never hard-code a name, URL, or date. Updating the site means editing two typed files (`src/content/site.ts` and `src/content/projects.ts`).
@@ -70,7 +70,7 @@ src/
 
 ### Localization & SEO
 
-- **Locale-driven routing:** Every page resolves under `/[locale]` (`/en`, `/de`, `/es`). A proxy (Next.js 16 renamed middleware) negotiates the root `/` to the visitor's browser language, defaulting to English.
+- **Locale-driven routing:** Every page resolves under `/[locale]` (`/en`, `/de`, `/es`). A route handler at `/` negotiates the visitor's browser language, defaulting to English. A route rather than a proxy (middleware), because it runs on any host without the middleware support some adapters still treat as experimental.
 - **Hreflang alternates:** `<link rel="alternate" hreflang="...">` tags for all three locales, dynamic Open Graph social images generated per locale, and a fully localized `sitemap.xml`.
 - **Semantic JSON-LD:** Structured data describes a `Person`, a `WebSite`, and projects as an `ItemList`. Search engines resolve "Marc Mendez" to a semantic entity rather than an unstructured string.
 
@@ -130,6 +130,8 @@ pnpm dev          # Dev server at http://localhost:3000
 | `pnpm dev` | Dev server, plus a terminal checklist of unfilled placeholders |
 | `pnpm build` | Production build |
 | `pnpm start` | Serve the production build |
+| `pnpm preview` | Build the Cloudflare Worker and run it locally in `workerd` at http://localhost:8787 |
+| `pnpm deploy` | Build and deploy the Worker with Wrangler (needs `wrangler login`) |
 | `pnpm check` | Typecheck + lint + format check (what CI runs) |
 | `pnpm format` | Apply Prettier |
 
@@ -150,9 +152,24 @@ The site runs cleanly as-is, but a few fields are deliberately left empty rather
 
 ## Deploying
 
-The pages are static, but the locale proxy (`src/proxy.ts`) needs a runtime, so deploy to a host that runs Next.js: Vercel, Netlify, or Cloudflare Workers through OpenNext. `next.config.ts` applies the security headers there.
+The site runs on **Cloudflare Workers** through [OpenNext](https://opennext.js.org/cloudflare), Cloudflare's own Next.js integration. Nothing to provision: no KV, no R2, no database.
 
-A plain static export (`output: 'export'` for GitHub Pages, S3 or nginx) does not work as the repo stands: the proxy is dropped, so `/` has nothing to redirect it, and the metadata routes would need `force-static`. Supporting it means replacing the proxy with a static root page that picks the language on the client.
+- [`wrangler.jsonc`](wrangler.jsonc): the Worker. Static assets plus the Cloudflare Images binding that backs `next/image` (resizing and AVIF/WebP).
+- [`open-next.config.ts`](open-next.config.ts): every page is prerendered and never revalidates, so the incremental cache is the read-only one served from the Worker's static assets.
+- [`public/_headers`](public/_headers): headers for files Cloudflare serves straight from static assets. Pages get the full set, CSP included, from `next.config.ts`.
+
+**From GitHub (Workers Builds).** Cloudflare dashboard → Workers & Pages → Create → Import a repository, then:
+
+| Setting | Value |
+| --- | --- |
+| Project name | `marcmendezb` (must match `name` in `wrangler.jsonc`) |
+| Build command | `pnpm build:worker` |
+| Deploy command | `pnpm exec opennextjs-cloudflare deploy` |
+| Non-production branch deploy command | `pnpm exec opennextjs-cloudflare upload` |
+
+Every push to `main` then builds and deploys. Attach the custom domain under the Worker's Settings → Domains & Routes. `NEXT_PUBLIC_SITE_URL` (a build variable) overrides the canonical origin, which defaults to `https://marcmendezb.com`.
+
+**From the terminal.** `pnpm preview` to check the Worker locally, `pnpm deploy` to ship it.
 
 ---
 

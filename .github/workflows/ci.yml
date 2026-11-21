@@ -53,8 +53,11 @@ jobs:
       - name: Check formatting
         run: pnpm format:check
 
-      - name: Build
-        run: pnpm build
+      # The Cloudflare Worker build runs `next build` itself and then bundles
+      # the result for workerd, so a green run means the exact artifact
+      # Cloudflare deploys was built, not just the Next.js output.
+      - name: Build (Cloudflare Worker)
+        run: pnpm build:worker
 
       # Non-blocking: a dependency can carry an advisory with no upstream fix
       # yet (see README § Keeping dependencies patched), and failing the whole

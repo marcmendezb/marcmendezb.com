@@ -24,12 +24,6 @@ export function reportPlaceholders() {
       'site.hiring.workEligibility: unset; Swiss recruiters screen on this first',
     )
   }
-  const outcomeless = projects.filter((project) => !project.outcome)
-  if (outcomeless.length > 0) {
-    todo.push(
-      `projects: ${outcomeless.length} with no outcome; one real number each is the biggest win available`,
-    )
-  }
   /* A link with no destination does not count as having one. A project that
      offers a call instead (Tessel, in development and not public) has no URL
      by design, so it is not a gap to fill. */
@@ -80,6 +74,6 @@ export function reportPlaceholders() {
   console.warn(
     `\n\x1b[33m▲ ${todo.length} item(s) still to fill in before launch\x1b[0m\n` +
       todo.map((item) => `  · ${item}`).join('\n') +
-      '\n  See the launch checklist in README.md\n',
+      '\n  See "Left out on purpose" in README.md for what is off the page by design\n',
   )
 }

@@ -137,15 +137,15 @@ pnpm dev          # Dev server at http://localhost:3000
 
 ---
 
-## Launch checklist
+## Left out on purpose
 
-The site runs cleanly as-is, but a few fields are deliberately left empty rather than guessed. Everything lives in `src/content/site.ts` and `src/content/projects.ts`; no component needs touching.
+Three things are off the page by decision, not missing:
 
-- [ ] **Project outcomes**: Add concrete quantitative metrics to `projects[].outcome` where available.
+- **The CV.** It goes by email to each company that needs it rather than sitting public (`site.cvPath` stays `null`, so no download buttons).
+- **School names.** They belong on the CV.
+- **Project figures.** `projects[].outcome` stays `null`, which renders nothing.
 
-Two things are left off the page on purpose rather than pending: the CV, which goes by email to each company instead of being public (`site.cvPath` stays `null`), and the names of the schools, which belong on the CV.
-
-`pnpm dev` prints the status of remaining placeholders on every server start.
+All content lives in `src/content/site.ts` and `src/content/projects.ts`. `pnpm dev` still prints anything genuinely unfinished on every server start.
 
 ---
 

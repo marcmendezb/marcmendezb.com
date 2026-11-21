@@ -602,23 +602,39 @@ export function Nav({
         aria-label={menuDialogLabel[locale]}
         data-open={menuOpen}
         inert={!menuOpen}
-        className="overlay bg-surface fixed inset-0 z-55 overflow-y-auto overscroll-contain min-[880px]:hidden"
+        /* A fixed panel, not a page: it never scrolls sideways and never
+           rubber-bands. `overflow-y-auto` stays only as the escape hatch for a
+           phone on its side, where three display-size rows cannot fit; in
+           portrait the content is sized to the screen and there is nothing to
+           scroll. `overscroll-none` stops the bounce and keeps a flick from
+           reaching the page behind. */
+        className="overlay bg-surface fixed inset-0 z-55 overflow-x-hidden overflow-y-auto overscroll-none min-[880px]:hidden"
       >
         {/* The same mark that sits behind the hero and the About section. A
             blank white panel is the one screen on the site that looked like it
             came from somewhere else; carrying the mark across means the menu
-            reads as the page continuing rather than as a layer on top of it. */}
-        <div aria-hidden="true" className="brand-mark brand-mark--menu">
-          <div className="brand-mark-parallax">
-            <div className="brand-mark-float">
-              <div className="brand-mark-spin">
-                <Image
-                  src="/brand/marcmendez-logo.png"
-                  alt=""
-                  fill
-                  sizes="130vw"
-                  className="object-contain"
-                />
+            reads as the page continuing rather than as a layer on top of it.
+
+            Clipped by a layer of its own. The mark hangs off the right and
+            bottom edges on purpose, and inside a scroll container anything
+            hanging off an edge is scrollable overflow: it made the menu pan
+            180px sideways and 150px down into empty space. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+        >
+          <div className="brand-mark brand-mark--menu">
+            <div className="brand-mark-parallax">
+              <div className="brand-mark-float">
+                <div className="brand-mark-spin">
+                  <Image
+                    src="/brand/marcmendez-logo.png"
+                    alt=""
+                    fill
+                    sizes="130vw"
+                    className="object-contain"
+                  />
+                </div>
               </div>
             </div>
           </div>

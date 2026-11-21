@@ -408,6 +408,90 @@
     color: var(--accent);
   }
 
+  /* --- Work, phone: the deck as cards ---------------------------------------
+
+     The desktop deck pins each project full-screen and deals the next one
+     over it. A phone gets the same gesture at its own scale: rounded cards
+     inside the page gutter, each pinning 10px lower than the one before so
+     the stack keeps its edges in view, and the card underneath settling back
+     as the next one rides over it (the scroll-driven part is further down,
+     under @supports).
+
+     The gallery inside each card still swipes sideways. That is why the deck
+     runs vertically rather than as a horizontal carousel of cards: two
+     horizontal swipes nested inside each other fight over every gesture. */
+  @media (max-width: 879.98px) {
+    .deck-list {
+      gap: 16px;
+      padding-inline: var(--edge);
+    }
+
+    .deck-card {
+      border: 1px solid var(--hair);
+      border-radius: clamp(24px, 7vw, 32px);
+      overflow: hidden;
+      transform-origin: 50% 0;
+    }
+
+    /* Clamped on a phone; `ExpandableText` offers the rest in place. */
+    .expandable:not([data-expanded='true']) {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      overflow: hidden;
+    }
+
+    /* The tools as one row that swipes, running out under the card's edge
+       instead of wrapping into three rows that would push the card past the
+       screen. The fade on the right says there is more. */
+    /* `!important` on the wrap alone: the list carries Tailwind's
+       `flex-wrap`, a utility, and utilities outrank this layer. */
+    .deck-pills {
+      flex-wrap: nowrap !important;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      margin-inline: calc(clamp(18px, 5vw, 24px) * -1);
+      padding-inline: clamp(18px, 5vw, 24px);
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 clamp(18px, 5vw, 24px),
+        #000 calc(100% - 48px),
+        transparent 100%
+      );
+    }
+
+    .deck-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .deck-pills > [role='presentation'] {
+      display: none;
+    }
+
+    .deck-pills > .tool-pill {
+      flex: none;
+      white-space: nowrap;
+    }
+  }
+
+  /* Pinned only where a card fits under the header. On a short phone a
+     pinned card would hold its own bottom out of reach, so there the cards
+     simply scroll. An open description unpins its card for the same reason. */
+  @media (max-width: 879.98px) and (min-height: 700px) {
+    .deck-card {
+      position: sticky;
+      top: calc(var(--nav-h) + var(--i, 0) * 10px);
+    }
+
+    .deck-card:has([data-expanded='true']) {
+      position: relative;
+      top: auto;
+    }
+  }
+
   /* --- Locale control, mobile menu -----------------------------------------
 
      The header's nav pill, holding the three languages: the same hairline
@@ -573,6 +657,34 @@
     letter-spacing: -0.03em;
     padding-block: clamp(12px, 4.2vh, 34px);
     transition: color 0.3s var(--ease);
+  }
+
+  /* The phone hero's headline sits on the portrait's lower edge; this shade
+     is what keeps white type legible there. Ink-tinted rather than black, and
+     only as deep as the letters need: the top half of the picture, the face,
+     is left untouched. */
+  .hero-shade {
+    background: linear-gradient(
+      to top,
+      rgb(10 10 10 / 0.66) 0%,
+      rgb(10 10 10 / 0.34) 30%,
+      rgb(10 10 10 / 0) 58%
+    );
+  }
+
+  /* A short phone (an iPhone SE is 667px) ran the panel 28px past the screen,
+     which is all it takes to make a fixed menu scroll. The rows give up some
+     of their air there and only there; taller phones keep the full rhythm. */
+  @media (max-height: 720px) {
+    .menu-row {
+      padding-block: clamp(10px, 2.6vh, 20px);
+    }
+  }
+
+  @media (max-height: 600px) {
+    .menu-row {
+      padding-block: 8px;
+    }
   }
 
   /* The section you are currently in. With the dot gone, colour is the only
@@ -1614,6 +1726,42 @@
         calc(16% + (var(--i) / var(--n)) * 34%);
   }
 
+  /* The phone deck settling back. Each card publishes its own view timeline
+     (`--tl-self`, lifted to the list by `timeline-scope`) and animates on the
+     next card's (`--tl-next`): as the next one rises into the screen, this one
+     shrinks a step toward its top edge, so the stack reads as cards dealt
+     onto a pile rather than panels sliding past. Transform only. */
+  @media (max-width: 879.98px) and (min-height: 700px) {
+    .deck-card {
+      view-timeline-name: var(--tl-self);
+      animation: deck-settle linear both;
+      animation-timeline: var(--tl-next);
+      animation-range: entry 0% entry 100%;
+    }
+
+    /* Nothing rides over the last card, so it gets no animation at all.
+       Pointing it at a timeline that does not exist is not the same thing:
+       Chrome treats a timeline-less animation as finished, fills forward,
+       and parks the card a step smaller than the ones beneath it, which
+       then show below its edge. */
+    .deck-card:last-child,
+    .deck-card:has([data-expanded='true']) {
+      animation: none;
+    }
+  }
+
+  /* On a phone the headline sits on the photograph in white, and the blue it
+     would ink to on scroll has no ground there: 2:1 against the portrait's
+     shadows. The rise stays; the fill is a desktop gesture. */
+  @media (max-width: 879.98px) {
+    .ink-exit .hero-title .word {
+      animation: word-rise 0.9s var(--ease) forwards;
+      animation-delay: calc(var(--i, 0) * 70ms);
+      animation-timeline: auto;
+      animation-range: normal;
+    }
+  }
+
   /* The marks travel slower than the page, which is what reads as depth. */
   .brand-mark-parallax {
     animation: mark-parallax linear both;
@@ -1662,6 +1810,12 @@
        them onto the half that can actually be scrolled doubles the movement
        without adding a pixel of zoom. */
     animation-range: cover 50% cover 100%;
+  }
+}
+
+@keyframes deck-settle {
+  to {
+    transform: scale(0.92);
   }
 }
 
@@ -1757,6 +1911,11 @@
   .menu-in {
     opacity: 1;
     transform: none;
+  }
+
+  /* Scroll-driven, so the duration override above does not reach it. */
+  .deck-card {
+    animation: none !important;
   }
 
   /* `transform: none` above is not enough on its own, and the blanket

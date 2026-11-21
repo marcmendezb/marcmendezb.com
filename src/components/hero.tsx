@@ -65,7 +65,7 @@ export function Hero({ locale }: { locale: Locale }) {
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="ink-exit px-edge min-[880px]:pt-nav relative isolate grid min-h-svh grid-cols-1 items-center gap-[clamp(28px,4vw,64px)] pt-[calc(var(--nav-h)+24px)] pb-0 min-[880px]:min-h-[calc(100svh+clamp(60px,10vh,140px))] min-[880px]:grid-cols-[1fr_0.92fr] min-[880px]:items-stretch min-[880px]:pb-[clamp(16px,3vh,40px)]"
+      className="ink-exit px-edge min-[880px]:pt-nav relative isolate grid grid-cols-1 items-center gap-[clamp(28px,4vw,64px)] pt-0 pb-[clamp(8px,2svh,20px)] max-[879.98px]:gap-0 min-[880px]:min-h-[calc(100svh+clamp(60px,10vh,140px))] min-[880px]:grid-cols-[1fr_0.92fr] min-[880px]:items-stretch min-[880px]:pb-[clamp(16px,3vh,40px)]"
     >
       {/* Mirror of the About mark, on the other side. */}
       <div aria-hidden="true" className="brand-mark brand-mark--hero">
@@ -98,14 +98,14 @@ export function Hero({ locale }: { locale: Locale }) {
           past the fold, but the words should not move with it: this column is
           given exactly one viewport of height and centres itself inside that,
           so the headline sits where it always did and only the picture grows. */}
-      <div className="min-[880px]:order-1 min-[880px]:flex min-[880px]:h-[calc(100svh-var(--nav-h))] min-[880px]:flex-col min-[880px]:justify-center">
+      <div className="max-[879.98px]:contents min-[880px]:order-1 min-[880px]:flex min-[880px]:h-[calc(100svh-var(--nav-h))] min-[880px]:flex-col min-[880px]:justify-center">
         {/* Word-by-word rather than line-by-line. The line break is kept
             deliberate rather than left to wrapping, so the stagger index
             continues across both lines via `start`. */}
         <h1
           id="hero-heading"
           aria-label={`${line1} ${line2}`}
-          className="text-[clamp(2.8rem,6.2vw,6rem)] leading-[0.98] font-semibold tracking-[-0.035em]"
+          className="hero-title text-[clamp(2.8rem,6.2vw,6rem)] leading-[0.98] font-semibold tracking-[-0.035em] max-[879.98px]:z-10 max-[879.98px]:col-start-1 max-[879.98px]:row-start-1 max-[879.98px]:self-end max-[879.98px]:pb-[clamp(26px,4.5svh,40px)] max-[879.98px]:text-[clamp(2.5rem,11.5vw,4.2rem)] max-[879.98px]:text-white"
         >
           <span className="block">
             <SplitWords text={line1} start={0} total={2} />
@@ -119,14 +119,14 @@ export function Hero({ locale }: { locale: Locale }) {
             the other, so the supporting lines get to be concrete instead of
             explaining the headline back. */}
         <p
-          className="fade-up text-soft mt-[clamp(18px,3vh,32px)] max-w-[34ch] text-[clamp(1.05rem,1.55vw,1.3rem)]"
+          className="fade-up text-soft max-[879.98px]:text-ink mt-[clamp(18px,3vh,32px)] max-w-[34ch] text-[clamp(1.05rem,1.55vw,1.3rem)] max-[879.98px]:order-2 max-[879.98px]:mt-[clamp(24px,3.5svh,32px)] max-[879.98px]:text-[1.2rem] max-[879.98px]:leading-snug max-[879.98px]:font-medium"
           style={delay(0.5)}
         >
           {lede[locale]}
         </p>
 
         <p
-          className="fade-up text-mute mt-3.5 max-w-[40ch] text-[clamp(0.95rem,1.2vw,1.05rem)]"
+          className="fade-up text-mute mt-3.5 max-w-[40ch] text-[clamp(0.95rem,1.2vw,1.05rem)] max-[879.98px]:order-3"
           style={delay(0.58)}
         >
           {/* Not "most teams hire twice for that": headcount framing prices the
@@ -136,14 +136,17 @@ export function Hero({ locale }: { locale: Locale }) {
         </p>
 
         {/* The three facts a Swiss recruiter screens on, above the fold and in
-            plain text rather than buried in a paragraph. */}
+            plain text rather than buried in a paragraph. On a phone that means
+            directly under the photograph, ahead of the lede: the picture and
+            the headline take most of the first screen, and these are the
+            lines that have to share it with them. */}
         <ul
           /* A column on a phone, a row on a desktop. Wrapped, the three facts
              broke after "Available" and left the separator dangling at the end
              of the line with nothing after it, which reads as a truncation
              rather than a list. Stacked they also stop competing with the
              headline for the same horizontal space. */
-          className="fade-up text-mute mt-[clamp(22px,3.5vh,34px)] flex flex-col items-start gap-y-2.5 text-sm min-[880px]:flex-row min-[880px]:flex-wrap min-[880px]:items-center min-[880px]:gap-x-5 min-[880px]:gap-y-2"
+          className="fade-up text-mute max-[879.98px]:text-ink mt-[clamp(22px,3.5vh,34px)] flex flex-col items-start gap-y-2.5 text-sm max-[879.98px]:order-1 max-[879.98px]:mt-[clamp(18px,2.6svh,24px)] max-[879.98px]:gap-y-2 min-[880px]:flex-row min-[880px]:flex-wrap min-[880px]:items-center min-[880px]:gap-x-5 min-[880px]:gap-y-2"
           style={delay(0.66)}
         >
           {/* The three marks are decorative: each sits beside text that already
@@ -216,12 +219,12 @@ export function Hero({ locale }: { locale: Locale }) {
         </ul>
 
         <div
-          className="fade-up mt-[clamp(26px,4vh,40px)] flex flex-wrap gap-3"
+          className="fade-up mt-[clamp(26px,4vh,40px)] flex flex-wrap gap-3 max-[879.98px]:order-4 max-[879.98px]:grid max-[879.98px]:grid-cols-2"
           style={delay(0.74)}
         >
           <a
             href="#work"
-            className="wipe-fill border-ink ease-brand hover:border-accent hover:text-on-accent inline-block rounded-full border px-[22px] py-3 text-sm font-medium transition-colors duration-300"
+            className="wipe-fill border-ink ease-brand hover:border-accent hover:text-on-accent max-[879.98px]:bg-ink max-[879.98px]:text-surface inline-block rounded-full border px-[22px] py-3 text-sm font-medium transition-colors duration-300 max-[879.98px]:py-[15px] max-[879.98px]:text-center"
           >
             {seeTheWork[locale]}
           </a>
@@ -229,14 +232,14 @@ export function Hero({ locale }: { locale: Locale }) {
             <a
               href={cvPath}
               download
-              className="wipe-stroke border-hair text-mute ease-brand hover:text-accent inline-block rounded-full border px-[22px] py-3 text-sm font-medium transition-colors duration-300"
+              className="wipe-stroke border-hair text-mute ease-brand hover:text-accent max-[879.98px]:text-ink inline-block rounded-full border px-[22px] py-3 text-sm font-medium transition-colors duration-300 max-[879.98px]:py-[15px] max-[879.98px]:text-center"
             >
               {downloadCV[locale]}
             </a>
           ) : (
             <a
               href="#contact"
-              className="wipe-stroke border-hair text-mute ease-brand hover:text-accent inline-block rounded-full border px-[22px] py-3 text-sm font-medium transition-colors duration-300"
+              className="wipe-stroke border-hair text-mute ease-brand hover:text-accent max-[879.98px]:text-ink inline-block rounded-full border px-[22px] py-3 text-sm font-medium transition-colors duration-300 max-[879.98px]:py-[15px] max-[879.98px]:text-center"
             >
               {letsTalk[locale]}
             </a>
@@ -275,12 +278,12 @@ export function Hero({ locale }: { locale: Locale }) {
           template. Running it off both edges and down to the section's own
           bottom makes it the end of the hero rather than an attachment to it,
           which is the same argument the desktop bleed is making. */}
-      <figure className="fade-up ms-[calc(var(--edge)*-1)] me-[calc(var(--edge)*-1)] mt-[clamp(28px,5vh,48px)] w-auto min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:mt-[calc(var(--nav-h)*-1)] min-[880px]:self-stretch">
+      <figure className="fade-up ms-[calc(var(--edge)*-1)] me-[calc(var(--edge)*-1)] mt-0 w-auto max-[879.98px]:col-start-1 max-[879.98px]:row-start-1 max-[879.98px]:h-[min(62svh,620px)] min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:mt-[calc(var(--nav-h)*-1)] min-[880px]:self-stretch">
         {/* One rounded corner, the only one that is not sitting on a viewport
             edge. Rounding the other three would carve notches out of the screen
             corners; leaving this one square would make the bleed look like an
             overflow bug rather than a decision. */}
-        <div className="media-frame bg-placeholder relative aspect-[4/5] h-full overflow-hidden rounded-none rounded-t-[clamp(22px,6vw,34px)] min-[880px]:aspect-auto min-[880px]:w-full min-[880px]:rounded-none min-[880px]:rounded-bl-[clamp(24px,3vw,44px)]">
+        <div className="media-frame bg-placeholder relative h-full overflow-hidden rounded-none rounded-b-[clamp(26px,7vw,36px)] min-[880px]:aspect-auto min-[880px]:w-full min-[880px]:rounded-none min-[880px]:rounded-bl-[clamp(24px,3vw,44px)]">
           {/* Now that the frame is set by the bleed rather than by the
               photograph, its shape moves with the window and `object-cover`
               always has something to trim. `object-position` at 50% 22% is the
@@ -294,6 +297,15 @@ export function Hero({ locale }: { locale: Locale }) {
             sizes="(max-width: 880px) 100vw, 46vw"
             priority
             className="parallax--hero object-[50%_22%]"
+          />
+          {/* A phone sets the headline on the photograph's lower edge, so the
+              picture is the first thing on the screen rather than a second
+              screen under the copy. This shade is what holds white type at AA
+              there: the portrait's lower half is teal and skin, light enough in
+              places to swallow the letters without it. */}
+          <div
+            aria-hidden="true"
+            className="hero-shade pointer-events-none absolute inset-0 min-[880px]:hidden"
           />
         </div>
       </figure>

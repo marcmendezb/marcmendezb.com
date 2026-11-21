@@ -1,6 +1,6 @@
 import { Carousel } from '@/components/carousel'
-import { Emphasis } from '@/components/emphasis'
 import { DeckIndex } from '@/components/deck-index'
+import { ExpandableText } from '@/components/expandable-text'
 import { PrivateWork } from '@/components/private-work'
 import { Media } from '@/components/media'
 import { ProjectVideo } from '@/components/project-video'
@@ -90,7 +90,17 @@ export function Work({ locale }: { locale: Locale }) {
           out of alignment with the screen. */}
       <DeckIndex projects={projects} locale={locale} />
 
-      <div className="grid">
+      {/* `timeline-scope` lifts each card's view timeline up to the list, so
+          the card underneath can read the entry of the one riding over it.
+          That is what drives the stacked deck on a phone (see `.deck-card`). */}
+      <div
+        className="deck-list grid"
+        style={
+          {
+            timelineScope: projects.map((_, i) => `--card-${i}`).join(', '),
+          } as React.CSSProperties
+        }
+      >
         {projects.map((project, index) => {
           // Alternate which side the image sits on, but only once there are two
           // columns to alternate between.
@@ -110,14 +120,25 @@ export function Work({ locale }: { locale: Locale }) {
                boundary shows on its own, and over the white half of the layout
                there is nothing behind it worth separating from.
 
-               Sticky only from 880px. Below it the image and the copy stack and
-               a project is taller than the screen, so pinning one would hold
-               the top of it in place while the rest scrolled out of reach. */
+               On a phone the same deck, dealt as cards: each one is a rounded
+               card that pins a little lower than the one before, so the stack
+               shows its edges, and the card underneath settles back as the
+               next one covers it. The card is sized to fit the screen (square
+               gallery, clamped description) because a pinned card taller than
+               the screen holds its bottom out of reach; opening the
+               description unpins it. All of it lives in `.deck-card`. */
             <article
               key={project.slug}
               data-snap
               data-index={index}
-              className="group bg-surface px-edge grid grid-cols-1 items-center gap-[clamp(20px,4vw,56px)] py-[clamp(56px,9vh,96px)] min-[880px]:sticky min-[880px]:top-0 min-[880px]:min-h-svh min-[880px]:grid-cols-2 min-[880px]:py-0"
+              style={
+                {
+                  '--i': index,
+                  '--tl-self': `--card-${index}`,
+                  '--tl-next': `--card-${index + 1}`,
+                } as React.CSSProperties
+              }
+              className="deck-card group bg-surface min-[880px]:px-edge grid grid-cols-1 items-center min-[880px]:sticky min-[880px]:top-0 min-[880px]:min-h-svh min-[880px]:grid-cols-2 min-[880px]:gap-[clamp(20px,4vw,56px)] min-[880px]:py-0"
             >
               {/* Runs off its own side of the screen and stops short of the
                   other three edges: the negative margin cancels the section's
@@ -134,7 +155,7 @@ export function Work({ locale }: { locale: Locale }) {
                    phone it drops the 4:5 ratio for the same reason and takes
                    its own height. */
                 <Reveal
-                  className={`curtain media-frame footer-panel vault px-edge relative ms-[calc(var(--edge)*-1)] me-[calc(var(--edge)*-1)] overflow-hidden py-[clamp(48px,8vh,72px)] min-[880px]:flex min-[880px]:min-h-[min(72svh,720px)] min-[880px]:flex-col min-[880px]:justify-center min-[880px]:px-[clamp(36px,4.4vw,72px)] min-[880px]:py-[clamp(32px,4.5vh,52px)] ${
+                  className={`curtain media-frame footer-panel vault relative overflow-hidden px-[clamp(20px,5.5vw,28px)] py-[clamp(36px,6vh,56px)] min-[880px]:flex min-[880px]:min-h-[min(72svh,720px)] min-[880px]:flex-col min-[880px]:justify-center min-[880px]:px-[clamp(36px,4.4vw,72px)] min-[880px]:py-[clamp(32px,4.5vh,52px)] ${
                     mediaSecond
                       ? 'min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:rounded-l-[clamp(20px,2.4vw,36px)]'
                       : 'min-[880px]:ms-[calc(var(--edge)*-1)] min-[880px]:me-0 min-[880px]:rounded-r-[clamp(20px,2.4vw,36px)]'
@@ -156,7 +177,7 @@ export function Work({ locale }: { locale: Locale }) {
                    with a single `mx-0`: `mx` and `ms` set overlapping
                    properties and Tailwind orders its own output, so which one
                    won would not be decided here. */
-                  className={`curtain media-frame bg-placeholder relative ms-[calc(var(--edge)*-1)] me-[calc(var(--edge)*-1)] aspect-[4/5] overflow-hidden rounded-none min-[880px]:aspect-auto min-[880px]:h-[min(72svh,720px)] min-[880px]:rounded-none ${
+                  className={`curtain media-frame bg-placeholder relative aspect-square overflow-hidden rounded-none min-[880px]:aspect-auto min-[880px]:h-[min(72svh,720px)] min-[880px]:rounded-none ${
                     mediaSecond
                       ? 'min-[880px]:order-2 min-[880px]:ms-0 min-[880px]:me-[calc(var(--edge)*-1)] min-[880px]:rounded-l-[clamp(20px,2.4vw,36px)]'
                       : 'min-[880px]:ms-[calc(var(--edge)*-1)] min-[880px]:me-0 min-[880px]:rounded-r-[clamp(20px,2.4vw,36px)]'
@@ -211,7 +232,7 @@ export function Work({ locale }: { locale: Locale }) {
                   the carousel collapses to nothing: the frame still measures
                   684px, and every photograph inside it renders at zero. */}
               <div
-                className={`min-[880px]:flex min-[880px]:min-h-[min(72svh,720px)] min-[880px]:flex-col min-[880px]:justify-start ${
+                className={`px-[clamp(18px,5vw,24px)] pt-[18px] pb-[22px] min-[880px]:flex min-[880px]:min-h-[min(72svh,720px)] min-[880px]:flex-col min-[880px]:justify-start min-[880px]:p-0 ${
                   mediaSecond
                     ? 'min-[880px]:order-1 min-[880px]:text-right'
                     : ''
@@ -270,17 +291,17 @@ export function Work({ locale }: { locale: Locale }) {
                     working. It still runs everywhere nothing is pinned: the
                     About lead, the Contact heading, the three discipline
                     names. */}
-                  <h3 className="text-[clamp(1.6rem,3vw,2.6rem)] font-semibold tracking-[-0.025em]">
+                  <h3 className="text-[clamp(1.5rem,3vw,2.6rem)] font-semibold tracking-[-0.025em]">
                     {project.title}
                   </h3>
 
-                  <p
-                    className={`text-soft mt-2.5 max-w-[42ch] ${
+                  <ExpandableText
+                    text={project.description}
+                    locale={locale}
+                    className={`text-soft mt-2 max-w-[42ch] min-[880px]:mt-2.5 ${
                       mediaSecond ? 'min-[880px]:ml-auto' : ''
                     }`}
-                  >
-                    <Emphasis text={project.description} />
-                  </p>
+                  />
 
                   {project.outcome ? (
                     <p
@@ -293,13 +314,13 @@ export function Work({ locale }: { locale: Locale }) {
                   ) : null}
                 </div>
 
-                <div className="mt-[clamp(28px,4vh,56px)]">
+                <div className="mt-4 min-[880px]:mt-[clamp(28px,4vh,56px)]">
                   <p className="text-mute text-sm">{project.role}</p>
 
                   <ToolPills
                     tools={project.tags}
                     label={toolkitLabel(project.title, locale)}
-                    className={`mt-[18px] ${mediaSecond ? 'min-[880px]:justify-end' : ''}`}
+                    className={`deck-pills mt-3 min-[880px]:mt-[18px] ${mediaSecond ? 'min-[880px]:justify-end' : ''}`}
                   />
 
                   {/* A dead `href="#"`, which is what the original shipped, is
@@ -311,7 +332,7 @@ export function Work({ locale }: { locale: Locale }) {
                     that link, not on hovering anywhere in the project. */}
                   {project.links.length > 0 ? (
                     <ul
-                      className={`mt-[22px] flex flex-wrap items-center gap-x-7 gap-y-2 ${
+                      className={`mt-4 flex flex-wrap items-center gap-x-7 gap-y-2 min-[880px]:mt-[22px] ${
                         mediaSecond ? 'min-[880px]:justify-end' : ''
                       }`}
                     >

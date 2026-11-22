@@ -21,7 +21,7 @@ Static Next.js site. No database, no API, no third-party tracking scripts. Every
 | --- | --- | --- |
 | **Role** | Full-stack developer & MarTech specialist | Seven years marketing, three building products |
 | **Location** | Winterthur / Zürich area, Switzerland | On-site, hybrid, or remote |
-| **Eligibility** | EU citizen | No Swiss work permit needed |
+| **Eligibility** | EU citizen | Free movement: no sponsorship needed (an L or B permit follows the contract) |
 | **Availability** | Immediate | Available now |
 | **Languages** | English (B2), German (A1, learning), Spanish (Native), Catalan (Native) | Full UI localized in EN, DE, ES |
 

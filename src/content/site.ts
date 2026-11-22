@@ -115,7 +115,7 @@ const localized: Record<Locale, LocalizedSite> = {
       origin: 'Barcelona, Spain',
       availableFrom: 'now',
       workArrangement: 'On-site, hybrid or remote',
-      workEligibility: 'EU citizen, no Swiss permit needed',
+      workEligibility: 'EU citizen, no sponsorship needed',
       responseTime: 'within 24 hours',
     },
     education: [
@@ -167,7 +167,7 @@ const localized: Record<Locale, LocalizedSite> = {
       origin: 'Barcelona, Spanien',
       availableFrom: 'sofort',
       workArrangement: 'Vor Ort, hybrid oder remote',
-      workEligibility: 'EU-Bürger, keine Schweizer Bewilligung nötig',
+      workEligibility: 'EU-Bürger, kein Sponsoring nötig',
       responseTime: 'innerhalb von 24 Stunden',
     },
     education: [
@@ -219,7 +219,7 @@ const localized: Record<Locale, LocalizedSite> = {
       origin: 'Barcelona, España',
       availableFrom: 'ya',
       workArrangement: 'Presencial, híbrido o remoto',
-      workEligibility: 'Ciudadano de la UE, sin permiso suizo necesario',
+      workEligibility: 'Ciudadano de la UE, sin necesidad de patrocinio',
       responseTime: 'en menos de 24 horas',
     },
     education: [

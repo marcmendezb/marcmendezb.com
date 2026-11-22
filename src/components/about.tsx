@@ -173,7 +173,8 @@ export function About({ locale }: { locale: Locale }) {
                   <strong className="text-ink font-medium">
                     {availableLine[locale]}
                   </strong>
-                  , ohne Bewilligung oder Umzug zu klären. {site.openTo}
+                  , ohne Umzug und ohne Sponsoring durch den Arbeitgeber.{' '}
+                  {site.openTo}
                 </>
               ) : locale === 'es' ? (
                 <>
@@ -182,7 +183,8 @@ export function About({ locale }: { locale: Locale }) {
                   <strong className="text-ink font-medium">
                     {availableLine[locale]}
                   </strong>
-                  , sin permiso ni traslado que resolver. {site.openTo}
+                  , sin traslado pendiente y sin necesidad de patrocinio.{' '}
+                  {site.openTo}
                 </>
               ) : (
                 <>
@@ -191,7 +193,8 @@ export function About({ locale }: { locale: Locale }) {
                   <strong className="text-ink font-medium">
                     {availableLine[locale]}
                   </strong>
-                  , with no permit or relocation to sort out. {site.openTo}
+                  , with no relocation to sort out and no sponsorship needed.{' '}
+                  {site.openTo}
                 </>
               )}
             </p>

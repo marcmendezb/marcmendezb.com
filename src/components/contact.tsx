@@ -22,11 +22,11 @@ const intro = (
 ): string => {
   switch (locale) {
     case 'de':
-      return `**EU-Bürger, keine Bewilligung zu klären, verfügbar ab ${availableFrom}**. E-Mail ist der schnellste Weg, mich zu erreichen. Ich antworte ${responseTime}.`
+      return `**EU-Bürger, kein Sponsoring nötig, verfügbar ab ${availableFrom}**. E-Mail ist der schnellste Weg, mich zu erreichen. Ich antworte ${responseTime}.`
     case 'es':
-      return `**Ciudadano de la UE, sin permiso que resolver, disponible desde ${availableFrom}**. El correo es la forma más rápida de contactarme. Respondo ${responseTime}.`
+      return `**Ciudadano de la UE, sin necesidad de patrocinio, disponible desde ${availableFrom}**. El correo es la forma más rápida de contactarme. Respondo ${responseTime}.`
     default:
-      return `**EU citizen, no permit to sort out, available ${availableFrom}**. Email is the fastest way to reach me. I reply ${responseTime}.`
+      return `**EU citizen, no sponsorship needed, available ${availableFrom}**. Email is the fastest way to reach me. I reply ${responseTime}.`
   }
 }
 

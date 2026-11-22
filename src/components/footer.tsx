@@ -55,7 +55,7 @@ const availableLine = (availableFrom: string, locale: Locale): string => {
  * It still closes on the three facts a Swiss recruiter screens for. They open
  * the page under the headline and they close it here, which is the one piece of
  * repetition that earns itself: someone who skimmed the middle still leaves
- * knowing where he is, when he is free, and that there is no permit to arrange.
+ * knowing where I am, when I am free, and that no sponsorship is needed.
  */
 export function Footer({ locale }: { locale: Locale }) {
   const site = getSite(locale)
@@ -185,7 +185,7 @@ export function Footer({ locale }: { locale: Locale }) {
 
             {/* --- Availability --------------------------------------------- */}
             {/* Full width below the other two rather than beside them: "EU
-                citizen, no Swiss permit needed" in half a phone is four ragged
+                citizen, no sponsorship needed" in half a phone is four ragged
                 lines. */}
             <div className="col-span-2 min-[560px]:col-span-1">
               <h2 id="footer-availability" className="footer-label">

@@ -49,13 +49,12 @@ src/
 │   ├── [locale]/
 │   │   ├── layout.tsx         Metadata, fonts, JSON-LD, hreflang alternates
 │   │   ├── page.tsx           Section composition (Hero, Disciplines, Work, About, Contact)
-│   │   ├── opengraph-image.tsx Social share image dynamically generated per locale
-│   │   └── not-found.tsx      Localized 404 page
+│   │   └── opengraph-image.tsx Social share image dynamically generated per locale
 │   ├── globals.css            Tailwind v4 tokens, CSS Houdini properties, and animations
 │   ├── icon.png · apple-icon.png Favicons
 │   ├── manifest.ts · robots.ts · sitemap.ts
 │   ├── route.ts               `/` → browser-language redirect
-│   └── not-found.tsx          Root 404 fallback
+│   └── global-not-found.tsx   The 404, in the language the address asks for
 ├── components/                Individual section views and UI primitives
 ├── content/                   Typed single source of truth for site and project copy
 ├── i18n/                      Locale definitions and routing configuration
@@ -71,6 +70,8 @@ src/
 ### Localization & SEO
 
 - **Locale-driven routing:** Every page resolves under `/[locale]` (`/en`, `/de`, `/es`). A route handler at `/` negotiates the visitor's browser language, defaulting to English. A route rather than a proxy (middleware), because it runs on any host without the middleware support some adapters still treat as experimental.
+- **A 404 per language:** `global-not-found.tsx` answers every missing address with a real 404 status. One static document holds the English, German and Spanish pages, and a few lines of inline script show the one the address asks for before the first paint (English with JavaScript off). Prerendered rather than thrown from a catch-all route, because Next.js answers an on-demand `notFound()` with an empty error shell and draws the page client-side.
+- **Page transitions:** moving between pages (one language to another, the 404 back home) is a cross-document view transition (`@view-transition { navigation: auto }`): a crossfade with the header held in place instead of a blank flash. No JavaScript; browsers without support load the page as before, and it is off under `prefers-reduced-motion`.
 - **Hreflang alternates:** `<link rel="alternate" hreflang="...">` tags for all three locales, dynamic Open Graph social images generated per locale, and a fully localized `sitemap.xml`.
 - **Semantic JSON-LD:** Structured data describes a `Person`, a `WebSite`, and projects as an `ItemList`. Search engines resolve "Marc Mendez" to a semantic entity rather than an unstructured string.
 

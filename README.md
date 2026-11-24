@@ -31,7 +31,7 @@ Static Next.js site. No database, no API, no third-party tracking scripts. Every
 
 Rather than taking claims on faith, here are the concrete implementation choices worth inspecting:
 
-- [`.github/workflows/ci.yml`](.github/workflows/ci.yml): Route type generation, typecheck, lint, Prettier, production build and `pnpm audit` on every push. The [Actions tab](https://github.com/marcmendezb/marcmendezb/actions) has the history.
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml): Route type generation, typecheck, lint, Prettier, production build and `pnpm audit` on every push. The [Actions tab](https://github.com/marcmendezb/marcmendezb.com/actions) has the history.
 - [`src/app/route.ts`](src/app/route.ts): Route handler negotiating root visits to `/en`, `/de`, or `/es` via the `Accept-Language` header, with English fallback.
 - [`next.config.ts`](next.config.ts): Content Security Policy (CSP) and HTTP security headers, documented with the exact trade-offs made for static generation.
 - [`tsconfig.json`](tsconfig.json): Strict TypeScript configuration with `noUncheckedIndexedAccess`, `noUnusedLocals`, and `noUnusedParameters`, not just `strict: true`.

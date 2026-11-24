@@ -15,6 +15,76 @@ import {
 const SLIDE_BREAKPOINT = 880
 
 /**
+ * Scroll to a section the way every in-page link does, focus included. Shared
+ * by the click handler and by a fragment parked on arrival from another page.
+ */
+function goToSection(target: HTMLElement) {
+  /* Focus follows the scroll. Cancelling the navigation also cancels the
+     one useful thing a fragment does for assistive tech: it moves the
+     focus. Without this the next Tab continues from the link in the nav,
+     so a keyboard user is scrolled to Contact and then tabbed back into
+     the header. `preventScroll` because the scroll is ours to do.
+
+     The tabindex is removed on blur so the section does not stay in a
+     state no markup asked for. */
+  target.setAttribute('tabindex', '-1')
+  target.focus({ preventScroll: true })
+  target.addEventListener('blur', () => target.removeAttribute('tabindex'), {
+    once: true,
+  })
+
+  /* One frame late, and deliberately. A link inside the mobile menu closes
+     the panel through React state, and until that render commits the body
+     still carries `overflow: hidden` and the scroll goes nowhere. A click
+     is a discrete event, so React has flushed the update and its effects
+     before the next frame runs. */
+  requestAnimationFrame(() => {
+    /* Work opens on the first project, not on the heading above it.
+    
+       "See the work" that lands you on the words "Selected work" has
+       answered a question nobody asked: the heading is a label for the
+       section, and the thing the link is offering is the project under it.
+       Every route into the section gets this: the hero button, the nav,
+       the mobile menu and the footer index all point at `#work`, so the
+       rule lives here, once, rather than in four `href`s that would have to
+       be kept in step.
+
+       `cardTops()` rather than the card's own position, for the reason that
+       function exists: the cards are sticky and report where they are
+       painted rather than where they belong. Focus still goes to the
+       section, which is the landmark the link names. */
+    const firstCard = document.querySelector<HTMLElement>('#work [data-snap]')
+    if (target.id !== 'work' || !firstCard) {
+      scrollToTarget(target)
+      return
+    }
+
+    /* Two ways to the same card, because the card is two different things
+       either side of 880px.
+    
+       With the deck running it is pinned to the top of the screen and its
+       measured position is a lie, so the arithmetic in `cardTops` is the
+       only thing that knows where it belongs, and it belongs flush to the
+       top, under the header, exactly where a wheel gesture would leave it.
+    
+       Below that the cards are ordinary blocks in a column, nothing is
+       pinned, and flush to the top is wrong: the header is 80px of fixed
+       chrome and the card's own top padding is 60, so aiming at the top of
+       the card put the photograph under the header. `scrollToTarget`
+       already honours the `scroll-padding-top` that reserves the header,
+       and with nothing pinned it can be trusted to measure. */
+    if (window.matchMedia(`(min-width: ${SLIDE_BREAKPOINT}px)`).matches) {
+      const top = cardTops()[0]
+      if (top !== undefined) {
+        scrollToY(top)
+        return
+      }
+    }
+    scrollToTarget(firstCard)
+  })
+}
+
+/**
  * Smooth scrolling, with the safeguards that decide whether it reads as premium
  * or as a site fighting you.
  *
@@ -68,74 +138,7 @@ export function SmoothScroll() {
 
       event.preventDefault()
 
-      /* Focus follows the scroll. Cancelling the navigation also cancels the
-         one useful thing a fragment does for assistive tech: it moves the
-         focus. Without this the next Tab continues from the link in the nav,
-         so a keyboard user is scrolled to Contact and then tabbed back into
-         the header. `preventScroll` because the scroll is ours to do.
-
-         The tabindex is removed on blur so the section does not stay in a
-         state no markup asked for. */
-      target.setAttribute('tabindex', '-1')
-      target.focus({ preventScroll: true })
-      target.addEventListener(
-        'blur',
-        () => target.removeAttribute('tabindex'),
-        {
-          once: true,
-        },
-      )
-
-      /* One frame late, and deliberately. A link inside the mobile menu closes
-         the panel through React state, and until that render commits the body
-         still carries `overflow: hidden` and the scroll goes nowhere. A click
-         is a discrete event, so React has flushed the update and its effects
-         before the next frame runs. */
-      requestAnimationFrame(() => {
-        /* Work opens on the first project, not on the heading above it.
-        
-           "See the work" that lands you on the words "Selected work" has
-           answered a question nobody asked: the heading is a label for the
-           section, and the thing the link is offering is the project under it.
-           Every route into the section gets this: the hero button, the nav,
-           the mobile menu and the footer index all point at `#work`, so the
-           rule lives here, once, rather than in four `href`s that would have to
-           be kept in step.
-
-           `cardTops()` rather than the card's own position, for the reason that
-           function exists: the cards are sticky and report where they are
-           painted rather than where they belong. Focus still goes to the
-           section, which is the landmark the link names. */
-        const firstCard =
-          document.querySelector<HTMLElement>('#work [data-snap]')
-        if (target.id !== 'work' || !firstCard) {
-          scrollToTarget(target)
-          return
-        }
-
-        /* Two ways to the same card, because the card is two different things
-           either side of 880px.
-        
-           With the deck running it is pinned to the top of the screen and its
-           measured position is a lie, so the arithmetic in `cardTops` is the
-           only thing that knows where it belongs, and it belongs flush to the
-           top, under the header, exactly where a wheel gesture would leave it.
-        
-           Below that the cards are ordinary blocks in a column, nothing is
-           pinned, and flush to the top is wrong: the header is 80px of fixed
-           chrome and the card's own top padding is 60, so aiming at the top of
-           the card put the photograph under the header. `scrollToTarget`
-           already honours the `scroll-padding-top` that reserves the header,
-           and with nothing pinned it can be trusted to measure. */
-        if (window.matchMedia(`(min-width: ${SLIDE_BREAKPOINT}px)`).matches) {
-          const top = cardTops()[0]
-          if (top !== undefined) {
-            scrollToY(top)
-            return
-          }
-        }
-        scrollToTarget(firstCard)
-      })
+      goToSection(target)
     }
 
     document.addEventListener('click', onClick)
@@ -145,8 +148,9 @@ export function SmoothScroll() {
   /* Land at the top on every load, and strip any fragment that arrives with
      the URL rather than honouring it. Two things the site already asks for
      point the same way: it should open at the top on a refresh, and the bar
-     should never show a `#`. Honouring an inbound fragment would contradict
-     both, and nothing on the page writes one for anybody to arrive with.
+     should never show a `#`. The browser's own jump to an inbound fragment
+     would contradict both; a fragment from another page (the 404's footer)
+     is instead parked by the layout script and eased to further down.
 
      The `hashchange` listener covers the path the load-time strip cannot: a
      fragment arriving on a URL the browser treats as the same document (a
@@ -376,6 +380,35 @@ export function SmoothScroll() {
       registerSmoothScroll(null)
       lenis.destroy()
     }
+  }, [])
+
+  /* A section asked for by another page. The inline script in the layout
+     takes the fragment out of the address before the browser can act on it
+     and parks it in sessionStorage; once the page and the scroller are up,
+     this eases to it exactly as a click on the same link would have.
+
+     The key is removed when the jump runs, not when it is read, so a
+     development double mount (Strict Mode) does not consume it with the
+     timeout of the first mount, which its cleanup then cancels. */
+  useEffect(() => {
+    let id: string | null = null
+    try {
+      id = sessionStorage.getItem('jump')
+    } catch {
+      return
+    }
+    if (!id) return
+
+    const timer = window.setTimeout(() => {
+      try {
+        sessionStorage.removeItem('jump')
+      } catch {
+        // Storage refused: nothing to clean up.
+      }
+      const target = id ? document.getElementById(id) : null
+      if (target) goToSection(target)
+    }, 120)
+    return () => window.clearTimeout(timer)
   }, [])
 
   return null

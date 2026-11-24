@@ -23,6 +23,12 @@ const inter = Inter({
   display: 'swap',
 })
 
+// Only the three locales exist. Without this, `/nope/` matched `[locale]` with
+// locale "nope", the layout threw notFound() with no root layout above it to
+// catch it, and the visitor got the framework's unstyled error page. Unknown
+// values now count as unmatched URLs and land on global-not-found.tsx.
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
 }
@@ -162,12 +168,19 @@ export default async function LocaleLayout({
 
             SmoothScroll keeps a `hashchange` listener for the other route in:
             a fragment arriving on a document that is already open, which never
-            reaches this script. */}
+            reaches this script.
+
+            The fragment is not thrown away, only taken out of the address: it
+            is parked in sessionStorage, and SmoothScroll eases to that section
+            once the page is up. That is what lets a link from another page
+            (the 404's footer index, `/en/#work`) still arrive at the section
+            it names, without the browser's own jump fighting the reset. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
               "if('scrollRestoration' in history)history.scrollRestoration='manual';" +
-              "if(location.hash)history.replaceState(null,'',location.pathname+location.search)",
+              "if(location.hash){try{sessionStorage.setItem('jump',location.hash.slice(1))}catch(e){}" +
+              "history.replaceState(null,'',location.pathname+location.search)}",
           }}
         />
 

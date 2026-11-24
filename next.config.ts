@@ -78,6 +78,13 @@ const nextConfig: NextConfig = {
   // Don't leak the framework version in response headers.
   poweredByHeader: false,
 
+  // A styled 404 for every unmatched URL. The only layout is the dynamic
+  // `[locale]` one, so a root `not-found.tsx` had no layout to render inside and
+  // came out as the framework's unstyled error page. See global-not-found.tsx.
+  experimental: {
+    globalNotFound: true,
+  },
+
   // Emit `/about/` style URLs: one canonical form per page, so the Worker never
   // serves the same document under two addresses.
   trailingSlash: true,

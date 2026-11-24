@@ -3140,3 +3140,296 @@
     transform-origin: left;
   }
 }
+
+/* ==========================================================================
+   404
+
+   The number at poster scale, with the brand mark standing in for the zero.
+   Three pages share one document (see global-not-found.tsx): only the
+   language the address asks for is shown, English when it asks for none or
+   when the script never ran.
+   ========================================================================== */
+
+@layer components {
+  /* No rubber-band at either end: the page is a fixed composition, and the
+     bounce dragged the white ground out from under the footer's dark panel. */
+  html[data-nf],
+  html[data-nf] body {
+    overscroll-behavior: none;
+  }
+
+  .nf-page {
+    display: none;
+  }
+
+  html:not([data-nf]) .nf-page[data-nf-locale='en'],
+  html[data-nf='en'] .nf-page[data-nf-locale='en'],
+  html[data-nf='de'] .nf-page[data-nf-locale='de'],
+  html[data-nf='es'] .nf-page[data-nf-locale='es'] {
+    display: flex;
+  }
+
+  /* One screen: header, the number and the footer all inside the window.
+     The main area takes whatever the header and footer leave, and the number
+     is sized from that (container query units), not from the viewport. If a
+     screen is too short even for that, the floor below lets the page grow
+     and scroll rather than overlap. */
+  .nf-page {
+    /* A fixed height, not a minimum: with only a minimum, Chrome does not
+       treat the flexed main area as a definite size, and the container query
+       units the number is sized with resolved to zero. Where the floor on
+       the main area below is not met, the content simply runs past the
+       screen and the page scrolls. */
+    height: 100svh;
+  }
+
+  .nf-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    flex: 1 1 0;
+    min-height: 300px;
+    container-type: size;
+    align-content: center;
+    row-gap: clamp(20px, 4cqh, 40px);
+    padding-block: clamp(12px, 3vh, 40px);
+  }
+
+  @media (min-width: 880px) {
+    .nf-main {
+      min-height: 260px;
+    }
+  }
+
+  /* Side by side from the breakpoint: the number on the left, the copy in
+     the column beside it, sitting on the number's baseline. */
+  @media (min-width: 880px) {
+    .nf-main {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: end;
+      column-gap: clamp(40px, 5vw, 96px);
+    }
+  }
+
+  /* --- The number --------------------------------------------------------- */
+
+  .nf-num {
+    display: flex;
+    align-items: flex-end;
+    /* Sized to the space it has. On a phone, the width of the column; above
+       the breakpoint, whichever runs out first of a third of the width and
+       just over half the height, so it never pushes the copy off a short
+       screen. */
+    /* The column's width, or the height the copy leaves under it, whichever
+       is smaller. 0.78em is the number's full height: the 0.74 line plus
+       the mask's top padding. */
+    font-size: max(
+      64px,
+      min(
+        calc((100vw - 2 * var(--edge)) * 0.465),
+        calc((100cqh - 250px) / 0.78)
+      )
+    );
+    font-weight: 600;
+    line-height: 0.74;
+    letter-spacing: -0.06em;
+    color: var(--ink);
+    font-feature-settings: 'tnum' 0;
+  }
+
+  @media (min-width: 880px) {
+    .nf-num {
+      font-size: min(29vw, calc(100cqh * 0.9 / 0.78));
+    }
+  }
+
+  /* Each digit rises out of its own line, the way the headlines on the home
+     page do. The mask is the line box; the bottom padding keeps the foot of
+     the glyph inside it. */
+  .nf-mask {
+    display: block;
+    overflow: hidden;
+    padding-top: 0.04em;
+  }
+
+  .nf-digit {
+    display: block;
+    transform: translateY(105%);
+    animation: word-rise 1.2s var(--ease) both;
+    animation-delay: calc(0.1s + var(--d) * 0.08s);
+  }
+
+  /* The zero: the mark, the size of a cap-height circle, sitting on the
+     baseline between the two fours. */
+  .nf-zero {
+    position: relative;
+    flex: none;
+    width: 0.74em;
+    height: 0.74em;
+    margin-inline: 0.05em 0.03em;
+    animation: nf-zero-in 1.6s var(--ease) 0.22s both;
+  }
+
+  /* The mark sits inside a square canvas with soft edges, so it is drawn a
+     little larger than its box to read at the weight of the digits. Turns at
+     the hero's speed, slowed down: at this size a full turn in 16s is too
+     much movement beside text someone is reading. */
+  .nf-zero-turn {
+    position: absolute;
+    inset: -9%;
+    animation: mark-spin 28s linear infinite;
+  }
+
+  .nf-title {
+    font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+    line-height: 1.06;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  /* --- The copy ----------------------------------------------------------- */
+
+  /* A hairline over the copy, as every section on the home page opens. */
+  .nf-copy {
+    border-top: 1px solid var(--hair);
+    padding-top: clamp(18px, 2.4vh, 24px);
+  }
+
+  @media (min-width: 880px) {
+    .nf-copy {
+      max-width: 30rem;
+      /* Level with the foot of the digits, not with the bottom of the line
+         box below them. */
+      margin-bottom: 0.2rem;
+    }
+  }
+
+  .nf-in {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fade-up 1s var(--ease) both;
+    animation-delay: calc(0.55s + var(--d, 0) * 0.08s);
+  }
+
+  .nf-cta-arrow {
+    transition: transform 0.45s var(--ease);
+  }
+
+  .nf-cta:hover .nf-cta-arrow,
+  .nf-cta:focus-visible .nf-cta-arrow {
+    transform: translateX(4px);
+  }
+
+  /* --- The footer, one line ------------------------------------------- */
+
+  .nf-foot-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--hair);
+    padding-block: clamp(14px, 2.2vh, 22px)
+      max(clamp(16px, 2.6vh, 26px), env(safe-area-inset-bottom));
+    font-size: 13px;
+  }
+
+  .nf-foot-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px clamp(18px, 2.4vw, 28px);
+    color: var(--soft);
+  }
+
+  /* One line from the breakpoint: the name on the left, where the header's
+     name sits above it, and the ways to reach me on the right. */
+  @media (min-width: 880px) {
+    .nf-foot-row {
+      flex-direction: row-reverse;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+  }
+
+  /* Everything in its final place, and the mark still. The blanket rule
+     zeroes durations but keeps the delays, which would leave the page blank
+     for a moment. */
+  @media (prefers-reduced-motion: reduce) {
+    .nf-digit,
+    .nf-zero,
+    .nf-zero-turn,
+    .nf-in {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@keyframes nf-zero-in {
+  from {
+    opacity: 0;
+    transform: scale(0.55) rotate(-50deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Page transitions
+
+   Moving between the site's pages (one language to another, the 404 back to
+   the home page) is a full document load, on purpose: every page is static
+   HTML. The browser's cross-document view transition turns that load into a
+   crossfade instead of a blank flash: the old page fades out, the new one
+   rises into place on the site's one curve, and the header, which is the same
+   on every page, is lifted out of both and stays put.
+
+   No JavaScript, and nothing to fall back from: a browser without view
+   transitions (Firefox today) simply loads the page as before. Off for
+   anyone who has asked for less motion.
+   ========================================================================== */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* Named here rather than inline: the 404 holds one header per language and
+   only the shown one is rendered, so the name stays unique on every page. */
+.site-header {
+  view-transition-name: site-header;
+}
+
+::view-transition-old(root) {
+  animation: vt-out 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-in 0.7s var(--ease) both;
+}
+
+/* The header: same place, same pills on both pages, so it holds still and only
+   its contents crossfade where they differ (a language's labels). */
+::view-transition-group(site-header) {
+  animation-duration: 0.45s;
+  animation-timing-function: var(--ease);
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}

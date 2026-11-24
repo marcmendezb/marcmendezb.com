@@ -112,16 +112,27 @@ const available: Record<Locale, string> = {
 export function Nav({
   locale,
   projects,
+  home,
 }: {
   locale: Locale
   /** For the Work dropdown: names and three-word notes, nothing else. */
   projects: readonly ProjectEntry[]
+  /**
+   * Set when the header sits on a page other than the home page (the 404).
+   * Every link then leads to its section on that page instead of to an anchor
+   * that only exists there, and the call to action starts in its ordinary
+   * pill, since there is no hero photograph under it.
+   */
+  home?: string
 }) {
   const site = getSite(locale)
+  const to = (hash: string) => (home ? `${home}${hash}` : hash)
+  // The 404 carries one header per language in a single document.
+  const menuId = home ? `mobile-menu-${locale}` : 'mobile-menu'
   const [activeIndex, setActiveIndex] = useState(-1)
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [overHero, setOverHero] = useState(true)
+  const [overHero, setOverHero] = useState(!home)
   const [workOpen, setWorkOpen] = useState(false)
   // The projects under Work in the phone menu. Folded again whenever the menu
   // closes, so it always opens on the three sections.
@@ -441,7 +452,7 @@ export function Nav({
           // z-index on the burger inside it counts for nothing: the whole
           // header has to win, or the close button vanishes behind the open
           // menu. (The original HTML had this exact bug.)
-          'px-edge fixed inset-x-0 top-0 z-60 flex items-center justify-between',
+          'site-header px-edge fixed inset-x-0 top-0 z-60 flex items-center justify-between',
           'h-nav',
         ].join(' ')}
       >
@@ -450,7 +461,7 @@ export function Nav({
             reads as a coloured dot beside the name rather than as a second
             visual system competing with the one on the page. */}
         <a
-          href="#hero"
+          href={home ?? '#hero'}
           className="nav-pill z-10 flex items-center gap-2.5 py-2 pr-4 pl-2 text-[15px] font-semibold tracking-tight whitespace-nowrap"
         >
           <Image
@@ -491,7 +502,7 @@ export function Nav({
               const link = (
                 <a
                   key={item.section}
-                  href={`#${item.section}`}
+                  href={to(`#${item.section}`)}
                   ref={(node) => {
                     linkRefs.current[index] = node
                   }}
@@ -592,7 +603,7 @@ export function Nav({
             is the only difference between the two states: the hover is the same
             fill either side of the hero. */}
           <a
-            href="#contact"
+            href={to('#contact')}
             data-ghost={overHero}
             className="nav-pill nav-cta wipe-fill ease-brand hover:border-accent z-10 hidden px-[18px] py-2.5 text-sm font-medium whitespace-nowrap min-[880px]:block"
           >
@@ -604,7 +615,7 @@ export function Nav({
             type="button"
             onClick={() => (menuOpen ? closeMenu() : setMenuOpen(true))}
             aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
+            aria-controls={menuId}
             aria-label={
               menuOpen ? closeMenuLabel[locale] : openMenuLabel[locale]
             }
@@ -635,7 +646,7 @@ export function Nav({
           `inert` while closed keeps its links out of the tab order and hides
           them from assistive tech: the clip-path alone would not. */}
       <div
-        id="mobile-menu"
+        id={menuId}
         ref={overlayRef}
         role="dialog"
         aria-modal="true"
@@ -706,7 +717,7 @@ export function Nav({
                 >
                   <div className="flex items-center justify-between gap-4">
                     <a
-                      href={`#${item.section}`}
+                      href={to(`#${item.section}`)}
                       onClick={() => setMenuOpen(false)}
                       aria-current={activeIndex === index ? 'true' : undefined}
                       className="menu-row"
@@ -769,7 +780,7 @@ export function Nav({
               ) : (
                 <a
                   key={item.section}
-                  href={`#${item.section}`}
+                  href={to(`#${item.section}`)}
                   onClick={() => setMenuOpen(false)}
                   aria-current={activeIndex === index ? 'true' : undefined}
                   // `--i` is registered with `inherits: false`, so it has to

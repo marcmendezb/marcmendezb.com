@@ -372,7 +372,7 @@ export const projects: readonly Project[] = [
       'Cloudflare Pages',
     ],
     links: [
-      { label: 'Visit site', href: 'https://northbridge-124.pages.dev' },
+      { label: 'Visit site', href: 'https://nb.marcmendezb.com/' },
       {
         label: 'Source code',
         href: 'https://github.com/marcmendezb/northbridge',
